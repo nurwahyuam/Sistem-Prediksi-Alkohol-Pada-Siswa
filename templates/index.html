@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}Beranda — CBR KMeans{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h2>Sistem CBR Klasifikasi Risiko Alkohol Siswa</h2>
+  <p>Case Based Reasoning dengan K-Means Clustering dan Cosine Similarity</p>
+</div>
+
+<!-- Hero -->
+<div class="card-custom mb-4" style="background: linear-gradient(135deg, #0f1e3d 0%, #0f1629 100%); border-color:#1e3a5f;">
+  <div class="row align-items-center">
+    <div class="col-md-8">
+      <h4 style="font-size:18px; font-weight:700; color:var(--text-primary);">
+        🧠 Case Based Reasoning (CBR)
+      </h4>
+      <p style="font-size:13px; color:var(--text-dim); margin-bottom:16px;">
+        Sistem ini mengklasifikasikan risiko konsumsi alkohol siswa menggunakan pendekatan
+        <strong style="color:var(--accent-blue);">K-Means Clustering</strong> untuk retrieve kasus serupa,
+        lalu menghitung <strong style="color:var(--accent-violet);">Cosine Similarity</strong>
+        untuk menemukan kasus paling mirip dari basis kasus.
+      </p>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <form action="{{ url_for('train') }}" method="POST">
+          <input type="hidden" name="k" value="{{ optimal_k }}">
+          <button type="submit" class="btn-primary-custom">
+            <i class="bi bi-play-fill me-1"></i>Inisialisasi &amp; Train Model
+          </button>
+        </form>
+        {% if trained %}
+        <a href="{{ url_for('cbr') }}" class="btn-secondary-custom" style="display:inline-flex; align-items:center; text-decoration:none;">
+          <i class="bi bi-cpu me-1"></i>Mulai Prediksi CBR
+        </a>
+        {% endif %}
+      </div>
+    </div>
+    <div class="col-md-4 text-end" style="font-size:72px; opacity:0.15;">🎓</div>
+  </div>
+</div>
+
+<!-- Alur CBR -->
+<div class="row g-3 mb-4">
+  {% set steps = [
+    ('1', 'bi-upload', '#38bdf8', 'Load Dataset', 'Baca CSV student_dataset.csv dengan 10 atribut fitur siswa.'),
+    ('2', 'bi-code-square', '#a78bfa', 'Encoding', 'Konversi Sex, Address, Pstatus, Romantic ke nilai 0/1.'),
+    ('3', 'bi-sliders', '#34d399', 'Normalisasi', 'Min-Max normalization pada fitur numerik.'),
+    ('4', 'bi-tags', '#fbbf24', 'Labeling', 'Hitung score = 0.6×Dalc + 0.4×Walc, klasifikasikan.'),
+    ('5', 'bi-diagram-3', '#f87171', 'K-Means', 'Elbow Method K=1..10, tentukan K optimal, train cluster.'),
+    ('6', 'bi-cpu', '#38bdf8', 'CBR', 'Retrieve → Reuse → Revise → Retain.'),
+  ] %}
+  {% for num, icon, color, title, desc in steps %}
+  <div class="col-md-4 col-sm-6">
+    <div class="card-custom h-100">
+      <div style="display:flex; align-items:flex-start; gap:12px;">
+        <div class="step-badge" style="background:{{ color }}22; color:{{ color }}; flex-shrink:0;">{{ num }}</div>
+        <div>
+          <div style="font-size:13px; font-weight:600; color:var(--text-primary); margin-bottom:4px;">
+            <i class="bi {{ icon }} me-1" style="color:{{ color }};"></i>{{ title }}
+          </div>
+          <div style="font-size:12px; color:var(--text-muted);">{{ desc }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<!-- Rumus -->
+<div class="row g-3">
+  <div class="col-md-6">
+    <div class="card-custom">
+      <div class="card-header-custom">
+        <div class="card-header-icon" style="background:#38bdf822;">📐</div>
+        <div>
+          <p class="card-header-title">Rumus Cosine Similarity</p>
+          <p class="card-header-sub">Digunakan pada tahap Reuse</p>
+        </div>
+      </div>
+      <div style="background:var(--bg-card2); border-radius:8px; padding:14px; text-align:center;">
+        <div class="mono" style="font-size:16px; color:var(--accent-blue); letter-spacing:0.02em;">
+          similarity = (A · B) / (‖A‖ × ‖B‖)
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card-custom">
+      <div class="card-header-custom">
+        <div class="card-header-icon" style="background:#fbbf2422;">🏷️</div>
+        <div>
+          <p class="card-header-title">Rumus Label Kategori</p>
+          <p class="card-header-sub">Equal Interval dari score</p>
+        </div>
+      </div>
+      <div style="background:var(--bg-card2); border-radius:8px; padding:14px;">
+        <div class="mono" style="font-size:14px; color:var(--accent-amber); text-align:center; margin-bottom:10px;">
+          score = 0.6 × Dalc + 0.4 × Walc
+        </div>
+        <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
+          <span class="badge-cat badge-normal">Normal ≤ 2.33</span>
+          <span class="badge-cat badge-waspada">Waspada ≤ 3.67</span>
+          <span class="badge-cat badge-bahaya">Bahaya > 3.67</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

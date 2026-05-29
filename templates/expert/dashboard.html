@@ -1,0 +1,189 @@
+{% extends "expert/base_expert.html" %}
+{% block title %}Dashboard Pakar{% endblock %}
+{% block content %}
+
+<div class="etopbar">
+  <div>
+    <h2><i class="bi bi-speedometer2 me-2" style="color:var(--accent);"></i>Dashboard Pakar</h2>
+    <p>Ringkasan sistem, statistik dataset, dan riwayat aktivitas terbaru.</p>
+  </div>
+  <div>
+    <form action="{{ url_for('expert_retrain') }}" method="POST" class="d-flex align-items-center gap-2">
+      <select name="k" class="eform-ctrl" style="width:100px;">
+        {% for k in range(2,11) %}
+        <option value="{{ k }}" {% if k==optimal_k %}selected{% endif %}>K = {{ k }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="ebtn-primary">
+        <i class="bi bi-arrow-clockwise me-1"></i>Re-Train
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Stats Row -->
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3">
+    <div class="estat">
+      <div class="estat-val" style="color:var(--accent2);">{{ total_data }}</div>
+      <div class="estat-lbl">Total Basis Kasus</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="estat">
+      <div class="estat-val" style="color:var(--accent);">{{ optimal_k }}</div>
+      <div class="estat-lbl">K Cluster Aktif</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="estat">
+      <div class="estat-val" style="color:var(--green);">{{ stats.counts.get('Normal',0) }}</div>
+      <div class="estat-lbl">Kategori Normal</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="estat">
+      <div class="estat-val" style="color:var(--red);">{{ stats.counts.get('Bahaya',0) }}</div>
+      <div class="estat-lbl">Kategori Bahaya</div>
+    </div>
+  </div>
+</div>
+
+<!-- Distribusi Label & Cluster -->
+<div class="row g-4 mb-4">
+  <div class="col-md-5">
+    <div class="ecard h-100">
+      <div class="ecard-header">
+        <div class="ecard-icon" style="background:rgba(52,211,153,0.12);">📊</div>
+        <div>
+          <p class="ecard-title">Distribusi Label Kategori</p>
+          <p class="ecard-sub">Persentase dari total {{ stats.total }} data</p>
+        </div>
+      </div>
+      {% for cat, cnt in stats.counts.items() %}
+      {% set pct = stats.pct.get(cat, 0) %}
+      <div style="margin-bottom:14px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+          <span class="bc bc-{{ cat|lower }}">{{ cat }}</span>
+          <span class="mono" style="font-size:12px; color:var(--text);">{{ cnt }} <span style="color:var(--muted);">({{ pct }}%)</span></span>
+        </div>
+        <div style="height:6px; border-radius:3px; background:var(--border); overflow:hidden;">
+          <div style="height:100%; border-radius:3px; width:{{ pct }}%;
+                      background:{% if cat=='Normal' %}var(--green){% elif cat=='Waspada' %}var(--amber){% else %}var(--red){% endif %};
+                      transition:width 0.8s ease;"></div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="ecard h-100">
+      <div class="ecard-header">
+        <div class="ecard-icon" style="background:rgba(167,139,250,0.12);">🔵</div>
+        <div>
+          <p class="ecard-title">Distribusi Cluster</p>
+          <p class="ecard-sub">K-Means K={{ optimal_k }}</p>
+        </div>
+      </div>
+      {% set cl_colors = ['#38bdf8','#a78bfa','#fb923c','#4ade80','#facc15','#f87171'] %}
+      {% for cl, cnt in cluster_counts.items() %}
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+        <div style="width:10px; height:10px; border-radius:50%;
+                    background:{{ cl_colors[cl % cl_colors|length] }};
+                    flex-shrink:0;"></div>
+        <span style="font-size:12.5px; color:var(--dim);">Cluster {{ cl }}</span>
+        <span class="mono" style="margin-left:auto; font-size:12px;
+                                  color:var(--text);">{{ cnt }}</span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="ecard h-100">
+      <div class="ecard-header">
+        <div class="ecard-icon" style="background:rgba(251,191,36,0.12);">⚡</div>
+        <div>
+          <p class="ecard-title">Aksi Cepat</p>
+          <p class="ecard-sub">Navigasi pakar</p>
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <a href="{{ url_for('expert_basis_kasus') }}" style="display:flex; align-items:center; gap:8px; padding:10px 12px; background:rgba(167,139,250,0.07); border:1px solid rgba(167,139,250,0.15); border-radius:8px; text-decoration:none; color:var(--accent); font-size:12.5px; font-weight:500; transition:all 0.15s;">
+          <i class="bi bi-database-gear"></i>Kelola Basis Kasus
+        </a>
+        <a href="{{ url_for('expert_riwayat') }}" style="display:flex; align-items:center; gap:8px; padding:10px 12px; background:rgba(56,189,248,0.07); border:1px solid rgba(56,189,248,0.15); border-radius:8px; text-decoration:none; color:var(--accent2); font-size:12.5px; font-weight:500; transition:all 0.15s;">
+          <i class="bi bi-clock-history"></i>Lihat Riwayat CBR
+        </a>
+        <a href="{{ url_for('expert_akun') }}" style="display:flex; align-items:center; gap:8px; padding:10px 12px; background:rgba(52,211,153,0.07); border:1px solid rgba(52,211,153,0.15); border-radius:8px; text-decoration:none; color:var(--green); font-size:12.5px; font-weight:500; transition:all 0.15s;">
+          <i class="bi bi-people"></i>Manajemen Akun
+        </a>
+        <a href="{{ url_for('cbr') }}" target="_blank" style="display:flex; align-items:center; gap:8px; padding:10px 12px; background:rgba(251,191,36,0.07); border:1px solid rgba(251,191,36,0.15); border-radius:8px; text-decoration:none; color:var(--amber); font-size:12.5px; font-weight:500; transition:all 0.15s;">
+          <i class="bi bi-cpu"></i>Buka CBR Prediksi
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Riwayat Terbaru -->
+<div class="ecard">
+  <div class="ecard-header">
+    <div class="ecard-icon" style="background:rgba(56,189,248,0.12);">🕐</div>
+    <div>
+      <p class="ecard-title">Aktivitas Terbaru (10 Terakhir)</p>
+      <p class="ecard-sub">Log semua aksi pada sistem</p>
+    </div>
+  </div>
+  {% if history %}
+  <div class="tscroll">
+    <table class="etable">
+      <thead>
+        <tr>
+          <th>#</th><th>Waktu</th><th>Tipe</th><th>Pelaku</th><th>Detail</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for h in history %}
+        <tr {% if loop.first %}class="top1"{% endif %}>
+          <td class="mono" style="color:var(--muted);">{{ h.id }}</td>
+          <td class="mono" style="font-size:11px;">{{ h.timestamp }}</td>
+          <td><span class="bc-type">{{ h.type }}</span></td>
+          <td style="color:var(--accent);">{{ h.get('pakar', h.get('user','—')) }}</td>
+          <td style="font-size:11px; color:var(--muted); max-width:280px;">
+            {% if h.type == 'prediksi' %}
+              Cluster {{ h.cluster }} → <span class="bc bc-{{ h.kategori|lower }}">{{ h.kategori }}</span>
+              sim={{ h.similarity }}{% if h.warning %} ⚠️{% endif %}
+            {% elif h.type == 'retain' %}
+              Simpan ke cluster {{ h.cluster }}: {{ h.kategori }}
+            {% elif h.type == 'revise_pakar' %}
+              <span class="bc bc-{{ h.kategori_sistem|lower }}">{{ h.kategori_sistem }}</span>
+              <i class="bi bi-arrow-right mx-1"></i>
+              <span class="bc bc-{{ h.kategori_final|lower }}">{{ h.kategori_final }}</span>
+              {% if h.direvisi %}<span style="color:var(--amber);font-size:10px;margin-left:3px;">✏️ direvisi</span>{% endif %}
+            {% elif h.type == 'revisi_label' %}
+              Baris {{ h.row_index }}: {{ h.label_lama }} → {{ h.label_baru }}
+            {% elif h.type == 'hapus_kasus' %}
+              Hapus baris {{ h.row_index }}
+            {% elif h.type == 'tambah_kasus_manual' %}
+              Tambah kasus: {{ h.data[:60] }}...
+            {% elif h.type == 're-train' %}
+              Re-train K={{ h.k }}, data={{ h.total_data }}
+            {% else %}
+              {{ h | string | truncate(80) }}
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div style="text-align:center; padding:30px; color:var(--muted); font-size:13px;">
+    Belum ada aktivitas tercatat.
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}

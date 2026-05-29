@@ -1,0 +1,422 @@
+{% extends "base.html" %}
+{% block title %}CBR Prediksi — KMeans{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h2><i class="bi bi-cpu me-2" style="color:var(--accent-blue);"></i>CBR Prediksi Risiko</h2>
+  <p>Masukkan data siswa baru untuk diprediksi melalui proses Case Based Reasoning.</p>
+</div>
+
+<div class="row g-4">
+  <!-- Form Input -->
+  <div class="col-lg-4">
+    <div class="card-custom" style="position:sticky; top:20px;">
+      <div class="card-header-custom">
+        <div class="card-header-icon" style="background:#38bdf822; color:var(--accent-blue);">📝</div>
+        <div>
+          <p class="card-header-title">Input Kasus Baru</p>
+          <p class="card-header-sub">Data siswa yang akan diprediksi</p>
+        </div>
+      </div>
+      <form action="{{ url_for('cbr') }}" method="POST">
+        <input type="hidden" name="action" value="predict"/>
+
+        <!-- Categorical -->
+        <div class="mb-3">
+          <label class="form-label-custom">Sex (Jenis Kelamin)</label>
+          <select name="sex" class="form-control-custom w-100">
+            <option value="F" {% if form_data.get('sex')=='F' %}selected{% endif %}>F — Perempuan</option>
+            <option value="M" {% if form_data.get('sex')=='M' or not form_data %}selected{% endif %}>M — Laki-laki</option>
+          </select>
+          <small style="font-size:10px; color:var(--text-muted);">F=0, M=1</small>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label-custom">Address (Alamat)</label>
+          <select name="address" class="form-control-custom w-100">
+            <option value="R" {% if form_data.get('address')=='R' %}selected{% endif %}>R — Rural (Pedesaan)</option>
+            <option value="U" {% if form_data.get('address')=='U' or not form_data %}selected{% endif %}>U — Urban (Perkotaan)</option>
+          </select>
+          <small style="font-size:10px; color:var(--text-muted);">R=0, U=1</small>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label-custom">Pstatus (Status Orang Tua)</label>
+          <select name="Pstatus" class="form-control-custom w-100">
+            <option value="A" {% if form_data.get('Pstatus')=='A' %}selected{% endif %}>A — Terpisah (Apart)</option>
+            <option value="T" {% if form_data.get('Pstatus')=='T' or not form_data %}selected{% endif %}>T — Bersama (Together)</option>
+          </select>
+          <small style="font-size:10px; color:var(--text-muted);">A=0, T=1</small>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label-custom">Romantic (Status Pacaran)</label>
+          <select name="romantic" class="form-control-custom w-100">
+            <option value="No" {% if form_data.get('romantic')=='No' or not form_data %}selected{% endif %}>No — Tidak</option>
+            <option value="Yes" {% if form_data.get('romantic')=='Yes' %}selected{% endif %}>Yes — Ya</option>
+          </select>
+          <small style="font-size:10px; color:var(--text-muted);">No=0, Yes=1</small>
+        </div>
+
+        <!-- Numeric -->
+        <div class="mb-3">
+          <label class="form-label-custom">Studytime (1–4)</label>
+          <input type="number" name="studytime" min="1" max="4" step="1"
+                 value="{{ form_data.get('studytime', 2) }}"
+                 class="form-control-custom w-100"/>
+          <small style="font-size:10px; color:var(--text-muted);">1=&lt;2jam, 2=2-5jam, 3=5-10jam, 4=&gt;10jam</small>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label-custom">Failures (0–3)</label>
+          <input type="number" name="failures" min="0" max="3" step="1"
+                 value="{{ form_data.get('failures', 0) }}"
+                 class="form-control-custom w-100"/>
+          <small style="font-size:10px; color:var(--text-muted);">Jumlah kelas yang pernah gagal</small>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label-custom">Famrel — Hubungan Keluarga (1–5)</label>
+          <input type="number" name="famrel" min="1" max="5" step="1"
+                 value="{{ form_data.get('famrel', 3) }}"
+                 class="form-control-custom w-100"/>
+          <small style="font-size:10px; color:var(--text-muted);">1=sangat buruk, 5=sangat baik</small>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label-custom">Freetime — Waktu Luang (1–5)</label>
+          <input type="number" name="freetime" min="1" max="5" step="1"
+                 value="{{ form_data.get('freetime', 3) }}"
+                 class="form-control-custom w-100"/>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label-custom">Goout — Frekuensi Keluar (1–5)</label>
+          <input type="number" name="goout" min="1" max="5" step="1"
+                 value="{{ form_data.get('goout', 3) }}"
+                 class="form-control-custom w-100"/>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label-custom">Absences — Jumlah Absensi (0–93)</label>
+          <input type="number" name="absences" min="0" max="93" step="1"
+                 value="{{ form_data.get('absences', 0) }}"
+                 class="form-control-custom w-100"/>
+        </div>
+
+        <hr style="border-color:var(--border);"/>
+
+        <!-- Dalc / Walc untuk labeling -->
+        <div style="background:var(--bg-card2); border-radius:8px; padding:12px; margin-bottom:12px;">
+          <div style="font-size:11px; color:var(--accent-amber); margin-bottom:8px; font-weight:600;">
+            ⚗️ Label Score (untuk referensi)
+          </div>
+          <div class="row g-2">
+            <div class="col-6">
+              <label class="form-label-custom">Dalc (1–5)</label>
+              <input type="number" name="dalc" min="1" max="5" step="1"
+                     value="{{ form_data.get('dalc', 1) }}"
+                     class="form-control-custom w-100"/>
+              <small style="font-size:10px; color:var(--text-muted);">Alkohol hari kerja</small>
+            </div>
+            <div class="col-6">
+              <label class="form-label-custom">Walc (1–5)</label>
+              <input type="number" name="walc" min="1" max="5" step="1"
+                     value="{{ form_data.get('walc', 1) }}"
+                     class="form-control-custom w-100"/>
+              <small style="font-size:10px; color:var(--text-muted);">Alkohol akhir pekan</small>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary-custom w-100">
+          <i class="bi bi-search me-1"></i>Proses CBR
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="col-lg-8">
+    {% if result %}
+
+    {% if result.get('retained') %}
+    <div class="alert-success-custom mb-4">
+      <i class="bi bi-check-circle-fill me-2"></i>{{ result.message }}
+    </div>
+    {% endif %}
+
+    {% if not result.get('retained') %}
+
+    <!-- Encoding & Normalization -->
+    <div class="card-custom mb-4">
+      <div class="card-header-custom">
+        <div class="card-header-icon" style="background:#a78bfa22;">🔄</div>
+        <div>
+          <p class="card-header-title">Tahap 1 — Encoding &amp; Normalisasi</p>
+          <p class="card-header-sub">Transformasi input kasus baru</p>
+        </div>
+      </div>
+      <div class="table-scroll">
+        <table class="table-custom">
+          <thead>
+            <tr>
+              <th>Fitur</th>
+              <th>Input Asli</th>
+              <th>Encoded</th>
+              <th>Normalized</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% set feature_cols = ['sex','address','Pstatus','studytime','failures','romantic','famrel','freetime','goout','absences'] %}
+            {% for col in feature_cols %}
+            <tr>
+              <td class="mono" style="color:var(--accent-blue);">{{ col }}</td>
+              <td class="mono">{{ result.form_data.get(col, '—') }}</td>
+              <td class="mono" style="color:var(--accent-violet);">{{ result.encoded.get(col, '—') }}</td>
+              <td class="mono" style="color:var(--accent-green);">{{ result.normalized.get(col, '—') }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Label dari Dalc/Walc -->
+    <div class="card-custom mb-4">
+      <div class="card-header-custom">
+        <div class="card-header-icon" style="background:#fbbf2422;">🏷️</div>
+        <div>
+          <p class="card-header-title">Tahap 2 — Scoring &amp; Labeling</p>
+          <p class="card-header-sub">score = 0.6×Dalc + 0.4×Walc</p>
+        </div>
+      </div>
+      <div class="row g-3 align-items-center">
+        <div class="col-md-5">
+          <div style="background:var(--bg-card2); border-radius:8px; padding:14px;">
+            <div class="mono" style="font-size:13px; color:var(--text-dim);">
+              score = 0.6 × {{ result.dalc }} + 0.4 × {{ result.walc }}<br/>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= <span style="color:var(--accent-amber); font-weight:700;">{{ result.score_dalc }}</span>
+            </div>
+            <div style="margin-top:10px; font-size:11px; color:var(--text-muted);">
+              Interval: Normal ≤ {{ result.threshold1 }} | Waspada ≤ {{ result.threshold2 }} | Bahaya &gt; {{ result.threshold2 }}
+            </div>
+          </div>
+        </div>
+        <div class="col-md-7 text-center">
+          <div style="font-size:12px; color:var(--text-muted); margin-bottom:6px;">Label dari Dalc/Walc:</div>
+          <span class="badge-cat badge-{{ result.kategori_input|lower }}" style="font-size:16px; padding:8px 20px;">
+            {{ result.kategori_input }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CBR Pipeline -->
+    <div class="card-custom mb-4">
+      <div class="card-header-custom">
+        <div class="card-header-icon" style="background:#38bdf822;">🔁</div>
+        <div>
+          <p class="card-header-title">Tahap 3 — Proses CBR</p>
+          <p class="card-header-sub">Retrieve → Reuse → Revise → Retain</p>
+        </div>
+      </div>
+
+      <!-- Step timeline -->
+      <div style="display:flex; gap:0; margin-bottom:20px; overflow-x:auto;">
+        {% set cbr_steps = [
+          ('RETRIEVE','bi-search','#38bdf8','Cluster '~result.cluster~' — '~result.cbr.retrieve.total_retrieved~' kasus ditemukan'),
+          ('REUSE','bi-shuffle','#a78bfa','Cosine Similarity terhadap '~result.cbr.retrieve.total_retrieved~' kasus'),
+          ('REVISE','bi-check2-circle','#34d399','Top similarity: '~result.cbr.revise.similarity_score),
+          ('RETAIN','bi-save','#fbbf24','Simpan kasus baru ke basis kasus'),
+        ] %}
+        {% for step, icon, color, desc in cbr_steps %}
+        <div style="flex:1; min-width:120px; text-align:center; position:relative;">
+          <div style="width:36px; height:36px; border-radius:50%;
+                      background:{{ color }}22; border:2px solid {{ color }};
+                      display:flex; align-items:center; justify-content:center;
+                      margin:0 auto 6px; font-size:14px; color:{{ color }};">
+            <i class="bi {{ icon }}"></i>
+          </div>
+          <div style="font-size:10px; font-weight:700; color:{{ color }}; letter-spacing:0.08em;">{{ step }}</div>
+          <div style="font-size:10px; color:var(--text-muted); margin-top:3px;">{{ desc }}</div>
+          {% if not loop.last %}
+          <div style="position:absolute; top:18px; right:0; left:50%; height:2px;
+                      background:{{ color }}44; z-index:0;"></div>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- RETRIEVE info -->
+      <div style="background:var(--bg-card2); border-radius:8px; padding:12px 14px; margin-bottom:12px;">
+        <div style="font-size:11px; color:var(--accent-blue); font-weight:700; margin-bottom:4px;">
+          📥 RETRIEVE
+        </div>
+        <div style="font-size:12px; color:var(--text-dim);">
+          Kasus baru masuk ke
+          <span class="cluster-chip" style="background:#38bdf822; color:var(--accent-blue); border:1px solid #38bdf844;">
+            Cluster {{ result.cluster }}
+          </span>
+          — Ditemukan <strong style="color:var(--text-primary);">{{ result.cbr.retrieve.total_retrieved }}</strong> kasus dalam cluster yang sama.
+        </div>
+      </div>
+
+      <!-- REVISE -->
+      <div style="background:var(--bg-card2); border-radius:8px; padding:12px 14px; margin-bottom:12px;">
+        <div style="font-size:11px; color:var(--accent-green); font-weight:700; margin-bottom:4px;">
+          ✏️ REVISE
+        </div>
+        {% if result.cbr.revise.warning %}
+        <div class="alert-warning-custom" style="font-size:12px; padding:8px 12px;">
+          <i class="bi bi-exclamation-triangle-fill me-1"></i>
+          Kemiripan rendah ({{ result.cbr.revise.similarity_score }}) — hasil mungkin kurang akurat.
+        </div>
+        {% else %}
+        <div style="font-size:12px; color:var(--text-dim);">
+          Similarity tertinggi: <strong class="mono" style="color:var(--accent-green);">{{ result.cbr.revise.similarity_score }}</strong>
+          — Kategori prediksi CBR:
+          <span class="badge-cat badge-{{ result.cbr.revise.kategori|lower }} ms-2">{{ result.cbr.revise.kategori }}</span>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Top 5 Similarity Table -->
+    <div class="card-custom mb-4">
+      <div class="card-header-custom">
+        <div class="card-header-icon" style="background:#34d39922;">📋</div>
+        <div>
+          <p class="card-header-title">Tabel Top-5 Similarity (REUSE)</p>
+          <p class="card-header-sub">Kasus paling mirip dalam cluster yang sama</p>
+        </div>
+      </div>
+      <div class="table-scroll">
+        <table class="table-custom">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Similarity</th>
+              <th>Bar</th>
+              <th>Kategori</th>
+              <th>sex</th>
+              <th>addr</th>
+              <th>Pstat</th>
+              <th>study</th>
+              <th>fail</th>
+              <th>rom</th>
+              <th>famrel</th>
+              <th>free</th>
+              <th>goout</th>
+              <th>abs</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for case in result.cbr.reuse.top_cases %}
+            <tr {% if loop.first %}class="top-1-row"{% endif %}>
+              <td class="mono" style="color:{% if loop.first %}var(--accent-amber){% else %}var(--text-muted){% endif %};">
+                {% if loop.first %}★{% endif %} {{ loop.index }}
+              </td>
+              <td class="mono" style="color:var(--accent-green); font-weight:600;">
+                {{ "%.6f"|format(case.similarity) }}
+              </td>
+              <td style="min-width:80px;">
+                <div class="sim-bar-track">
+                  <div class="sim-bar-fill" style="width:{{ (case.similarity * 100)|round(1) }}%;"></div>
+                </div>
+              </td>
+              <td><span class="badge-cat badge-{{ case.label_sentimen|lower }}">{{ case.label_sentimen }}</span></td>
+              <td class="mono">{{ case.sex }}</td>
+              <td class="mono">{{ case.address }}</td>
+              <td class="mono">{{ case.Pstatus }}</td>
+              <td class="mono">{{ case.studytime }}</td>
+              <td class="mono">{{ case.failures }}</td>
+              <td class="mono">{{ case.romantic }}</td>
+              <td class="mono">{{ case.famrel }}</td>
+              <td class="mono">{{ case.freetime }}</td>
+              <td class="mono">{{ case.goout }}</td>
+              <td class="mono">{{ case.absences }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Final Result -->
+    <div class="card-custom mb-4" style="border-color:{% if result.cbr.revise.kategori=='Normal' %}#34d39944{% elif result.cbr.revise.kategori=='Waspada' %}#fbbf2444{% else %}#f8717144{% endif %};">
+      <div class="row align-items-center">
+        <div class="col-md-7">
+          <div style="font-size:12px; color:var(--text-muted); margin-bottom:6px;">
+            <i class="bi bi-trophy-fill me-1" style="color:var(--accent-amber);"></i>
+            Hasil Akhir Prediksi CBR
+          </div>
+          <div style="font-size:13px; color:var(--text-dim); margin-bottom:6px;">
+            Kasus paling mirip (Rank 1) berasal dari kategori:
+          </div>
+          <span class="badge-cat badge-{{ result.cbr.revise.kategori|lower }}"
+                style="font-size:20px; padding:10px 24px;">
+            {{ result.cbr.revise.kategori }}
+          </span>
+          <div style="margin-top:10px; font-size:12px; color:var(--text-muted);">
+            Cosine Similarity: <span class="mono" style="color:var(--accent-green);">
+              {{ result.cbr.revise.similarity_score }}
+            </span>
+            | Cluster: <span class="mono" style="color:var(--accent-blue);">{{ result.cluster }}</span>
+          </div>
+        </div>
+        <div class="col-md-5 text-end">
+          <div style="font-size:48px; opacity:0.3;">
+            {% if result.cbr.revise.kategori == 'Normal' %}✅
+            {% elif result.cbr.revise.kategori == 'Waspada' %}⚠️
+            {% else %}🚨{% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RETAIN Button -->
+    <div class="card-custom">
+      <div class="card-header-custom">
+        <div class="card-header-icon" style="background:#fbbf2422;">💾</div>
+        <div>
+          <p class="card-header-title">RETAIN — Simpan Kasus</p>
+          <p class="card-header-sub">Tambahkan kasus baru ke basis kasus CSV</p>
+        </div>
+      </div>
+      <p style="font-size:12px; color:var(--text-muted); margin-bottom:14px;">
+        Kasus baru akan disimpan dengan kategori prediksi CBR
+        (<span class="badge-cat badge-{{ result.cbr.revise.kategori|lower }}">{{ result.cbr.revise.kategori }}</span>)
+        ke dalam file dataset.
+      </p>
+      <form action="{{ url_for('cbr') }}" method="POST">
+        <input type="hidden" name="action" value="retain"/>
+        <!-- Carry over all form data -->
+        {% for k, v in result.form_data.items() %}
+        <input type="hidden" name="{{ k }}" value="{{ v }}"/>
+        {% endfor %}
+        <input type="hidden" name="dalc" value="{{ result.dalc }}"/>
+        <input type="hidden" name="walc" value="{{ result.walc }}"/>
+        <button type="submit" class="btn-primary-custom" style="background:var(--gradient-2);">
+          <i class="bi bi-floppy-fill me-1"></i>Simpan ke Basis Kasus
+        </button>
+      </form>
+    </div>
+
+    {% endif %} {# end if not retained #}
+    {% else %}
+    <!-- Empty state -->
+    <div class="card-custom text-center py-5">
+      <div style="font-size:56px; opacity:0.15; margin-bottom:16px;">🔍</div>
+      <div style="font-size:15px; font-weight:600; color:var(--text-primary); margin-bottom:6px;">
+        Belum Ada Prediksi
+      </div>
+      <div style="font-size:13px; color:var(--text-muted);">
+        Isi form input di sebelah kiri dan klik <strong>Proses CBR</strong>.
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

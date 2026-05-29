@@ -1,0 +1,1018 @@
+[
+    {
+        "label": "numpy",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "numpy",
+        "description": "numpy",
+        "detail": "numpy",
+        "documentation": {}
+    },
+    {
+        "label": "pandas",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "pandas",
+        "description": "pandas",
+        "detail": "pandas",
+        "documentation": {}
+    },
+    {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "FEATURE_COLS",
+        "importPath": "utils.preprocessing",
+        "description": "utils.preprocessing",
+        "isExtraImport": true,
+        "detail": "utils.preprocessing",
+        "documentation": {}
+    },
+    {
+        "label": "DATASET_PATH",
+        "importPath": "utils.preprocessing",
+        "description": "utils.preprocessing",
+        "isExtraImport": true,
+        "detail": "utils.preprocessing",
+        "documentation": {}
+    },
+    {
+        "label": "load_dataset",
+        "importPath": "utils.preprocessing",
+        "description": "utils.preprocessing",
+        "isExtraImport": true,
+        "detail": "utils.preprocessing",
+        "documentation": {}
+    },
+    {
+        "label": "fit_and_save_scaler",
+        "importPath": "utils.preprocessing",
+        "description": "utils.preprocessing",
+        "isExtraImport": true,
+        "detail": "utils.preprocessing",
+        "documentation": {}
+    },
+    {
+        "label": "compute_elbow",
+        "importPath": "utils.preprocessing",
+        "description": "utils.preprocessing",
+        "isExtraImport": true,
+        "detail": "utils.preprocessing",
+        "documentation": {}
+    },
+    {
+        "label": "find_optimal_k",
+        "importPath": "utils.preprocessing",
+        "description": "utils.preprocessing",
+        "isExtraImport": true,
+        "detail": "utils.preprocessing",
+        "documentation": {}
+    },
+    {
+        "label": "train_kmeans",
+        "importPath": "utils.preprocessing",
+        "description": "utils.preprocessing",
+        "isExtraImport": true,
+        "detail": "utils.preprocessing",
+        "documentation": {}
+    },
+    {
+        "label": "add_cluster_to_dataset",
+        "importPath": "utils.preprocessing",
+        "description": "utils.preprocessing",
+        "isExtraImport": true,
+        "detail": "utils.preprocessing",
+        "documentation": {}
+    },
+    {
+        "label": "load_models",
+        "importPath": "utils.preprocessing",
+        "description": "utils.preprocessing",
+        "isExtraImport": true,
+        "detail": "utils.preprocessing",
+        "documentation": {}
+    },
+    {
+        "label": "encode_new_case",
+        "importPath": "utils.preprocessing",
+        "description": "utils.preprocessing",
+        "isExtraImport": true,
+        "detail": "utils.preprocessing",
+        "documentation": {}
+    },
+    {
+        "label": "normalize_new_case",
+        "importPath": "utils.preprocessing",
+        "description": "utils.preprocessing",
+        "isExtraImport": true,
+        "detail": "utils.preprocessing",
+        "documentation": {}
+    },
+    {
+        "label": "get_normalization_info",
+        "importPath": "utils.preprocessing",
+        "description": "utils.preprocessing",
+        "isExtraImport": true,
+        "detail": "utils.preprocessing",
+        "documentation": {}
+    },
+    {
+        "label": "FEATURE_COLS",
+        "importPath": "utils.preprocessing",
+        "description": "utils.preprocessing",
+        "isExtraImport": true,
+        "detail": "utils.preprocessing",
+        "documentation": {}
+    },
+    {
+        "label": "compute_label",
+        "importPath": "utils.preprocessing",
+        "description": "utils.preprocessing",
+        "isExtraImport": true,
+        "detail": "utils.preprocessing",
+        "documentation": {}
+    },
+    {
+        "label": "DATASET_PATH",
+        "importPath": "utils.preprocessing",
+        "description": "utils.preprocessing",
+        "isExtraImport": true,
+        "detail": "utils.preprocessing",
+        "documentation": {}
+    },
+    {
+        "label": "io",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "io",
+        "description": "io",
+        "detail": "io",
+        "documentation": {}
+    },
+    {
+        "label": "base64",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "base64",
+        "description": "base64",
+        "detail": "base64",
+        "documentation": {}
+    },
+    {
+        "label": "matplotlib",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "matplotlib",
+        "description": "matplotlib",
+        "detail": "matplotlib",
+        "documentation": {}
+    },
+    {
+        "label": "matplotlib.pyplot",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "matplotlib.pyplot",
+        "description": "matplotlib.pyplot",
+        "detail": "matplotlib.pyplot",
+        "documentation": {}
+    },
+    {
+        "label": "matplotlib.patches",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "matplotlib.patches",
+        "description": "matplotlib.patches",
+        "detail": "matplotlib.patches",
+        "documentation": {}
+    },
+    {
+        "label": "PCA",
+        "importPath": "sklearn.decomposition",
+        "description": "sklearn.decomposition",
+        "isExtraImport": true,
+        "detail": "sklearn.decomposition",
+        "documentation": {}
+    },
+    {
+        "label": "json",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "json",
+        "description": "json",
+        "detail": "json",
+        "documentation": {}
+    },
+    {
+        "label": "hashlib",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "hashlib",
+        "description": "hashlib",
+        "detail": "hashlib",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "MinMaxScaler",
+        "importPath": "sklearn.preprocessing",
+        "description": "sklearn.preprocessing",
+        "isExtraImport": true,
+        "detail": "sklearn.preprocessing",
+        "documentation": {}
+    },
+    {
+        "label": "KMeans",
+        "importPath": "sklearn.cluster",
+        "description": "sklearn.cluster",
+        "isExtraImport": true,
+        "detail": "sklearn.cluster",
+        "documentation": {}
+    },
+    {
+        "label": "joblib",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "joblib",
+        "description": "joblib",
+        "detail": "joblib",
+        "documentation": {}
+    },
+    {
+        "label": "wraps",
+        "importPath": "functools",
+        "description": "functools",
+        "isExtraImport": true,
+        "detail": "functools",
+        "documentation": {}
+    },
+    {
+        "label": "Flask",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "render_template",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "request",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "jsonify",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "redirect",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "url_for",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "session",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "flash",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "run_cbr",
+        "importPath": "utils.cbr_engine",
+        "description": "utils.cbr_engine",
+        "isExtraImport": true,
+        "detail": "utils.cbr_engine",
+        "documentation": {}
+    },
+    {
+        "label": "retain",
+        "importPath": "utils.cbr_engine",
+        "description": "utils.cbr_engine",
+        "isExtraImport": true,
+        "detail": "utils.cbr_engine",
+        "documentation": {}
+    },
+    {
+        "label": "plot_elbow",
+        "importPath": "utils.charts",
+        "description": "utils.charts",
+        "isExtraImport": true,
+        "detail": "utils.charts",
+        "documentation": {}
+    },
+    {
+        "label": "plot_clusters",
+        "importPath": "utils.charts",
+        "description": "utils.charts",
+        "isExtraImport": true,
+        "detail": "utils.charts",
+        "documentation": {}
+    },
+    {
+        "label": "login_expert",
+        "importPath": "utils.expert",
+        "description": "utils.expert",
+        "isExtraImport": true,
+        "detail": "utils.expert",
+        "documentation": {}
+    },
+    {
+        "label": "get_all_experts",
+        "importPath": "utils.expert",
+        "description": "utils.expert",
+        "isExtraImport": true,
+        "detail": "utils.expert",
+        "documentation": {}
+    },
+    {
+        "label": "add_expert",
+        "importPath": "utils.expert",
+        "description": "utils.expert",
+        "isExtraImport": true,
+        "detail": "utils.expert",
+        "documentation": {}
+    },
+    {
+        "label": "delete_expert",
+        "importPath": "utils.expert",
+        "description": "utils.expert",
+        "isExtraImport": true,
+        "detail": "utils.expert",
+        "documentation": {}
+    },
+    {
+        "label": "update_expert_password",
+        "importPath": "utils.expert",
+        "description": "utils.expert",
+        "isExtraImport": true,
+        "detail": "utils.expert",
+        "documentation": {}
+    },
+    {
+        "label": "save_cbr_history",
+        "importPath": "utils.expert",
+        "description": "utils.expert",
+        "isExtraImport": true,
+        "detail": "utils.expert",
+        "documentation": {}
+    },
+    {
+        "label": "get_cbr_history",
+        "importPath": "utils.expert",
+        "description": "utils.expert",
+        "isExtraImport": true,
+        "detail": "utils.expert",
+        "documentation": {}
+    },
+    {
+        "label": "clear_cbr_history",
+        "importPath": "utils.expert",
+        "description": "utils.expert",
+        "isExtraImport": true,
+        "detail": "utils.expert",
+        "documentation": {}
+    },
+    {
+        "label": "revise_label",
+        "importPath": "utils.expert",
+        "description": "utils.expert",
+        "isExtraImport": true,
+        "detail": "utils.expert",
+        "documentation": {}
+    },
+    {
+        "label": "delete_case",
+        "importPath": "utils.expert",
+        "description": "utils.expert",
+        "isExtraImport": true,
+        "detail": "utils.expert",
+        "documentation": {}
+    },
+    {
+        "label": "add_manual_case",
+        "importPath": "utils.expert",
+        "description": "utils.expert",
+        "isExtraImport": true,
+        "detail": "utils.expert",
+        "documentation": {}
+    },
+    {
+        "label": "get_label_stats",
+        "importPath": "utils.expert",
+        "description": "utils.expert",
+        "isExtraImport": true,
+        "detail": "utils.expert",
+        "documentation": {}
+    },
+    {
+        "label": "app",
+        "importPath": "app",
+        "description": "app",
+        "isExtraImport": true,
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "initialize_system",
+        "importPath": "app",
+        "description": "app",
+        "isExtraImport": true,
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "cosine_similarity",
+        "kind": 2,
+        "importPath": "utils.cbr_engine",
+        "description": "utils.cbr_engine",
+        "peekOfCode": "def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:\n    \"\"\"\n    Hitung cosine similarity antara dua vektor.\n    similarity = (A·B) / (||A|| × ||B||)\n    \"\"\"\n    dot = np.dot(a, b)\n    norm_a = np.linalg.norm(a)\n    norm_b = np.linalg.norm(b)\n    if norm_a == 0 or norm_b == 0:\n        return 0.0",
+        "detail": "utils.cbr_engine",
+        "documentation": {}
+    },
+    {
+        "label": "retrieve",
+        "kind": 2,
+        "importPath": "utils.cbr_engine",
+        "description": "utils.cbr_engine",
+        "peekOfCode": "def retrieve(df_with_cluster: pd.DataFrame, new_cluster: int) -> pd.DataFrame:\n    \"\"\"\n    RETRIEVE: Ambil semua kasus dari cluster yang sama.\n    \"\"\"\n    same_cluster = df_with_cluster[df_with_cluster['cluster'] == new_cluster].copy()\n    return same_cluster.reset_index(drop=True)\ndef reuse(retrieved_df: pd.DataFrame, new_case_normalized: np.ndarray, top_n: int = 5):\n    \"\"\"\n    REUSE: Hitung cosine similarity antara kasus baru dengan semua kasus dalam cluster.\n    Return list top_n kasus paling mirip beserta similarity score.",
+        "detail": "utils.cbr_engine",
+        "documentation": {}
+    },
+    {
+        "label": "reuse",
+        "kind": 2,
+        "importPath": "utils.cbr_engine",
+        "description": "utils.cbr_engine",
+        "peekOfCode": "def reuse(retrieved_df: pd.DataFrame, new_case_normalized: np.ndarray, top_n: int = 5):\n    \"\"\"\n    REUSE: Hitung cosine similarity antara kasus baru dengan semua kasus dalam cluster.\n    Return list top_n kasus paling mirip beserta similarity score.\n    \"\"\"\n    results = []\n    feature_vals = retrieved_df[FEATURE_COLS].values\n    for idx, row_vals in enumerate(feature_vals):\n        sim = cosine_similarity(new_case_normalized, row_vals)\n        results.append({",
+        "detail": "utils.cbr_engine",
+        "documentation": {}
+    },
+    {
+        "label": "revise",
+        "kind": 2,
+        "importPath": "utils.cbr_engine",
+        "description": "utils.cbr_engine",
+        "peekOfCode": "def revise(top_cases: list) -> dict:\n    \"\"\"\n    REVISE: Evaluasi kasus dengan similarity tertinggi.\n    Jika similarity < threshold, beri warning.\n    Return: kategori prediksi dan warning flag.\n    \"\"\"\n    if not top_cases:\n        return {'kategori': 'Unknown', 'warning': True, 'top_case': None}\n    best = top_cases[0]\n    warning = best['similarity'] < LOW_SIMILARITY_THRESHOLD",
+        "detail": "utils.cbr_engine",
+        "documentation": {}
+    },
+    {
+        "label": "retain",
+        "kind": 2,
+        "importPath": "utils.cbr_engine",
+        "description": "utils.cbr_engine",
+        "peekOfCode": "def retain(new_case_encoded: dict, kategori: str, cluster: int):\n    \"\"\"\n    RETAIN: Simpan kasus baru ke dataset CSV.\n    new_case_encoded sudah dinormalisasi.\n    \"\"\"\n    new_row = {col: new_case_encoded.get(col, 0) for col in FEATURE_COLS}\n    new_row['label_sentimen'] = kategori\n    new_row['cluster'] = cluster\n    df = pd.read_csv(DATASET_PATH)\n    # Tambahkan cluster jika belum ada",
+        "detail": "utils.cbr_engine",
+        "documentation": {}
+    },
+    {
+        "label": "run_cbr",
+        "kind": 2,
+        "importPath": "utils.cbr_engine",
+        "description": "utils.cbr_engine",
+        "peekOfCode": "def run_cbr(df_with_cluster: pd.DataFrame,\n            new_case_normalized: np.ndarray,\n            new_cluster: int,\n            new_case_normalized_dict: dict,\n            kategori_prediksi: str) -> dict:\n    \"\"\"\n    Jalankan full pipeline CBR dan return semua hasil.\n    \"\"\"\n    # RETRIEVE\n    retrieved = retrieve(df_with_cluster, new_cluster)",
+        "detail": "utils.cbr_engine",
+        "documentation": {}
+    },
+    {
+        "label": "LOW_SIMILARITY_THRESHOLD",
+        "kind": 5,
+        "importPath": "utils.cbr_engine",
+        "description": "utils.cbr_engine",
+        "peekOfCode": "LOW_SIMILARITY_THRESHOLD = 0.5\ndef cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:\n    \"\"\"\n    Hitung cosine similarity antara dua vektor.\n    similarity = (A·B) / (||A|| × ||B||)\n    \"\"\"\n    dot = np.dot(a, b)\n    norm_a = np.linalg.norm(a)\n    norm_b = np.linalg.norm(b)\n    if norm_a == 0 or norm_b == 0:",
+        "detail": "utils.cbr_engine",
+        "documentation": {}
+    },
+    {
+        "label": "fig_to_base64",
+        "kind": 2,
+        "importPath": "utils.charts",
+        "description": "utils.charts",
+        "peekOfCode": "def fig_to_base64(fig) -> str:\n    \"\"\"Convert matplotlib figure ke base64 string.\"\"\"\n    buf = io.BytesIO()\n    fig.savefig(buf, format='png', dpi=120, bbox_inches='tight',\n                facecolor=fig.get_facecolor())\n    buf.seek(0)\n    encoded = base64.b64encode(buf.read()).decode('utf-8')\n    plt.close(fig)\n    return encoded\ndef plot_elbow(sse_list: list, optimal_k: int) -> str:",
+        "detail": "utils.charts",
+        "documentation": {}
+    },
+    {
+        "label": "plot_elbow",
+        "kind": 2,
+        "importPath": "utils.charts",
+        "description": "utils.charts",
+        "peekOfCode": "def plot_elbow(sse_list: list, optimal_k: int) -> str:\n    \"\"\"Buat grafik elbow method.\"\"\"\n    ks = [k for k, _ in sse_list]\n    sses = [s for _, s in sse_list]\n    fig, ax = plt.subplots(figsize=(8, 4.5))\n    fig.patch.set_facecolor('#0f172a')\n    ax.set_facecolor('#1e293b')\n    ax.plot(ks, sses, 'o-', color='#38bdf8', linewidth=2.5,\n            markersize=8, markerfacecolor='#f0abfc', markeredgecolor='#38bdf8',\n            markeredgewidth=1.5, label='SSE')",
+        "detail": "utils.charts",
+        "documentation": {}
+    },
+    {
+        "label": "plot_clusters",
+        "kind": 2,
+        "importPath": "utils.charts",
+        "description": "utils.charts",
+        "peekOfCode": "def plot_clusters(df_with_cluster, feature_cols: list, k: int) -> str:\n    \"\"\"\n    Visualisasi cluster menggunakan PCA 2D.\n    \"\"\"\n    X = df_with_cluster[feature_cols].values\n    pca = PCA(n_components=2, random_state=42)\n    X_2d = pca.fit_transform(X)\n    clusters = df_with_cluster['cluster'].values\n    fig, ax = plt.subplots(figsize=(8, 5))\n    fig.patch.set_facecolor('#0f172a')",
+        "detail": "utils.charts",
+        "documentation": {}
+    },
+    {
+        "label": "login_expert",
+        "kind": 2,
+        "importPath": "utils.expert",
+        "description": "utils.expert",
+        "peekOfCode": "def login_expert(username: str, password: str):\n    \"\"\"\n    Verifikasi username dan password pakar.\n    Return: dict pakar jika cocok, None jika tidak.\n    \"\"\"\n    experts = _load_json(EXPERTS_PATH)\n    for e in experts:\n        if e['username'] == username and e['password'] == password:\n            return e\n    return None",
+        "detail": "utils.expert",
+        "documentation": {}
+    },
+    {
+        "label": "get_all_experts",
+        "kind": 2,
+        "importPath": "utils.expert",
+        "description": "utils.expert",
+        "peekOfCode": "def get_all_experts() -> list:\n    return _load_json(EXPERTS_PATH)\ndef add_expert(username: str, password: str, nama: str, jabatan: str) -> tuple[bool, str]:\n    experts = _load_json(EXPERTS_PATH)\n    if any(e['username'] == username for e in experts):\n        return False, f\"Username '{username}' sudah digunakan.\"\n    experts.append({\n        'username': username,\n        'password': password,\n        'nama': nama,",
+        "detail": "utils.expert",
+        "documentation": {}
+    },
+    {
+        "label": "add_expert",
+        "kind": 2,
+        "importPath": "utils.expert",
+        "description": "utils.expert",
+        "peekOfCode": "def add_expert(username: str, password: str, nama: str, jabatan: str) -> tuple[bool, str]:\n    experts = _load_json(EXPERTS_PATH)\n    if any(e['username'] == username for e in experts):\n        return False, f\"Username '{username}' sudah digunakan.\"\n    experts.append({\n        'username': username,\n        'password': password,\n        'nama': nama,\n        'jabatan': jabatan,\n        'created_at': _now()[:10],",
+        "detail": "utils.expert",
+        "documentation": {}
+    },
+    {
+        "label": "delete_expert",
+        "kind": 2,
+        "importPath": "utils.expert",
+        "description": "utils.expert",
+        "peekOfCode": "def delete_expert(username: str) -> tuple[bool, str]:\n    if username == 'admin':\n        return False, 'Akun admin tidak bisa dihapus.'\n    experts = _load_json(EXPERTS_PATH)\n    new = [e for e in experts if e['username'] != username]\n    if len(new) == len(experts):\n        return False, 'Username tidak ditemukan.'\n    _save_json(EXPERTS_PATH, new)\n    return True, 'Pakar berhasil dihapus.'\ndef update_expert_password(username: str, new_password: str) -> tuple[bool, str]:",
+        "detail": "utils.expert",
+        "documentation": {}
+    },
+    {
+        "label": "update_expert_password",
+        "kind": 2,
+        "importPath": "utils.expert",
+        "description": "utils.expert",
+        "peekOfCode": "def update_expert_password(username: str, new_password: str) -> tuple[bool, str]:\n    experts = _load_json(EXPERTS_PATH)\n    for e in experts:\n        if e['username'] == username:\n            e['password'] = new_password\n            _save_json(EXPERTS_PATH, experts)\n            return True, 'Password berhasil diubah.'\n    return False, 'Username tidak ditemukan.'\n# ── CBR History ───────────────────────────────────────────────────────────────\ndef save_cbr_history(entry: dict) -> None:",
+        "detail": "utils.expert",
+        "documentation": {}
+    },
+    {
+        "label": "save_cbr_history",
+        "kind": 2,
+        "importPath": "utils.expert",
+        "description": "utils.expert",
+        "peekOfCode": "def save_cbr_history(entry: dict) -> None:\n    \"\"\"Simpan satu record riwayat CBR.\"\"\"\n    history = _load_json(HISTORY_PATH)\n    entry['timestamp'] = _now()\n    entry['id'] = len(history) + 1\n    history.append(entry)\n    _save_json(HISTORY_PATH, history)\ndef get_cbr_history(limit: int = 50) -> list:\n    history = _load_json(HISTORY_PATH)\n    return list(reversed(history))[:limit]",
+        "detail": "utils.expert",
+        "documentation": {}
+    },
+    {
+        "label": "get_cbr_history",
+        "kind": 2,
+        "importPath": "utils.expert",
+        "description": "utils.expert",
+        "peekOfCode": "def get_cbr_history(limit: int = 50) -> list:\n    history = _load_json(HISTORY_PATH)\n    return list(reversed(history))[:limit]\ndef clear_cbr_history() -> None:\n    _save_json(HISTORY_PATH, [])\n# ── Basis Kasus Management ────────────────────────────────────────────────────\ndef revise_label(dataset_path: str, row_index: int, new_label: str,\n                 pakar_username: str) -> tuple[bool, str]:\n    \"\"\"\n    Pakar merevisi label_sentimen pada baris tertentu di dataset CSV.",
+        "detail": "utils.expert",
+        "documentation": {}
+    },
+    {
+        "label": "clear_cbr_history",
+        "kind": 2,
+        "importPath": "utils.expert",
+        "description": "utils.expert",
+        "peekOfCode": "def clear_cbr_history() -> None:\n    _save_json(HISTORY_PATH, [])\n# ── Basis Kasus Management ────────────────────────────────────────────────────\ndef revise_label(dataset_path: str, row_index: int, new_label: str,\n                 pakar_username: str) -> tuple[bool, str]:\n    \"\"\"\n    Pakar merevisi label_sentimen pada baris tertentu di dataset CSV.\n    \"\"\"\n    import pandas as pd\n    if new_label not in ('Normal', 'Waspada', 'Bahaya'):",
+        "detail": "utils.expert",
+        "documentation": {}
+    },
+    {
+        "label": "revise_label",
+        "kind": 2,
+        "importPath": "utils.expert",
+        "description": "utils.expert",
+        "peekOfCode": "def revise_label(dataset_path: str, row_index: int, new_label: str,\n                 pakar_username: str) -> tuple[bool, str]:\n    \"\"\"\n    Pakar merevisi label_sentimen pada baris tertentu di dataset CSV.\n    \"\"\"\n    import pandas as pd\n    if new_label not in ('Normal', 'Waspada', 'Bahaya'):\n        return False, 'Label tidak valid. Pilih: Normal, Waspada, atau Bahaya.'\n    try:\n        df = pd.read_csv(dataset_path)",
+        "detail": "utils.expert",
+        "documentation": {}
+    },
+    {
+        "label": "delete_case",
+        "kind": 2,
+        "importPath": "utils.expert",
+        "description": "utils.expert",
+        "peekOfCode": "def delete_case(dataset_path: str, row_index: int,\n                pakar_username: str) -> tuple[bool, str]:\n    \"\"\"Hapus satu baris kasus dari dataset.\"\"\"\n    import pandas as pd\n    try:\n        df = pd.read_csv(dataset_path)\n        if row_index < 0 or row_index >= len(df):\n            return False, 'Index tidak valid.'\n        removed = df.iloc[row_index].to_dict()\n        df = df.drop(index=row_index).reset_index(drop=True)",
+        "detail": "utils.expert",
+        "documentation": {}
+    },
+    {
+        "label": "add_manual_case",
+        "kind": 2,
+        "importPath": "utils.expert",
+        "description": "utils.expert",
+        "peekOfCode": "def add_manual_case(dataset_path: str, row_data: dict,\n                    pakar_username: str) -> tuple[bool, str]:\n    \"\"\"Pakar menambahkan kasus manual ke dataset.\"\"\"\n    import pandas as pd\n    try:\n        df = pd.read_csv(dataset_path)\n        new_row = pd.DataFrame([row_data])\n        df = pd.concat([df, new_row], ignore_index=True)\n        df.to_csv(dataset_path, index=False)\n        save_cbr_history({",
+        "detail": "utils.expert",
+        "documentation": {}
+    },
+    {
+        "label": "get_label_stats",
+        "kind": 2,
+        "importPath": "utils.expert",
+        "description": "utils.expert",
+        "peekOfCode": "def get_label_stats(dataset_path: str) -> dict:\n    \"\"\"Statistik distribusi label di dataset.\"\"\"\n    import pandas as pd\n    df = pd.read_csv(dataset_path)\n    counts = df['label_sentimen'].value_counts().to_dict()\n    total = len(df)\n    return {\n        'total': total,\n        'counts': counts,\n        'pct': {k: round(v / total * 100, 1) for k, v in counts.items()},",
+        "detail": "utils.expert",
+        "documentation": {}
+    },
+    {
+        "label": "EXPERTS_PATH",
+        "kind": 5,
+        "importPath": "utils.expert",
+        "description": "utils.expert",
+        "peekOfCode": "EXPERTS_PATH = os.path.join(BASE_DIR, 'dataset', 'experts.json')\nHISTORY_PATH = os.path.join(BASE_DIR, 'dataset', 'cbr_history.json')\n# ── Helpers ───────────────────────────────────────────────────────────────────\ndef _load_json(path: str) -> list:\n    if not os.path.exists(path):\n        return []\n    with open(path, 'r', encoding='utf-8') as f:\n        return json.load(f)\ndef _save_json(path: str, data) -> None:\n    with open(path, 'w', encoding='utf-8') as f:",
+        "detail": "utils.expert",
+        "documentation": {}
+    },
+    {
+        "label": "HISTORY_PATH",
+        "kind": 5,
+        "importPath": "utils.expert",
+        "description": "utils.expert",
+        "peekOfCode": "HISTORY_PATH = os.path.join(BASE_DIR, 'dataset', 'cbr_history.json')\n# ── Helpers ───────────────────────────────────────────────────────────────────\ndef _load_json(path: str) -> list:\n    if not os.path.exists(path):\n        return []\n    with open(path, 'r', encoding='utf-8') as f:\n        return json.load(f)\ndef _save_json(path: str, data) -> None:\n    with open(path, 'w', encoding='utf-8') as f:\n        json.dump(data, f, ensure_ascii=False, indent=2)",
+        "detail": "utils.expert",
+        "documentation": {}
+    },
+    {
+        "label": "load_dataset",
+        "kind": 2,
+        "importPath": "utils.preprocessing",
+        "description": "utils.preprocessing",
+        "peekOfCode": "def load_dataset() -> pd.DataFrame:\n    return pd.read_csv(DATASET_PATH)\ndef compute_label(dalc: float, walc: float):\n    \"\"\"\n    score = 0.6*Dalc + 0.4*Walc  (range 1–5)\n    Equal interval → 3 kategori\n    \"\"\"\n    score  = 0.6 * dalc + 0.4 * walc\n    lo, hi = 1.0, 5.0\n    step   = (hi - lo) / 3",
+        "detail": "utils.preprocessing",
+        "documentation": {}
+    },
+    {
+        "label": "compute_label",
+        "kind": 2,
+        "importPath": "utils.preprocessing",
+        "description": "utils.preprocessing",
+        "peekOfCode": "def compute_label(dalc: float, walc: float):\n    \"\"\"\n    score = 0.6*Dalc + 0.4*Walc  (range 1–5)\n    Equal interval → 3 kategori\n    \"\"\"\n    score  = 0.6 * dalc + 0.4 * walc\n    lo, hi = 1.0, 5.0\n    step   = (hi - lo) / 3\n    t1, t2 = lo + step, lo + 2 * step   # ~2.333, ~3.667\n    if score <= t1:",
+        "detail": "utils.preprocessing",
+        "documentation": {}
+    },
+    {
+        "label": "minmax_normalize_value",
+        "kind": 2,
+        "importPath": "utils.preprocessing",
+        "description": "utils.preprocessing",
+        "peekOfCode": "def minmax_normalize_value(val: float, col: str) -> float:\n    \"\"\"Normalisasi satu nilai raw menggunakan rentang yang sudah diketahui.\"\"\"\n    lo, hi = RAW_RANGES[col]\n    if hi == lo:\n        return 0.0\n    return round(float(val - lo) / float(hi - lo), 6)\ndef encode_new_case(raw_input: dict) -> dict:\n    \"\"\"\n    Encode input kategorikal (string) → 0/1.\n    Nilai numerik dibiarkan apa adanya (raw range).",
+        "detail": "utils.preprocessing",
+        "documentation": {}
+    },
+    {
+        "label": "encode_new_case",
+        "kind": 2,
+        "importPath": "utils.preprocessing",
+        "description": "utils.preprocessing",
+        "peekOfCode": "def encode_new_case(raw_input: dict) -> dict:\n    \"\"\"\n    Encode input kategorikal (string) → 0/1.\n    Nilai numerik dibiarkan apa adanya (raw range).\n    \"\"\"\n    encoded = {}\n    for col in BINARY_COLS:\n        val = raw_input[col]\n        encoded[col] = ENCODING_MAP[col][val] if isinstance(val, str) else int(val)\n    for col in NORMALIZE_COLS:",
+        "detail": "utils.preprocessing",
+        "documentation": {}
+    },
+    {
+        "label": "normalize_new_case",
+        "kind": 2,
+        "importPath": "utils.preprocessing",
+        "description": "utils.preprocessing",
+        "peekOfCode": "def normalize_new_case(encoded: dict) -> np.ndarray:\n    \"\"\"\n    Normalisasi nilai numerik menggunakan RAW_RANGES.\n    Binary cols (0/1) tidak perlu dinormalisasi lagi.\n    \"\"\"\n    row = []\n    for col in FEATURE_COLS:\n        if col in BINARY_COLS:\n            row.append(float(encoded[col]))\n        else:",
+        "detail": "utils.preprocessing",
+        "documentation": {}
+    },
+    {
+        "label": "fit_and_save_scaler",
+        "kind": 2,
+        "importPath": "utils.preprocessing",
+        "description": "utils.preprocessing",
+        "peekOfCode": "def fit_and_save_scaler(df: pd.DataFrame) -> MinMaxScaler:\n    \"\"\"\n    Dataset sudah normalized → scaler identity (min=0, max=1).\n    Disimpan agar load_models() tetap bisa berjalan.\n    \"\"\"\n    X = df[FEATURE_COLS].values\n    scaler = MinMaxScaler()\n    scaler.fit(X)\n    os.makedirs(SAVED_MODEL_DIR, exist_ok=True)\n    joblib.dump(scaler, os.path.join(SAVED_MODEL_DIR, 'scaler.pkl'))",
+        "detail": "utils.preprocessing",
+        "documentation": {}
+    },
+    {
+        "label": "compute_elbow",
+        "kind": 2,
+        "importPath": "utils.preprocessing",
+        "description": "utils.preprocessing",
+        "peekOfCode": "def compute_elbow(df: pd.DataFrame):\n    X = df[FEATURE_COLS].values\n    sse_list = []\n    for k in range(1, 11):\n        km = KMeans(n_clusters=k, random_state=42, n_init=10)\n        km.fit(X)\n        sse_list.append((k, round(km.inertia_, 4)))\n    return sse_list\ndef find_optimal_k(sse_list: list, default_k: int = 3) -> int:\n    if len(sse_list) < 3:",
+        "detail": "utils.preprocessing",
+        "documentation": {}
+    },
+    {
+        "label": "find_optimal_k",
+        "kind": 2,
+        "importPath": "utils.preprocessing",
+        "description": "utils.preprocessing",
+        "peekOfCode": "def find_optimal_k(sse_list: list, default_k: int = 3) -> int:\n    if len(sse_list) < 3:\n        return default_k\n    sses = [s for _, s in sse_list]\n    d1 = [sses[i] - sses[i+1] for i in range(len(sses)-1)]\n    d2 = [d1[i] - d1[i+1] for i in range(len(d1)-1)]\n    if not d2:\n        return default_k\n    elbow_idx = int(np.argmax(d2))\n    k = elbow_idx + 2",
+        "detail": "utils.preprocessing",
+        "documentation": {}
+    },
+    {
+        "label": "train_kmeans",
+        "kind": 2,
+        "importPath": "utils.preprocessing",
+        "description": "utils.preprocessing",
+        "peekOfCode": "def train_kmeans(df: pd.DataFrame, k: int) -> KMeans:\n    X = df[FEATURE_COLS].values\n    km = KMeans(n_clusters=k, random_state=42, n_init=10)\n    km.fit(X)\n    os.makedirs(SAVED_MODEL_DIR, exist_ok=True)\n    joblib.dump(km, os.path.join(SAVED_MODEL_DIR, 'kmeans.pkl'))\n    return km\ndef add_cluster_to_dataset(df: pd.DataFrame, km: KMeans) -> pd.DataFrame:\n    X = df[FEATURE_COLS].values\n    df = df.copy()",
+        "detail": "utils.preprocessing",
+        "documentation": {}
+    },
+    {
+        "label": "add_cluster_to_dataset",
+        "kind": 2,
+        "importPath": "utils.preprocessing",
+        "description": "utils.preprocessing",
+        "peekOfCode": "def add_cluster_to_dataset(df: pd.DataFrame, km: KMeans) -> pd.DataFrame:\n    X = df[FEATURE_COLS].values\n    df = df.copy()\n    df['cluster'] = km.predict(X)\n    return df\ndef load_models():\n    sp = os.path.join(SAVED_MODEL_DIR, 'scaler.pkl')\n    kp = os.path.join(SAVED_MODEL_DIR, 'kmeans.pkl')\n    scaler = joblib.load(sp) if os.path.exists(sp) else None\n    kmeans = joblib.load(kp) if os.path.exists(kp) else None",
+        "detail": "utils.preprocessing",
+        "documentation": {}
+    },
+    {
+        "label": "load_models",
+        "kind": 2,
+        "importPath": "utils.preprocessing",
+        "description": "utils.preprocessing",
+        "peekOfCode": "def load_models():\n    sp = os.path.join(SAVED_MODEL_DIR, 'scaler.pkl')\n    kp = os.path.join(SAVED_MODEL_DIR, 'kmeans.pkl')\n    scaler = joblib.load(sp) if os.path.exists(sp) else None\n    kmeans = joblib.load(kp) if os.path.exists(kp) else None\n    return scaler, kmeans\ndef get_normalization_info(df: pd.DataFrame, scaler):\n    \"\"\"Tampilkan info normalisasi dari RAW_RANGES.\"\"\"\n    info = {}\n    for col in FEATURE_COLS:",
+        "detail": "utils.preprocessing",
+        "documentation": {}
+    },
+    {
+        "label": "get_normalization_info",
+        "kind": 2,
+        "importPath": "utils.preprocessing",
+        "description": "utils.preprocessing",
+        "peekOfCode": "def get_normalization_info(df: pd.DataFrame, scaler):\n    \"\"\"Tampilkan info normalisasi dari RAW_RANGES.\"\"\"\n    info = {}\n    for col in FEATURE_COLS:\n        if col in RAW_RANGES:\n            lo, hi = RAW_RANGES[col]\n            info[col] = {'min': lo, 'max': hi}\n        else:\n            info[col] = {'min': 0, 'max': 1}\n    # Sample: ambil 5 baris dan tampilkan nilai normalized",
+        "detail": "utils.preprocessing",
+        "documentation": {}
+    },
+    {
+        "label": "FEATURE_COLS",
+        "kind": 5,
+        "importPath": "utils.preprocessing",
+        "description": "utils.preprocessing",
+        "peekOfCode": "FEATURE_COLS = ['sex', 'address', 'Pstatus', 'studytime', 'failures',\n                'romantic', 'famrel', 'freetime', 'goout', 'absences']\nNORMALIZE_COLS = ['studytime', 'failures', 'famrel', 'freetime', 'goout', 'absences']\nBINARY_COLS    = ['sex', 'address', 'Pstatus', 'romantic']\nENCODING_MAP = {\n    'sex':      {'F': 0, 'M': 1},\n    'address':  {'R': 0, 'U': 1},\n    'Pstatus':  {'A': 0, 'T': 1},\n    'romantic': {'No': 0, 'Yes': 1},\n}",
+        "detail": "utils.preprocessing",
+        "documentation": {}
+    },
+    {
+        "label": "NORMALIZE_COLS",
+        "kind": 5,
+        "importPath": "utils.preprocessing",
+        "description": "utils.preprocessing",
+        "peekOfCode": "NORMALIZE_COLS = ['studytime', 'failures', 'famrel', 'freetime', 'goout', 'absences']\nBINARY_COLS    = ['sex', 'address', 'Pstatus', 'romantic']\nENCODING_MAP = {\n    'sex':      {'F': 0, 'M': 1},\n    'address':  {'R': 0, 'U': 1},\n    'Pstatus':  {'A': 0, 'T': 1},\n    'romantic': {'No': 0, 'Yes': 1},\n}\n# Raw value ranges (sebelum normalisasi) dari dataset student-alcohol-consumption\nRAW_RANGES = {",
+        "detail": "utils.preprocessing",
+        "documentation": {}
+    },
+    {
+        "label": "ENCODING_MAP",
+        "kind": 5,
+        "importPath": "utils.preprocessing",
+        "description": "utils.preprocessing",
+        "peekOfCode": "ENCODING_MAP = {\n    'sex':      {'F': 0, 'M': 1},\n    'address':  {'R': 0, 'U': 1},\n    'Pstatus':  {'A': 0, 'T': 1},\n    'romantic': {'No': 0, 'Yes': 1},\n}\n# Raw value ranges (sebelum normalisasi) dari dataset student-alcohol-consumption\nRAW_RANGES = {\n    'studytime': (1, 4),\n    'failures':  (0, 3),",
+        "detail": "utils.preprocessing",
+        "documentation": {}
+    },
+    {
+        "label": "RAW_RANGES",
+        "kind": 5,
+        "importPath": "utils.preprocessing",
+        "description": "utils.preprocessing",
+        "peekOfCode": "RAW_RANGES = {\n    'studytime': (1, 4),\n    'failures':  (0, 3),\n    'famrel':    (1, 5),\n    'freetime':  (1, 5),\n    'goout':     (1, 5),\n    'absences':  (0, 93),\n}\nBASE_DIR    = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))\nDATASET_PATH = os.path.join(BASE_DIR, 'dataset', 'student_dataset.csv')",
+        "detail": "utils.preprocessing",
+        "documentation": {}
+    },
+    {
+        "label": "DATASET_PATH",
+        "kind": 5,
+        "importPath": "utils.preprocessing",
+        "description": "utils.preprocessing",
+        "peekOfCode": "DATASET_PATH = os.path.join(BASE_DIR, 'dataset', 'student_dataset.csv')\nSAVED_MODEL_DIR = os.path.join(BASE_DIR, 'saved_model')\ndef load_dataset() -> pd.DataFrame:\n    return pd.read_csv(DATASET_PATH)\ndef compute_label(dalc: float, walc: float):\n    \"\"\"\n    score = 0.6*Dalc + 0.4*Walc  (range 1–5)\n    Equal interval → 3 kategori\n    \"\"\"\n    score  = 0.6 * dalc + 0.4 * walc",
+        "detail": "utils.preprocessing",
+        "documentation": {}
+    },
+    {
+        "label": "SAVED_MODEL_DIR",
+        "kind": 5,
+        "importPath": "utils.preprocessing",
+        "description": "utils.preprocessing",
+        "peekOfCode": "SAVED_MODEL_DIR = os.path.join(BASE_DIR, 'saved_model')\ndef load_dataset() -> pd.DataFrame:\n    return pd.read_csv(DATASET_PATH)\ndef compute_label(dalc: float, walc: float):\n    \"\"\"\n    score = 0.6*Dalc + 0.4*Walc  (range 1–5)\n    Equal interval → 3 kategori\n    \"\"\"\n    score  = 0.6 * dalc + 0.4 * walc\n    lo, hi = 1.0, 5.0",
+        "detail": "utils.preprocessing",
+        "documentation": {}
+    },
+    {
+        "label": "initialize_system",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def initialize_system():\n    df = load_dataset()\n    scaler, kmeans = load_models()\n    sse_list = compute_elbow(df)\n    optimal_k = find_optimal_k(sse_list, default_k=3)\n    if scaler is None or kmeans is None:\n        scaler = fit_and_save_scaler(df)\n        kmeans = train_kmeans(df, optimal_k)\n    else:\n        optimal_k = kmeans.n_clusters",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "expert_required",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def expert_required(f):\n    @wraps(f)\n    def decorated(*args, **kwargs):\n        if not session.get('expert_logged_in'):\n            return redirect(url_for('expert_login'))\n        return f(*args, **kwargs)\n    return decorated\n# ─────────────────────────────────────────────────────────────────────────────\n# PUBLIC ROUTES\n# ─────────────────────────────────────────────────────────────────────────────",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "index",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def index():\n    return render_template('index.html', trained=_state['trained'],\n                           optimal_k=_state['optimal_k'])\n@app.route('/train', methods=['POST'])\ndef train():\n    k = int(request.form.get('k', _state['optimal_k']))\n    df = load_dataset()\n    scaler = fit_and_save_scaler(df)\n    kmeans = train_kmeans(df, k)\n    df_cluster = add_cluster_to_dataset(df, kmeans)",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "train",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def train():\n    k = int(request.form.get('k', _state['optimal_k']))\n    df = load_dataset()\n    scaler = fit_and_save_scaler(df)\n    kmeans = train_kmeans(df, k)\n    df_cluster = add_cluster_to_dataset(df, kmeans)\n    sse_list = compute_elbow(df)\n    norm_info, norm_sample = get_normalization_info(df, scaler)\n    elbow_img = plot_elbow(sse_list, k)\n    cluster_img = plot_clusters(df_cluster, FEATURE_COLS, k)",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "dashboard",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def dashboard():\n    if not _state['trained']:\n        return redirect(url_for('index'))\n    df = _state['df_cluster']\n    cluster_counts = df['cluster'].value_counts().sort_index().to_dict()\n    label_counts = df['label_sentimen'].value_counts().to_dict()\n    return render_template('dashboard.html', trained=True,\n                           optimal_k=_state['optimal_k'],\n                           sse_list=_state['sse_list'],\n                           elbow_img=_state['elbow_img'],",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "cbr",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def cbr():\n    \"\"\"\n    Alur CBR publik:\n    - POST action=predict  → Retrieve + Reuse + Revise (otomatis)\n    - POST action=retain   → simpan kasus ke CSV\n    \"\"\"\n    if not _state['trained']:\n        return redirect(url_for('index'))\n    result = None\n    form_data = {}",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "dataset_view",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def dataset_view():\n    if not _state['trained']:\n        return redirect(url_for('index'))\n    df = _state['df_cluster']\n    records = df.round(4).to_dict(orient='records')\n    label_counts = df['label_sentimen'].value_counts().to_dict()\n    return render_template('dataset.html', records=records,\n                           columns=list(df.columns),\n                           label_counts=label_counts,\n                           total=len(df), trained=True)",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "expert_login",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def expert_login():\n    error = None\n    if request.method == 'POST':\n        username = request.form.get('username', '').strip()\n        password = request.form.get('password', '').strip()\n        expert = login_expert(username, password)\n        if expert:\n            session['expert_logged_in'] = True\n            session['expert_username']  = expert['username']\n            session['expert_nama']      = expert['nama']",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "expert_logout",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def expert_logout():\n    for k in ('expert_logged_in', 'expert_username', 'expert_nama',\n              'expert_jabatan', 'expert_cbr_case'):\n        session.pop(k, None)\n    return redirect(url_for('expert_login'))\n# ─────────────────────────────────────────────────────────────────────────────\n# EXPERT CBR — dengan proses REVISE interaktif\n# ─────────────────────────────────────────────────────────────────────────────\n@app.route('/pakar/cbr', methods=['GET', 'POST'])\n@expert_required",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "expert_cbr",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def expert_cbr():\n    \"\"\"\n    Alur CBR dari sisi pakar — 3 tahap:\n      Tahap 1 (GET/POST action=input)  → Form input kasus baru\n      Tahap 2 (POST action=reuse)      → Retrieve + Reuse → tampilkan Top-5\n      Tahap 3 (POST action=revise)     → REVISE: pakar evaluasi & opsional override kategori\n      Tahap 4 (POST action=retain)     → RETAIN: simpan ke CSV\n    \"\"\"\n    if not _state['trained']:\n        return redirect(url_for('expert_dashboard'))",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "expert_dashboard",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def expert_dashboard():\n    stats  = get_label_stats(DATASET_PATH)\n    history = get_cbr_history(limit=10)\n    df     = _state['df_cluster']\n    cluster_counts = df['cluster'].value_counts().sort_index().to_dict()\n    return render_template('expert/dashboard.html',\n                           stats=stats, history=history,\n                           cluster_counts=cluster_counts,\n                           optimal_k=_state['optimal_k'],\n                           total_data=len(df))",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "expert_basis_kasus",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def expert_basis_kasus():\n    msg = None\n    msg_type = 'success'\n    if request.method == 'POST':\n        action   = request.form.get('action')\n        username = session['expert_username']\n        if action == 'revisi_label':\n            row_index = int(request.form.get('row_index'))\n            new_label = request.form.get('new_label')\n            ok, msg = revise_label(DATASET_PATH, row_index, new_label, username)",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "expert_riwayat",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def expert_riwayat():\n    history = get_cbr_history(limit=100)\n    return render_template('expert/riwayat.html', history=history)\n@app.route('/pakar/riwayat/clear', methods=['POST'])\n@expert_required\ndef expert_clear_riwayat():\n    clear_cbr_history()\n    return redirect(url_for('expert_riwayat'))\n@app.route('/pakar/akun', methods=['GET', 'POST'])\n@expert_required",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "expert_clear_riwayat",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def expert_clear_riwayat():\n    clear_cbr_history()\n    return redirect(url_for('expert_riwayat'))\n@app.route('/pakar/akun', methods=['GET', 'POST'])\n@expert_required\ndef expert_akun():\n    msg = None\n    msg_type = 'success'\n    is_admin = session.get('expert_username') == 'admin'\n    if request.method == 'POST' and is_admin:",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "expert_akun",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def expert_akun():\n    msg = None\n    msg_type = 'success'\n    is_admin = session.get('expert_username') == 'admin'\n    if request.method == 'POST' and is_admin:\n        action = request.form.get('action')\n        if action == 'tambah':\n            ok, msg = add_expert(\n                request.form.get('username', '').strip(),\n                request.form.get('password', '').strip(),",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "expert_retrain",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def expert_retrain():\n    k  = int(request.form.get('k', _state['optimal_k']))\n    df = load_dataset()\n    scaler  = fit_and_save_scaler(df)\n    kmeans  = train_kmeans(df, k)\n    df_cluster = add_cluster_to_dataset(df, kmeans)\n    sse_list   = compute_elbow(df)\n    norm_info, norm_sample = get_normalization_info(df, scaler)\n    elbow_img   = plot_elbow(sse_list, k)\n    cluster_img = plot_clusters(df_cluster, FEATURE_COLS, k)",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "app",
+        "kind": 5,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "app = Flask(__name__)\napp.secret_key = 'cbr_kmeans_expert_secret_2024'\n# ── Global state ──────────────────────────────────────────────────────────────\n_state = {\n    'df': None,\n    'df_cluster': None,\n    'scaler': None,\n    'kmeans': None,\n    'sse_list': [],\n    'optimal_k': 3,",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "app.secret_key",
+        "kind": 5,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "app.secret_key = 'cbr_kmeans_expert_secret_2024'\n# ── Global state ──────────────────────────────────────────────────────────────\n_state = {\n    'df': None,\n    'df_cluster': None,\n    'scaler': None,\n    'kmeans': None,\n    'sse_list': [],\n    'optimal_k': 3,\n    'elbow_img': None,",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "_state",
+        "kind": 5,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "_state = {\n    'df': None,\n    'df_cluster': None,\n    'scaler': None,\n    'kmeans': None,\n    'sse_list': [],\n    'optimal_k': 3,\n    'elbow_img': None,\n    'cluster_img': None,\n    'norm_info': {},",
+        "detail": "app",
+        "documentation": {}
+    }
+]

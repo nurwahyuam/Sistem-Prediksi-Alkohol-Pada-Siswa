@@ -1,0 +1,229 @@
+{% extends "expert/base_expert.html" %}
+{% block title %}Manajemen Akun Pakar{% endblock %}
+{% block content %}
+
+<div class="etopbar">
+  <div>
+    <h2><i class="bi bi-people me-2" style="color:var(--accent);"></i>Manajemen Akun Pakar</h2>
+    <p>
+      {% if is_admin %}
+        Tambah, hapus akun pakar, dan ubah password. (Mode: Admin)
+      {% else %}
+        Ubah password akun Anda. Hanya admin yang dapat menambah/menghapus akun.
+      {% endif %}
+    </p>
+  </div>
+</div>
+
+{% if msg %}
+<div class="{% if msg_type=='success' %}ealert-ok{% else %}ealert-err{% endif %} mb-4">
+  <i class="bi bi-{% if msg_type=='success' %}check-circle-fill{% else %}exclamation-circle-fill{% endif %} me-2"></i>{{ msg }}
+</div>
+{% endif %}
+
+<div class="row g-4">
+
+  <!-- Daftar Akun (Admin only) -->
+  {% if is_admin %}
+  <div class="col-lg-7">
+    <div class="ecard">
+      <div class="ecard-header">
+        <div class="ecard-icon" style="background:rgba(56,189,248,0.12);">👥</div>
+        <div>
+          <p class="ecard-title">Daftar Akun Pakar</p>
+          <p class="ecard-sub">{{ experts|length }} akun terdaftar</p>
+        </div>
+      </div>
+      <div class="tscroll">
+        <table class="etable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Username</th>
+              <th>Nama Lengkap</th>
+              <th>Jabatan</th>
+              <th>Dibuat</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for e in experts %}
+            <tr>
+              <td class="mono" style="color:var(--muted);">{{ loop.index }}</td>
+              <td>
+                <span class="mono" style="color:var(--accent);">{{ e.username }}</span>
+                {% if e.username == 'admin' %}
+                <span style="font-size:9px; color:var(--amber); margin-left:4px;
+                             background:rgba(251,191,36,0.1); border:1px solid rgba(251,191,36,0.2);
+                             border-radius:4px; padding:1px 5px;">ADMIN</span>
+                {% endif %}
+                {% if e.username == session.expert_username %}
+                <span style="font-size:9px; color:var(--green); margin-left:2px;
+                             background:rgba(52,211,153,0.1); border:1px solid rgba(52,211,153,0.2);
+                             border-radius:4px; padding:1px 5px;">KAMU</span>
+                {% endif %}
+              </td>
+              <td style="font-size:12px; color:var(--text);">{{ e.nama }}</td>
+              <td style="font-size:11px; color:var(--dim);">{{ e.jabatan }}</td>
+              <td class="mono" style="font-size:10.5px;">{{ e.created_at }}</td>
+              <td>
+                {% if e.username != 'admin' %}
+                <form action="{{ url_for('expert_akun') }}" method="POST"
+                      onsubmit="return confirm('Hapus akun {{ e.username }}?')">
+                  <input type="hidden" name="action" value="hapus"/>
+                  <input type="hidden" name="target_username" value="{{ e.username }}"/>
+                  <button type="submit" class="ebtn-danger">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </form>
+                {% else %}
+                <span style="font-size:10px; color:var(--muted);">—</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tambah Akun (Admin only) -->
+  <div class="col-lg-5">
+    <div class="ecard mb-4">
+      <div class="ecard-header">
+        <div class="ecard-icon" style="background:rgba(52,211,153,0.12);">➕</div>
+        <div>
+          <p class="ecard-title">Tambah Akun Pakar Baru</p>
+          <p class="ecard-sub">Hanya admin yang dapat menambah akun</p>
+        </div>
+      </div>
+      <form action="{{ url_for('expert_akun') }}" method="POST">
+        <input type="hidden" name="action" value="tambah"/>
+        <div style="margin-bottom:12px;">
+          <label class="eform-label">Username</label>
+          <input type="text" name="username" class="eform-ctrl"
+                 placeholder="cth: pakar2" required autocomplete="off"/>
+        </div>
+        <div style="margin-bottom:12px;">
+          <label class="eform-label">Password</label>
+          <input type="text" name="password" class="eform-ctrl"
+                 placeholder="Password awal" required/>
+        </div>
+        <div style="margin-bottom:12px;">
+          <label class="eform-label">Nama Lengkap</label>
+          <input type="text" name="nama" class="eform-ctrl"
+                 placeholder="cth: Dr. Budi Santoso, M.Kom" required/>
+        </div>
+        <div style="margin-bottom:16px;">
+          <label class="eform-label">Jabatan</label>
+          <input type="text" name="jabatan" class="eform-ctrl"
+                 placeholder="cth: Ahli Psikologi Pendidikan" required/>
+        </div>
+        <button type="submit" class="ebtn-primary">
+          <i class="bi bi-person-plus me-1"></i>Tambah Pakar
+        </button>
+      </form>
+    </div>
+
+    <!-- Ganti Password (untuk admin sendiri) -->
+    <div class="ecard">
+      <div class="ecard-header">
+        <div class="ecard-icon" style="background:rgba(251,191,36,0.12);">🔑</div>
+        <div>
+          <p class="ecard-title">Ganti Password Saya</p>
+          <p class="ecard-sub">Akun: <span class="mono" style="color:var(--accent);">{{ session.expert_username }}</span></p>
+        </div>
+      </div>
+      <form action="{{ url_for('expert_akun') }}" method="POST">
+        <input type="hidden" name="action" value="ganti_password"/>
+        <div style="margin-bottom:14px;">
+          <label class="eform-label">Password Baru</label>
+          <input type="password" name="new_password" class="eform-ctrl"
+                 placeholder="Password baru" required minlength="6"/>
+        </div>
+        <button type="submit" class="ebtn-primary" style="background:linear-gradient(135deg,#d97706,#fbbf24);">
+          <i class="bi bi-key me-1"></i>Ubah Password
+        </button>
+      </form>
+    </div>
+  </div>
+
+  {% else %}
+  <!-- Non-admin: hanya ganti password sendiri -->
+  <div class="col-md-5">
+    <div class="ecard">
+      <div class="ecard-header">
+        <div class="ecard-icon" style="background:rgba(251,191,36,0.12);">🔑</div>
+        <div>
+          <p class="ecard-title">Ganti Password</p>
+          <p class="ecard-sub">Akun: <span class="mono" style="color:var(--accent);">{{ session.expert_username }}</span></p>
+        </div>
+      </div>
+      <div style="background:rgba(56,189,248,0.07); border:1px solid rgba(56,189,248,0.15);
+                  border-radius:9px; padding:12px 14px; margin-bottom:16px;
+                  font-size:12px; color:var(--dim);">
+        <i class="bi bi-info-circle me-1" style="color:var(--accent2);"></i>
+        Hanya administrator yang dapat menambah atau menghapus akun pakar.
+      </div>
+      <form action="{{ url_for('expert_akun') }}" method="POST">
+        <input type="hidden" name="action" value="ganti_password"/>
+        <div style="margin-bottom:14px;">
+          <label class="eform-label">Password Baru</label>
+          <input type="password" name="new_password" class="eform-ctrl"
+                 placeholder="Minimal 6 karakter" required minlength="6"/>
+        </div>
+        <button type="submit" class="ebtn-primary">
+          <i class="bi bi-key me-1"></i>Ubah Password Saya
+        </button>
+      </form>
+    </div>
+
+    <!-- Info Profil -->
+    <div class="ecard" style="margin-top:16px;">
+      <div class="ecard-header">
+        <div class="ecard-icon" style="background:rgba(167,139,250,0.12);">👤</div>
+        <div>
+          <p class="ecard-title">Profil Saya</p>
+        </div>
+      </div>
+      <div style="font-size:13px; color:var(--text); margin-bottom:4px;">
+        {{ session.expert_nama }}
+      </div>
+      <div style="font-size:12px; color:var(--muted);">{{ session.expert_jabatan }}</div>
+    </div>
+  </div>
+
+  <!-- Daftar Pakar (read-only) -->
+  <div class="col-md-7">
+    <div class="ecard">
+      <div class="ecard-header">
+        <div class="ecard-icon" style="background:rgba(56,189,248,0.12);">👥</div>
+        <div>
+          <p class="ecard-title">Tim Pakar Sistem</p>
+          <p class="ecard-sub">{{ experts|length }} pakar terdaftar</p>
+        </div>
+      </div>
+      {% for e in experts %}
+      <div style="display:flex; align-items:center; gap:12px; padding:10px 0;
+                  {% if not loop.last %}border-bottom:1px solid var(--border);{% endif %}">
+        <div style="width:36px; height:36px; border-radius:50%;
+                    background:linear-gradient(135deg,#7c3aed,#38bdf8);
+                    display:flex; align-items:center; justify-content:center;
+                    font-size:15px; flex-shrink:0;">
+          {{ e.nama[0] }}
+        </div>
+        <div style="flex:1;">
+          <div style="font-size:13px; font-weight:500; color:var(--text);">{{ e.nama }}</div>
+          <div style="font-size:11px; color:var(--muted);">{{ e.jabatan }}</div>
+        </div>
+        <div class="mono" style="font-size:10.5px; color:var(--accent);">@{{ e.username }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+
+{% endblock %}

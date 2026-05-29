@@ -1,0 +1,173 @@
+{% extends "expert/base_expert.html" %}
+{% block title %}Riwayat CBR{% endblock %}
+{% block content %}
+
+<div class="etopbar">
+  <div>
+    <h2><i class="bi bi-clock-history me-2" style="color:var(--accent);"></i>Riwayat Aktivitas CBR</h2>
+    <p>Log semua prediksi, retain, revisi, dan training yang dilakukan pada sistem.</p>
+  </div>
+  <form action="{{ url_for('expert_clear_riwayat') }}" method="POST"
+        onsubmit="return confirm('Hapus semua riwayat? Tidak bisa dibatalkan.')">
+    <button type="submit" class="ebtn-danger" style="padding:8px 16px; font-size:12.5px;">
+      <i class="bi bi-trash3 me-1"></i>Bersihkan Riwayat
+    </button>
+  </form>
+</div>
+
+<!-- Filter -->
+<div class="ecard mb-4" style="padding:12px 16px;">
+  <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+    <i class="bi bi-funnel" style="color:var(--muted);"></i>
+    <select id="filterType" class="eform-ctrl" style="width:180px;">
+      <option value="">Semua Tipe</option>
+      <option value="prediksi">prediksi</option>
+      <option value="retain">retain</option>
+      <option value="revise_pakar">revise_pakar</option>
+      <option value="revisi_label">revisi_label</option>
+      <option value="hapus_kasus">hapus_kasus</option>
+      <option value="tambah_kasus_manual">tambah_kasus_manual</option>
+      <option value="re-train">re-train</option>
+    </select>
+    <input type="text" id="filterSearch" placeholder="Cari..."
+           class="eform-ctrl" style="width:200px;"/>
+    <span id="histCount" style="font-size:12px; color:var(--muted); margin-left:auto;">
+      {{ history|length }} entri
+    </span>
+  </div>
+</div>
+
+{% if history %}
+<div class="ecard">
+  <div class="tscroll">
+    <table class="etable" id="histTable">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Waktu</th>
+          <th>Tipe</th>
+          <th>Pelaku</th>
+          <th>Detail</th>
+          <th>Hasil / Keterangan</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for h in history %}
+        <tr>
+          <td class="mono" style="color:var(--muted);">{{ h.id }}</td>
+          <td class="mono" style="font-size:10.5px; white-space:nowrap;">{{ h.timestamp }}</td>
+          <td><span class="bc-type">{{ h.type }}</span></td>
+          <td style="color:var(--accent); font-size:12px;">
+            {{ h.get('pakar', h.get('user', '—')) }}
+          </td>
+          <td style="font-size:11px; color:var(--dim); max-width:220px;">
+            {% if h.type == 'prediksi' %}
+              <div>Cluster: <span class="mono" style="color:var(--accent2);">{{ h.cluster }}</span></div>
+              <div style="margin-top:2px;">
+                {% for feat, val in (h.get('input_raw') or {}).items() %}
+                <span style="color:var(--muted);">{{ feat }}={{ val }}</span>
+                {% if not loop.last %}, {% endif %}
+                {% endfor %}
+              </div>
+            {% elif h.type == 'retain' %}
+              Cluster {{ h.cluster }}
+            {% elif h.type == 'revise_pakar' %}
+              Cluster {{ h.cluster }}, sim={{ h.similarity }}
+              {% if h.direvisi %}<span style="color:var(--amber);">— direvisi</span>{% endif %}
+            {% elif h.type == 'revisi_label' %}
+              Baris {{ h.row_index }}
+            {% elif h.type == 'hapus_kasus' %}
+              Baris {{ h.row_index }}
+            {% elif h.type == 'tambah_kasus_manual' %}
+              <span style="font-size:10px;">{{ h.get('data','')[:80] }}</span>
+            {% elif h.type == 're-train' %}
+              K={{ h.k }}, {{ h.total_data }} data
+            {% else %}
+              —
+            {% endif %}
+          </td>
+          <td style="font-size:11.5px;">
+            {% if h.type == 'prediksi' %}
+              <span class="bc bc-{{ h.kategori|lower }}">{{ h.kategori }}</span>
+              <span class="mono" style="font-size:10px; color:var(--muted); margin-left:4px;">
+                sim={{ h.similarity }}
+              </span>
+              {% if h.warning %}
+              <span style="color:var(--amber); font-size:10px; margin-left:4px;">⚠️ low sim</span>
+              {% endif %}
+            {% elif h.type == 'retain' %}
+              <span class="bc bc-{{ h.kategori|lower }}">{{ h.kategori }}</span>
+            {% elif h.type == 'revise_pakar' %}
+              <span class="bc bc-{{ h.kategori_sistem|lower }}">{{ h.kategori_sistem }}</span>
+              <i class="bi bi-arrow-right mx-1" style="font-size:10px;color:var(--muted);"></i>
+              <span class="bc bc-{{ h.kategori_final|lower }}">{{ h.kategori_final }}</span>
+              {% if h.direvisi %}
+              <span style="font-size:10px;color:var(--amber);display:block;margin-top:3px;">
+                <i class="bi bi-pencil-square me-1"></i>Direvisi pakar
+              </span>
+              {% else %}
+              <span style="font-size:10px;color:var(--green);display:block;margin-top:3px;">
+                <i class="bi bi-check-circle me-1"></i>Disetujui pakar
+              </span>
+              {% endif %}
+              {% if h.catatan %}
+              <span style="font-size:10px;color:var(--muted);display:block;font-style:italic;">
+                "{{ h.catatan[:60] }}{% if h.catatan|length > 60 %}...{% endif %}"
+              </span>
+              {% endif %}
+            {% elif h.type == 'revisi_label' %}
+              <span class="bc bc-{{ h.label_lama|lower }}">{{ h.label_lama }}</span>
+              <i class="bi bi-arrow-right mx-1" style="color:var(--muted); font-size:10px;"></i>
+              <span class="bc bc-{{ h.label_baru|lower }}">{{ h.label_baru }}</span>
+            {% elif h.type == 'hapus_kasus' %}
+              <span style="color:var(--red); font-size:11px;">✓ Dihapus</span>
+            {% elif h.type == 'tambah_kasus_manual' %}
+              <span style="color:var(--green); font-size:11px;">✓ Ditambahkan</span>
+            {% elif h.type == 're-train' %}
+              <span style="color:var(--accent); font-size:11px;">K={{ h.k }} ✓</span>
+            {% else %}
+              —
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% else %}
+<div class="ecard" style="text-align:center; padding:40px;">
+  <div style="font-size:48px; opacity:0.15; margin-bottom:12px;">📋</div>
+  <div style="font-size:14px; color:var(--muted);">Belum ada riwayat aktivitas.</div>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const filterType = document.getElementById('filterType');
+  const filterSearch = document.getElementById('filterSearch');
+  const tbody = document.querySelector('#histTable tbody');
+  const allRows = tbody ? Array.from(tbody.querySelectorAll('tr')) : [];
+  const histCount = document.getElementById('histCount');
+
+  function applyFilter() {
+    const type = filterType.value.toLowerCase();
+    const q = filterSearch.value.toLowerCase();
+    let v = 0;
+    allRows.forEach(r => {
+      const typeMatch = !type || r.textContent.toLowerCase().includes(type);
+      const qMatch   = !q    || r.textContent.toLowerCase().includes(q);
+      const show = typeMatch && qMatch;
+      r.style.display = show ? '' : 'none';
+      if (show) v++;
+    });
+    histCount.textContent = v + ' entri';
+  }
+
+  filterType.addEventListener('change', applyFilter);
+  filterSearch.addEventListener('input', applyFilter);
+</script>
+{% endblock %}

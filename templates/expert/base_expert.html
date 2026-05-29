@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="id" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}Ruang Pakar{% endblock %} — CBR KMeans</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:      #060c18;
+      --bg-card: #0b1526;
+      --bg-card2:#101d32;
+      --border:  #162340;
+      --accent:  #a78bfa;       /* violet — berbeda dari public UI */
+      --accent2: #38bdf8;
+      --green:   #34d399;
+      --amber:   #fbbf24;
+      --red:     #f87171;
+      --text:    #e2e8f0;
+      --muted:   #64748b;
+      --dim:     #94a3b8;
+    }
+    * { box-sizing: border-box; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Space Grotesk', sans-serif;
+      min-height: 100vh;
+    }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* ── Expert Sidebar ── */
+    .esidebar {
+      width: 250px; min-height: 100vh;
+      background: var(--bg-card);
+      border-right: 1px solid var(--border);
+      position: fixed; top: 0; left: 0;
+      display: flex; flex-direction: column;
+      z-index: 100;
+    }
+    .esidebar-brand {
+      padding: 22px 18px 18px;
+      border-bottom: 1px solid var(--border);
+    }
+    .expert-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(167,139,250,0.12);
+      border: 1px solid rgba(167,139,250,0.25);
+      border-radius: 20px; padding: 3px 10px;
+      font-size: 10px; font-weight: 700;
+      color: var(--accent); letter-spacing: 0.08em;
+      text-transform: uppercase; margin-bottom: 10px;
+    }
+    .esidebar-brand h5 {
+      font-size: 13.5px; font-weight: 700;
+      color: var(--text); margin: 0;
+    }
+    .esidebar-brand small { font-size: 11px; color: var(--muted); }
+    .profile-mini {
+      margin-top: 12px;
+      background: rgba(167,139,250,0.06);
+      border: 1px solid rgba(167,139,250,0.15);
+      border-radius: 10px; padding: 10px 12px;
+    }
+    .profile-mini .name {
+      font-size: 12px; font-weight: 600; color: var(--text);
+    }
+    .profile-mini .role {
+      font-size: 10.5px; color: var(--muted);
+    }
+
+    .enav { padding: 10px 0; flex: 1; }
+    .nav-sec {
+      font-size: 10px; font-weight: 600;
+      color: var(--muted); text-transform: uppercase;
+      letter-spacing: 0.1em; padding: 12px 18px 5px;
+    }
+    .elink {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 18px;
+      color: var(--dim); text-decoration: none;
+      font-size: 13px; font-weight: 500;
+      border-left: 3px solid transparent;
+      transition: all 0.15s;
+    }
+    .elink:hover { color: var(--text); background: rgba(167,139,250,0.06); }
+    .elink.active {
+      color: var(--accent);
+      border-left-color: var(--accent);
+      background: rgba(167,139,250,0.08);
+    }
+    .elink .ei { font-size: 15px; width: 18px; text-align: center; }
+
+    .efooter {
+      padding: 14px 18px;
+      border-top: 1px solid var(--border);
+    }
+    .btn-logout {
+      display: flex; align-items: center; gap: 8px;
+      width: 100%; padding: 8px 12px;
+      background: rgba(248,113,113,0.08);
+      border: 1px solid rgba(248,113,113,0.2);
+      border-radius: 8px; color: var(--red);
+      font-size: 12.5px; font-weight: 600;
+      text-decoration: none; transition: all 0.15s;
+    }
+    .btn-logout:hover { background: rgba(248,113,113,0.14); color: var(--red); }
+
+    /* ── Main ── */
+    .emain { margin-left: 250px; padding: 26px 30px; min-height: 100vh; }
+
+    /* ── Top bar ── */
+    .etopbar {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .etopbar h2 { font-size: 20px; font-weight: 700; margin: 0; }
+    .etopbar p { font-size: 12.5px; color: var(--muted); margin: 3px 0 0; }
+
+    /* ── Cards ── */
+    .ecard {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 13px; padding: 20px 22px;
+      transition: border-color 0.2s;
+    }
+    .ecard:hover { border-color: rgba(167,139,250,0.3); }
+    .ecard-header {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 16px; padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .ecard-icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+    }
+    .ecard-title { font-size: 13.5px; font-weight: 600; color: var(--text); margin: 0; }
+    .ecard-sub   { font-size: 11px; color: var(--muted); margin: 0; }
+
+    /* ── Stats ── */
+    .estat {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px; padding: 16px 18px;
+    }
+    .estat-val {
+      font-size: 26px; font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .estat-lbl { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+
+    /* ── Tables ── */
+    .etable { width: 100%; border-collapse: collapse; }
+    .etable th {
+      font-size: 10.5px; font-weight: 600;
+      color: var(--muted); text-transform: uppercase;
+      letter-spacing: 0.07em; padding: 8px 11px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-card2);
+    }
+    .etable td {
+      font-size: 12px; color: var(--dim);
+      padding: 8px 11px;
+      border-bottom: 1px solid #0a1525;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .etable tr:hover td { background: rgba(255,255,255,0.02); }
+
+    /* ── Badges ── */
+    .bc { font-size: 10.5px; padding: 2px 9px; border-radius: 20px; font-weight: 600; font-family: 'Space Grotesk', sans-serif; }
+    .bc-normal  { background: rgba(52,211,153,0.12); color: #34d399; border: 1px solid rgba(52,211,153,0.25); }
+    .bc-waspada { background: rgba(251,191,36,0.12); color: #fbbf24; border: 1px solid rgba(251,191,36,0.25); }
+    .bc-bahaya  { background: rgba(248,113,113,0.12); color: #f87171; border: 1px solid rgba(248,113,113,0.25); }
+    .bc-type    { background: rgba(56,189,248,0.1); color: var(--accent2); border: 1px solid rgba(56,189,248,0.2); font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 2px 8px; border-radius: 4px; }
+
+    /* ── Form ── */
+    .eform-label { font-size: 11.5px; font-weight: 500; color: var(--dim); margin-bottom: 5px; display: block; }
+    .eform-ctrl {
+      width: 100%;
+      background: var(--bg-card2);
+      border: 1px solid var(--border);
+      color: var(--text); border-radius: 8px;
+      padding: 9px 12px; font-size: 13px;
+      font-family: 'Space Grotesk', sans-serif;
+      outline: none; transition: border-color 0.15s;
+    }
+    .eform-ctrl:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(167,139,250,0.12); }
+
+    /* ── Buttons ── */
+    .ebtn-primary {
+      background: linear-gradient(135deg, #7c3aed, #a78bfa);
+      border: none; color: #fff;
+      font-size: 12.5px; font-weight: 600; padding: 9px 18px;
+      border-radius: 8px; cursor: pointer; transition: opacity 0.15s;
+    }
+    .ebtn-primary:hover { opacity: 0.85; }
+    .ebtn-danger {
+      background: rgba(248,113,113,0.12);
+      border: 1px solid rgba(248,113,113,0.3);
+      color: var(--red); font-size: 12px; font-weight: 600;
+      padding: 5px 12px; border-radius: 6px; cursor: pointer;
+    }
+    .ebtn-danger:hover { background: rgba(248,113,113,0.2); }
+    .ebtn-sm {
+      font-size: 11px; padding: 4px 10px; border-radius: 6px;
+      border: 1px solid var(--border); background: transparent;
+      color: var(--dim); cursor: pointer;
+    }
+    .ebtn-sm:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── Alert ── */
+    .ealert-ok  { background: rgba(52,211,153,0.08); border: 1px solid rgba(52,211,153,0.25); border-radius: 9px; padding: 11px 14px; color: #34d399; font-size: 12.5px; }
+    .ealert-err { background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.25); border-radius: 9px; padding: 11px 14px; color: #f87171; font-size: 12.5px; }
+
+    .tscroll { overflow-x: auto; border-radius: 9px; }
+    .top1 td { background: rgba(167,139,250,0.05) !important; }
+
+    @media(max-width:768px) {
+      .esidebar { display: none; }
+      .emain { margin-left: 0; padding: 14px; }
+    }
+  </style>
+  {% block head %}{% endblock %}
+</head>
+<body>
+
+<!-- Expert Sidebar -->
+<aside class="esidebar">
+  <div class="esidebar-brand">
+    <div class="expert-badge"><i class="bi bi-shield-lock-fill"></i> Ruang Pakar</div>
+    <h5>CBR KMeans System</h5>
+    <small>Expert Panel</small>
+    <div class="profile-mini">
+      <div class="name"><i class="bi bi-person-circle me-1" style="color:var(--accent);"></i>{{ session.expert_nama }}</div>
+      <div class="role">{{ session.expert_jabatan }}</div>
+    </div>
+  </div>
+  <nav class="enav">
+    <div class="nav-sec">Panel Utama</div>
+    <a href="{{ url_for('expert_dashboard') }}" class="elink {% if request.endpoint=='expert_dashboard' %}active{% endif %}">
+      <span class="ei"><i class="bi bi-speedometer2"></i></span>Dashboard Pakar
+    </a>
+
+    <div class="nav-sec">CBR Pakar</div>
+    <a href="{{ url_for('expert_cbr') }}" class="elink {% if request.endpoint=='expert_cbr' %}active{% endif %}">
+      <span class="ei"><i class="bi bi-cpu-fill"></i></span>CBR + Revise Pakar
+    </a>
+
+    <div class="nav-sec">Manajemen Data</div>
+    <a href="{{ url_for('expert_basis_kasus') }}" class="elink {% if request.endpoint=='expert_basis_kasus' %}active{% endif %}">
+      <span class="ei"><i class="bi bi-database-gear"></i></span>Kelola Basis Kasus
+    </a>
+    <a href="{{ url_for('expert_riwayat') }}" class="elink {% if request.endpoint=='expert_riwayat' %}active{% endif %}">
+      <span class="ei"><i class="bi bi-clock-history"></i></span>Riwayat CBR
+    </a>
+
+    <div class="nav-sec">Administrasi</div>
+    <a href="{{ url_for('expert_akun') }}" class="elink {% if request.endpoint=='expert_akun' %}active{% endif %}">
+      <span class="ei"><i class="bi bi-people"></i></span>Manajemen Akun
+    </a>
+
+    <div class="nav-sec">Sistem</div>
+    <a href="{{ url_for('index') }}" class="elink" target="_blank">
+      <span class="ei"><i class="bi bi-box-arrow-up-right"></i></span>Buka Sistem Publik
+    </a>
+    <a href="{{ url_for('dashboard') }}" class="elink" target="_blank">
+      <span class="ei"><i class="bi bi-grid-3x3-gap"></i></span>Dashboard Publik
+    </a>
+  </nav>
+  <div class="efooter">
+    <a href="{{ url_for('expert_logout') }}" class="btn-logout">
+      <i class="bi bi-box-arrow-left"></i>Keluar
+    </a>
+  </div>
+</aside>
+
+<!-- Main Content -->
+<main class="emain">
+  {% block content %}{% endblock %}
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

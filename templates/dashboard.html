@@ -1,0 +1,244 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — CBR KMeans{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h2><i class="bi bi-grid-3x3-gap me-2" style="color:var(--accent-blue);"></i>Dashboard Analisis</h2>
+  <p>Ringkasan dataset, normalisasi, elbow method, dan visualisasi cluster.</p>
+</div>
+
+<!-- Stats -->
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3">
+    <div class="stat-card">
+      <div class="stat-value" style="color:var(--accent-blue);">{{ total_data }}</div>
+      <div class="stat-label">Total Data</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card">
+      <div class="stat-value" style="color:var(--accent-violet);">{{ optimal_k }}</div>
+      <div class="stat-label">K Optimal</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card">
+      <div class="stat-value" style="color:var(--accent-green);">{{ label_counts.get('Normal', 0) }}</div>
+      <div class="stat-label">Kategori Normal</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card">
+      <div class="stat-value" style="color:var(--accent-red);">{{ label_counts.get('Bahaya', 0) }}</div>
+      <div class="stat-label">Kategori Bahaya</div>
+    </div>
+  </div>
+</div>
+
+<!-- Re-train control -->
+<div class="card-custom mb-4">
+  <div class="card-header-custom">
+    <div class="card-header-icon" style="background:#a78bfa22; color:var(--accent-violet); font-size:16px;">⚙️</div>
+    <div>
+      <p class="card-header-title">Konfigurasi K-Means</p>
+      <p class="card-header-sub">Pilih jumlah cluster dan re-train model</p>
+    </div>
+  </div>
+  <form action="{{ url_for('train') }}" method="POST" class="d-flex align-items-center gap-3 flex-wrap">
+    <div>
+      <label class="form-label-custom">Jumlah K</label>
+      <select name="k" class="form-control-custom" style="width:120px;">
+        {% for k in range(2, 11) %}
+        <option value="{{ k }}" {% if k == optimal_k %}selected{% endif %}>K = {{ k }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div style="padding-top:18px;">
+      <button type="submit" class="btn-primary-custom">
+        <i class="bi bi-arrow-clockwise me-1"></i>Re-Train Model
+      </button>
+    </div>
+    <div style="padding-top:18px;">
+      <div style="font-size:12px; color:var(--text-muted);">
+        K optimal saat ini: <span class="mono" style="color:var(--accent-amber);">{{ optimal_k }}</span>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- Elbow & Cluster Charts -->
+<div class="row g-4 mb-4">
+  <div class="col-lg-6">
+    <div class="card-custom">
+      <div class="card-header-custom">
+        <div class="card-header-icon" style="background:#f8717122;">📈</div>
+        <div>
+          <p class="card-header-title">Elbow Method</p>
+          <p class="card-header-sub">SSE untuk K = 1 sampai 10</p>
+        </div>
+      </div>
+      <img src="data:image/png;base64,{{ elbow_img }}" alt="Elbow Chart" class="chart-img"/>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card-custom">
+      <div class="card-header-custom">
+        <div class="card-header-icon" style="background:#38bdf822;">🔵</div>
+        <div>
+          <p class="card-header-title">Visualisasi Cluster (PCA 2D)</p>
+          <p class="card-header-sub">K = {{ optimal_k }} cluster</p>
+        </div>
+      </div>
+      <img src="data:image/png;base64,{{ cluster_img }}" alt="Cluster Chart" class="chart-img"/>
+    </div>
+  </div>
+</div>
+
+<!-- SSE Table -->
+<div class="row g-4 mb-4">
+  <div class="col-lg-5">
+    <div class="card-custom">
+      <div class="card-header-custom">
+        <div class="card-header-icon" style="background:#34d39922;">📊</div>
+        <div>
+          <p class="card-header-title">Tabel SSE (Elbow)</p>
+          <p class="card-header-sub">Sum of Squared Errors tiap K</p>
+        </div>
+      </div>
+      <div class="table-scroll">
+        <table class="table-custom">
+          <thead>
+            <tr>
+              <th>K</th>
+              <th>SSE (Inertia)</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for k, sse in sse_list %}
+            <tr {% if k == optimal_k %}class="top-1-row"{% endif %}>
+              <td class="mono">{{ k }}</td>
+              <td class="mono">{{ sse }}</td>
+              <td>
+                {% if k == optimal_k %}
+                <span class="badge-cat badge-normal">★ Optimal</span>
+                {% else %}
+                <span style="font-size:11px; color:var(--text-muted);">—</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cluster Distribution -->
+  <div class="col-lg-7">
+    <div class="card-custom">
+      <div class="card-header-custom">
+        <div class="card-header-icon" style="background:#a78bfa22;">🔢</div>
+        <div>
+          <p class="card-header-title">Distribusi Cluster &amp; Kategori</p>
+          <p class="card-header-sub">Jumlah data per cluster dan label</p>
+        </div>
+      </div>
+      <div class="row g-3">
+        <div class="col-6">
+          <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px; font-weight:600;">
+            Per Cluster
+          </div>
+          {% set cl_colors = ['#38bdf8','#a78bfa','#fb923c','#4ade80','#facc15'] %}
+          {% for cl, cnt in cluster_counts.items() %}
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+            <div style="width:10px; height:10px; border-radius:50%;
+                        background:{{ cl_colors[cl % cl_colors|length] }};"></div>
+            <span style="font-size:12px; color:var(--text-dim);">Cluster {{ cl }}</span>
+            <span class="mono" style="margin-left:auto; font-size:12px; color:var(--text-primary);">{{ cnt }}</span>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="col-6">
+          <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px; font-weight:600;">
+            Per Kategori
+          </div>
+          {% for cat, cnt in label_counts.items() %}
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+            <span class="badge-cat badge-{{ cat|lower }}">{{ cat }}</span>
+            <span class="mono" style="margin-left:auto; font-size:12px; color:var(--text-primary);">{{ cnt }}</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Normalization Info -->
+<div class="card-custom mb-4">
+  <div class="card-header-custom">
+    <div class="card-header-icon" style="background:#fbbf2422;">📏</div>
+    <div>
+      <p class="card-header-title">Informasi Normalisasi Min-Max</p>
+      <p class="card-header-sub">Nilai min, max dari setiap fitur</p>
+    </div>
+  </div>
+  <div class="table-scroll">
+    <table class="table-custom">
+      <thead>
+        <tr>
+          <th>Fitur</th>
+          {% for col in feature_cols %}<th>{{ col }}</th>{% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="mono" style="color:var(--accent-green);">Min</td>
+          {% for col in feature_cols %}
+          <td class="mono">{{ norm_info[col]['min'] }}</td>
+          {% endfor %}
+        </tr>
+        <tr>
+          <td class="mono" style="color:var(--accent-red);">Max</td>
+          {% for col in feature_cols %}
+          <td class="mono">{{ norm_info[col]['max'] }}</td>
+          {% endfor %}
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Sample Normalized -->
+<div class="card-custom">
+  <div class="card-header-custom">
+    <div class="card-header-icon" style="background:#34d39922;">🔬</div>
+    <div>
+      <p class="card-header-title">Sampel Hasil Normalisasi (5 Baris Pertama)</p>
+      <p class="card-header-sub">X = (x − xmin) / (xmax − xmin)</p>
+    </div>
+  </div>
+  <div class="table-scroll">
+    <table class="table-custom">
+      <thead>
+        <tr>
+          <th>#</th>
+          {% for col in feature_cols %}<th>{{ col }}</th>{% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in norm_sample %}
+        <tr>
+          <td class="mono" style="color:var(--text-muted);">{{ loop.index }}</td>
+          {% for col in feature_cols %}
+          <td class="mono">{{ row[col] }}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

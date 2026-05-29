@@ -1,0 +1,818 @@
+{% extends "expert/base_expert.html" %}
+{% block title %}CBR Pakar — Revise{% endblock %}
+
+{% block head %}
+<style>
+  /* ── Stage progress bar ── */
+  .stage-bar {
+    display: flex; align-items: center;
+    gap: 0; margin-bottom: 32px;
+  }
+  .stage-item {
+    display: flex; flex-direction: column;
+    align-items: center; flex: 1; position: relative;
+  }
+  .stage-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 18px; left: 60%; right: -40%;
+    height: 2px;
+    background: var(--border);
+    z-index: 0;
+  }
+  .stage-item.done::after  { background: var(--accent); }
+  .stage-item.active::after { background: var(--border); }
+
+  .stage-dot {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    border: 2px solid var(--border);
+    background: var(--bg-card2);
+    color: var(--muted);
+    position: relative; z-index: 1;
+    transition: all 0.25s;
+  }
+  .stage-item.active .stage-dot {
+    border-color: var(--accent);
+    background: rgba(167,139,250,0.15);
+    color: var(--accent);
+    box-shadow: 0 0 14px rgba(167,139,250,0.35);
+  }
+  .stage-item.done .stage-dot {
+    border-color: var(--green);
+    background: rgba(52,211,153,0.12);
+    color: var(--green);
+  }
+  .stage-label {
+    font-size: 10.5px; font-weight: 600;
+    margin-top: 7px; text-align: center;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+  }
+  .stage-item.active .stage-label { color: var(--accent); }
+  .stage-item.done   .stage-label { color: var(--green); }
+
+  /* ── Kategori selector ── */
+  .kat-option {
+    border: 2px solid var(--border);
+    border-radius: 12px; padding: 14px 18px;
+    cursor: pointer; transition: all 0.18s;
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 10px;
+    background: var(--bg-card2);
+  }
+  .kat-option:hover { border-color: rgba(167,139,250,0.4); }
+  .kat-option.selected-normal   { border-color: var(--green);  background: rgba(52,211,153,0.07); }
+  .kat-option.selected-waspada  { border-color: var(--amber);  background: rgba(251,191,36,0.07); }
+  .kat-option.selected-bahaya   { border-color: var(--red);    background: rgba(248,113,113,0.07); }
+  .kat-option input[type=radio] { display: none; }
+  .kat-dot {
+    width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0;
+  }
+  .kat-title { font-size: 14px; font-weight: 600; }
+  .kat-desc  { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  /* ── Similarity bar ── */
+  .sim-bar { height: 5px; border-radius: 3px; background: var(--border); overflow: hidden; }
+  .sim-fill { height: 100%; border-radius: 3px;
+              background: linear-gradient(90deg, #7c3aed, #38bdf8); }
+
+  /* ── Decision box ── */
+  .decision-box {
+    border-radius: 12px; padding: 18px 20px;
+    border: 2px solid;
+  }
+  .decision-box.agree   { border-color: rgba(52,211,153,0.4);  background: rgba(52,211,153,0.06); }
+  .decision-box.revise  { border-color: rgba(251,191,36,0.4);  background: rgba(251,191,36,0.06); }
+
+  /* ── Top-5 table highlight ── */
+  .rank1-row td { background: rgba(167,139,250,0.06) !important; }
+
+  /* ── Done page ── */
+  .done-card {
+    text-align: center; padding: 48px 32px;
+  }
+  .done-icon {
+    font-size: 64px; margin-bottom: 16px;
+    display: block;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Page Header -->
+<div class="etopbar">
+  <div>
+    <h2><i class="bi bi-cpu-fill me-2" style="color:var(--accent);"></i>CBR — Ruang Pakar</h2>
+    <p>Proses Retrieve → Reuse → <strong style="color:var(--accent);">Revise (Pakar)</strong> → Retain</p>
+  </div>
+  {% if stage not in ['input','done'] %}
+  <form action="{{ url_for('expert_cbr') }}" method="POST">
+    <input type="hidden" name="action" value="batal"/>
+    <button type="submit" class="ebtn-sm" style="color:var(--red); border-color:rgba(248,113,113,0.3);">
+      <i class="bi bi-x-circle me-1"></i>Mulai Ulang
+    </button>
+  </form>
+  {% endif %}
+</div>
+
+<!-- ── Stage Progress Bar ───────────────────────────────────────── -->
+{% set stages = [
+  ('input',  '1', 'Input Kasus'),
+  ('reuse',  '2', 'Retrieve & Reuse'),
+  ('revise', '3', 'Revise Pakar'),
+  ('retain', '4', 'Retain'),
+  ('done',   '✓', 'Selesai'),
+] %}
+{% set stage_order = ['input','reuse','revise','retain','done'] %}
+{% set cur_idx = stage_order.index(stage) %}
+
+<div class="stage-bar">
+  {% for s_id, s_num, s_label in stages %}
+  {% set s_idx = loop.index0 %}
+  <div class="stage-item {% if s_idx < cur_idx %}done{% elif s_idx == cur_idx %}active{% endif %}">
+    <div class="stage-dot">
+      {% if s_idx < cur_idx %}<i class="bi bi-check-lg"></i>{% else %}{{ s_num }}{% endif %}
+    </div>
+    <div class="stage-label">{{ s_label }}</div>
+  </div>
+  {% endfor %}
+</div>
+
+
+{# ════════════════════════════════════════════════════════════════
+   STAGE 1 — INPUT KASUS BARU
+════════════════════════════════════════════════════════════════ #}
+{% if stage == 'input' %}
+
+<div class="row g-4">
+  <div class="col-lg-5">
+    <div class="ecard">
+      <div class="ecard-header">
+        <div class="ecard-icon" style="background:rgba(167,139,250,0.12);">📝</div>
+        <div>
+          <p class="ecard-title">Input Kasus Baru</p>
+          <p class="ecard-sub">Data siswa yang akan diproses CBR</p>
+        </div>
+      </div>
+      <form action="{{ url_for('expert_cbr') }}" method="POST">
+        <input type="hidden" name="action" value="reuse"/>
+
+        <!-- Kategorikal -->
+        <div class="row g-3 mb-3">
+          <div class="col-6">
+            <label class="eform-label">Sex</label>
+            <select name="sex" class="eform-ctrl">
+              <option value="F">F — Perempuan</option>
+              <option value="M" selected>M — Laki-laki</option>
+            </select>
+            <small style="font-size:10px;color:var(--muted);">F=0, M=1</small>
+          </div>
+          <div class="col-6">
+            <label class="eform-label">Address</label>
+            <select name="address" class="eform-ctrl">
+              <option value="R">R — Rural</option>
+              <option value="U" selected>U — Urban</option>
+            </select>
+            <small style="font-size:10px;color:var(--muted);">R=0, U=1</small>
+          </div>
+          <div class="col-6">
+            <label class="eform-label">Pstatus</label>
+            <select name="Pstatus" class="eform-ctrl">
+              <option value="A">A — Apart</option>
+              <option value="T" selected>T — Together</option>
+            </select>
+            <small style="font-size:10px;color:var(--muted);">A=0, T=1</small>
+          </div>
+          <div class="col-6">
+            <label class="eform-label">Romantic</label>
+            <select name="romantic" class="eform-ctrl">
+              <option value="No" selected>No</option>
+              <option value="Yes">Yes</option>
+            </select>
+            <small style="font-size:10px;color:var(--muted);">No=0, Yes=1</small>
+          </div>
+        </div>
+
+        <!-- Numerik -->
+        {% for fname, fmin, fmax, fdef, fdesc in [
+          ('studytime',1,4,2,'1=<2jam, 2=2-5jam, 3=5-10jam, 4=>10jam'),
+          ('failures',0,3,0,'Jumlah kelas pernah gagal'),
+          ('famrel',1,5,3,'1=sangat buruk, 5=sangat baik'),
+          ('freetime',1,5,3,'Waktu luang setelah sekolah'),
+          ('goout',1,5,3,'Frekuensi keluar bersama teman'),
+          ('absences',0,93,0,'Jumlah hari absen'),
+        ] %}
+        <div class="mb-2">
+          <label class="eform-label">{{ fname }} ({{ fmin }}–{{ fmax }})</label>
+          <input type="number" name="{{ fname }}" min="{{ fmin }}" max="{{ fmax }}"
+                 value="{{ fdef }}" class="eform-ctrl"/>
+          <small style="font-size:10px;color:var(--muted);">{{ fdesc }}</small>
+        </div>
+        {% endfor %}
+
+        <hr style="border-color:var(--border); margin:14px 0;"/>
+
+        <!-- Dalc / Walc untuk referensi label -->
+        <div style="background:rgba(251,191,36,0.06); border:1px solid rgba(251,191,36,0.2);
+                    border-radius:9px; padding:12px 14px; margin-bottom:14px;">
+          <div style="font-size:11px;color:var(--amber);font-weight:600;margin-bottom:8px;">
+            ⚗️ Referensi Label (Dalc & Walc)
+          </div>
+          <div class="row g-2">
+            <div class="col-6">
+              <label class="eform-label">Dalc (1–5)</label>
+              <input type="number" name="dalc" min="1" max="5" value="1" class="eform-ctrl"/>
+              <small style="font-size:10px;color:var(--muted);">Alkohol hari kerja</small>
+            </div>
+            <div class="col-6">
+              <label class="eform-label">Walc (1–5)</label>
+              <input type="number" name="walc" min="1" max="5" value="1" class="eform-ctrl"/>
+              <small style="font-size:10px;color:var(--muted);">Alkohol akhir pekan</small>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="ebtn-primary w-100">
+          <i class="bi bi-search me-1"></i>Retrieve &amp; Reuse →
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Panduan -->
+  <div class="col-lg-7">
+    <div class="ecard">
+      <div class="ecard-header">
+        <div class="ecard-icon" style="background:rgba(56,189,248,0.12);">📖</div>
+        <div>
+          <p class="ecard-title">Panduan Proses CBR Pakar</p>
+          <p class="ecard-sub">Alur 4 tahap dengan REVISE interaktif</p>
+        </div>
+      </div>
+      {% for num, color, title, desc in [
+        ('1','var(--accent2)','Input Kasus Baru','Masukkan data siswa baru yang akan diklasifikasikan.'),
+        ('2','var(--accent)', 'Retrieve & Reuse','Sistem otomatis mencari kasus serupa (cluster sama) dan menghitung Cosine Similarity terhadap semua kasus dalam cluster tersebut. Top-5 kasus paling mirip ditampilkan.'),
+        ('3','var(--amber)',  'REVISE — Keputusan Pakar','Inilah peran utama pakar. Pakar melihat hasil Reuse, mempertimbangkan similarity, lalu MEMUTUSKAN apakah kategori prediksi sistem sudah benar atau perlu dikoreksi berdasarkan keahlian klinis/domain.'),
+        ('4','var(--green)',  'Retain','Kasus baru beserta kategori final (sudah divalidasi pakar) disimpan permanen ke basis kasus CSV untuk digunakan pada inferensi berikutnya.'),
+      ] %}
+      <div style="display:flex;gap:12px;margin-bottom:16px;{% if not loop.last %}padding-bottom:16px;border-bottom:1px solid var(--border);{% endif %}">
+        <div style="width:28px;height:28px;border-radius:50%;
+                    background:rgba(167,139,250,0.1);border:2px solid {{ color }};
+                    display:flex;align-items:center;justify-content:center;
+                    font-size:12px;font-weight:700;color:{{ color }};flex-shrink:0;">{{ num }}</div>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;">{{ title }}</div>
+          <div style="font-size:12px;color:var(--muted);">{{ desc }}</div>
+        </div>
+      </div>
+      {% endfor %}
+
+      <div style="background:rgba(167,139,250,0.07);border:1px solid rgba(167,139,250,0.2);
+                  border-radius:9px;padding:12px 14px;margin-top:8px;">
+        <div style="font-size:11px;color:var(--accent);font-weight:600;margin-bottom:4px;">
+          <i class="bi bi-info-circle me-1"></i>Perbedaan dengan Sistem Publik
+        </div>
+        <div style="font-size:12px;color:var(--muted);">
+          Pada sistem publik, REVISE berjalan <em>otomatis</em> (langsung mengambil label dari kasus similarity tertinggi).
+          Di Ruang Pakar, tahap REVISE bersifat <strong style="color:var(--text);">interaktif</strong>
+          — pakar membaca Top-5, mempertimbangkan konteks, lalu memutuskan kategori final.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{# ════════════════════════════════════════════════════════════════
+   STAGE 2 — RETRIEVE & REUSE (tampilkan hasil, redirect ke revise)
+   (stage ini hanya dirender sesaat, redirect otomatis via POST)
+════════════════════════════════════════════════════════════════ #}
+{% elif stage == 'reuse' %}
+<!-- Jika stage=reuse tapi belum ada data, redirect ke input -->
+<script>window.location.href = "{{ url_for('expert_cbr', stage='input') }}";</script>
+
+
+{# ════════════════════════════════════════════════════════════════
+   STAGE 3 — REVISE (Keputusan Pakar)
+════════════════════════════════════════════════════════════════ #}
+{% elif stage == 'revise' and saved %}
+
+{% set cbr     = saved.cbr %}
+{% set reuse   = cbr.reuse.top_cases %}
+{% set revise  = cbr.revise %}
+{% set cluster = saved.cluster %}
+
+<!-- Ringkasan Retrieve + Reuse -->
+<div class="row g-4 mb-4">
+  <!-- Info Retrieve -->
+  <div class="col-md-4">
+    <div class="ecard h-100">
+      <div class="ecard-header">
+        <div class="ecard-icon" style="background:rgba(56,189,248,0.12);">📥</div>
+        <div>
+          <p class="ecard-title">RETRIEVE</p>
+          <p class="ecard-sub">Kasus dalam cluster yang sama</p>
+        </div>
+      </div>
+      <div style="text-align:center;padding:10px 0;">
+        <div style="font-size:40px;font-weight:700;color:var(--accent2);
+                    font-family:'JetBrains Mono',monospace;">
+          {{ cbr.retrieve.total_retrieved }}
+        </div>
+        <div style="font-size:12px;color:var(--muted);margin-top:4px;">kasus ditemukan</div>
+        <div style="margin-top:12px;">
+          <span style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.25);
+                       border-radius:20px;padding:4px 14px;font-size:12px;
+                       color:var(--accent2);font-family:'JetBrains Mono',monospace;">
+            Cluster {{ cluster }}
+          </span>
+        </div>
+      </div>
+      <hr style="border-color:var(--border);"/>
+      <!-- Input kasus baru yang dinormalisasi -->
+      <div style="font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:600;">
+        Kasus Baru (Normalized)
+      </div>
+      {% for col in feature_cols %}
+      <div style="display:flex;justify-content:space-between;font-size:11px;
+                  padding:3px 0;border-bottom:1px solid #0a1525;">
+        <span style="color:var(--dim);">{{ col }}</span>
+        <span class="mono" style="color:var(--text);">{{ saved.normalized_dict[col] }}</span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Prediksi Sistem -->
+  <div class="col-md-8">
+    <div class="ecard mb-4">
+      <div class="ecard-header">
+        <div class="ecard-icon" style="background:rgba(52,211,153,0.12);">🔄</div>
+        <div>
+          <p class="ecard-title">REUSE — Top-5 Kasus Paling Mirip</p>
+          <p class="ecard-sub">Diurutkan berdasarkan Cosine Similarity tertinggi</p>
+        </div>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="etable">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Similarity</th>
+              <th>Bar</th>
+              <th>Kategori</th>
+              {% for col in feature_cols %}<th style="font-size:9.5px;">{{ col }}</th>{% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for case in reuse %}
+            <tr {% if loop.first %}class="rank1-row"{% endif %}>
+              <td class="mono" style="font-weight:700;
+                  color:{% if loop.first %}var(--amber){% else %}var(--muted){% endif %};">
+                {% if loop.first %}★{% endif %}{{ loop.index }}
+              </td>
+              <td class="mono" style="color:var(--green);font-weight:600;white-space:nowrap;">
+                {{ "%.6f"|format(case.similarity) }}
+              </td>
+              <td style="min-width:70px;">
+                <div class="sim-bar">
+                  <div class="sim-fill" style="width:{{ (case.similarity*100)|round(1) }}%;"></div>
+                </div>
+              </td>
+              <td>
+                <span class="bc bc-{{ case.label_sentimen|lower }}">{{ case.label_sentimen }}</span>
+              </td>
+              {% for col in feature_cols %}
+              <td class="mono" style="font-size:10.5px;">{{ case[col] }}</td>
+              {% endfor %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Prediksi Otomatis Sistem -->
+    <div style="background:var(--bg-card2);border:1px solid var(--border);
+                border-radius:10px;padding:14px 16px;margin-bottom:16px;">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:600;">
+        Prediksi Otomatis Sistem (sebelum direvisi pakar)
+      </div>
+      <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+        <div>
+          <div style="font-size:11px;color:var(--muted);">Kategori sistem:</div>
+          <span class="bc bc-{{ revise.kategori|lower }}"
+                style="font-size:13px;padding:4px 14px;">{{ revise.kategori }}</span>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--muted);">Similarity tertinggi:</div>
+          <span class="mono" style="font-size:14px;color:var(--green);font-weight:700;">
+            {{ revise.similarity_score }}
+          </span>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--muted);">Label Dalc/Walc:</div>
+          <span class="bc bc-{{ saved.kategori_input|lower }}"
+                style="font-size:13px;padding:4px 14px;">{{ saved.kategori_input }}</span>
+          <span class="mono" style="font-size:11px;color:var(--muted);margin-left:6px;">
+            score={{ saved.score_dalc }}
+          </span>
+        </div>
+        {% if revise.warning %}
+        <div style="background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.25);
+                    border-radius:8px;padding:6px 12px;font-size:11.5px;color:var(--amber);">
+          <i class="bi bi-exclamation-triangle-fill me-1"></i>
+          Similarity rendah (&lt; 0.5) — perlu perhatian pakar
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FORM REVISE PAKAR ══ -->
+<div class="ecard" style="border-color:rgba(167,139,250,0.35);
+                          box-shadow:0 0 28px rgba(167,139,250,0.08);">
+  <div class="ecard-header">
+    <div class="ecard-icon"
+         style="background:linear-gradient(135deg,#7c3aed22,#a78bfa22);
+                border:1px solid rgba(167,139,250,0.3);">✏️</div>
+    <div>
+      <p class="ecard-title" style="color:var(--accent);">
+        REVISE — Keputusan Pakar
+      </p>
+      <p class="ecard-sub">
+        Evaluasi hasil Reuse di atas, lalu tentukan kategori final untuk kasus ini.
+      </p>
+    </div>
+  </div>
+
+  <form action="{{ url_for('expert_cbr') }}" method="POST">
+    <input type="hidden" name="action" value="revise"/>
+
+    <div class="row g-4">
+      <!-- Pilihan Kategori -->
+      <div class="col-md-5">
+        <div style="font-size:12px;font-weight:600;color:var(--dim);margin-bottom:12px;">
+          Pilih Kategori Final:
+        </div>
+
+        {% for kat, color, dot_color, desc in [
+          ('Normal', 'normal', 'var(--green)',
+           'Konsumsi alkohol dalam batas normal. Tidak ada kekhawatiran signifikan.'),
+          ('Waspada', 'waspada', 'var(--amber)',
+           'Konsumsi mulai meningkat. Perlu pemantauan dan intervensi dini.'),
+          ('Bahaya', 'bahaya', 'var(--red)',
+           'Konsumsi alkohol tinggi. Diperlukan tindakan segera dan konseling.'),
+        ] %}
+        <label class="kat-option" id="opt-{{ color }}"
+               onclick="selectKat('{{ kat }}','{{ color }}')">
+          <input type="radio" name="kategori_final" value="{{ kat }}"
+                 {% if revise.kategori == kat %}checked{% endif %}
+                 id="radio-{{ color }}"/>
+          <div class="kat-dot" style="background:{{ dot_color }};"></div>
+          <div style="flex:1;">
+            <div class="kat-title" style="color:{{ dot_color }};">{{ kat }}</div>
+            <div class="kat-desc">{{ desc }}</div>
+          </div>
+          <div id="check-{{ color }}" style="font-size:18px;color:{{ dot_color }};
+               display:{% if revise.kategori == kat %}block{% else %}none{% endif %};">
+            <i class="bi bi-check-circle-fill"></i>
+          </div>
+        </label>
+        {% endfor %}
+
+        <!-- Indikator perubahan -->
+        <div id="changeIndicator" style="display:none;
+             background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.25);
+             border-radius:8px;padding:10px 12px;margin-top:8px;font-size:12px;color:var(--amber);">
+          <i class="bi bi-pencil-square me-1"></i>
+          Anda mengubah prediksi sistem dari
+          <strong>{{ revise.kategori }}</strong> →
+          <strong id="newKatLabel">—</strong>
+        </div>
+      </div>
+
+      <!-- Catatan Pakar -->
+      <div class="col-md-7">
+        <div style="font-size:12px;font-weight:600;color:var(--dim);margin-bottom:8px;">
+          Catatan / Justifikasi Pakar:
+        </div>
+        <textarea name="catatan_pakar" rows="5" class="eform-ctrl"
+                  placeholder="Tuliskan alasan keputusan pakar, konteks tambahan, atau observasi klinis yang relevan...
+Contoh: 'Meskipun similarity tinggi (0.97), kasus ini memiliki goout=5 dan famrel=1 yang mengindikasikan faktor risiko lebih tinggi dari kategori Normal yang diprediksi sistem.'"></textarea>
+
+        <div style="margin-top:14px;background:var(--bg-card2);border-radius:9px;
+                    padding:12px 14px;font-size:11.5px;color:var(--dim);">
+          <i class="bi bi-lightbulb me-1" style="color:var(--amber);"></i>
+          <strong style="color:var(--text);">Panduan Revise:</strong><br/>
+          Pertimbangkan: (1) distribusi label Top-5, (2) nilai similarity,
+          (3) fitur kritis seperti <span class="mono">goout</span>,
+          <span class="mono">famrel</span>, <span class="mono">failures</span>,
+          (4) konteks klinis yang tidak terepresentasi dalam data.
+        </div>
+
+        <!-- Ringkasan distribusi label Top-5 -->
+        <div style="margin-top:12px;background:var(--bg-card2);border-radius:9px;
+                    padding:12px 14px;">
+          <div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:8px;">
+            Distribusi Label dari Top-5:
+          </div>
+          {% set label_counts = {} %}
+          {% for case in reuse %}
+            {% if case.label_sentimen in label_counts %}
+              {% set _ = label_counts.update({case.label_sentimen: label_counts[case.label_sentimen]+1}) %}
+            {% else %}
+              {% set _ = label_counts.update({case.label_sentimen: 1}) %}
+            {% endif %}
+          {% endfor %}
+          {% for kat_name, cnt in label_counts.items() %}
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+            <span class="bc bc-{{ kat_name|lower }}">{{ kat_name }}</span>
+            <div style="flex:1;height:5px;border-radius:3px;background:var(--border);">
+              <div style="height:100%;border-radius:3px;width:{{ (cnt/reuse|length*100)|round }}%;
+                          background:{% if kat_name=='Normal' %}var(--green){% elif kat_name=='Waspada' %}var(--amber){% else %}var(--red){% endif %};"></div>
+            </div>
+            <span class="mono" style="font-size:11px;color:var(--text);">{{ cnt }}/{{ reuse|length }}</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:10px;margin-top:20px;padding-top:16px;
+                border-top:1px solid var(--border);">
+      <button type="submit" class="ebtn-primary" style="padding:10px 28px;font-size:13.5px;">
+        <i class="bi bi-check2-circle me-1"></i>Konfirmasi Keputusan Pakar →
+      </button>
+      <form action="{{ url_for('expert_cbr') }}" method="POST" style="display:inline;">
+        <input type="hidden" name="action" value="batal"/>
+        <button type="submit" class="ebtn-sm" style="padding:10px 16px;">
+          <i class="bi bi-arrow-left me-1"></i>Ulang Input
+        </button>
+      </form>
+    </div>
+  </form>
+</div>
+
+
+{# ════════════════════════════════════════════════════════════════
+   STAGE 4 — RETAIN (konfirmasi simpan)
+════════════════════════════════════════════════════════════════ #}
+{% elif stage == 'retain' and saved %}
+
+{% set kategori_final  = saved.kategori_final %}
+{% set kategori_sistem = saved.kategori_sistem %}
+{% set direvisi        = saved.direvisi %}
+
+<div class="row g-4">
+  <div class="col-lg-7">
+
+    <!-- Hasil Revise Pakar -->
+    <div class="ecard mb-4" style="border-color:{% if direvisi %}rgba(251,191,36,0.4){% else %}rgba(52,211,153,0.3){% endif %};">
+      <div class="ecard-header">
+        <div class="ecard-icon"
+             style="background:{% if direvisi %}rgba(251,191,36,0.12){% else %}rgba(52,211,153,0.12){% endif %};">
+          {% if direvisi %}⚠️{% else %}✅{% endif %}
+        </div>
+        <div>
+          <p class="ecard-title">Hasil REVISE Pakar</p>
+          <p class="ecard-sub">
+            {% if direvisi %}Pakar mengubah prediksi sistem{% else %}Pakar menyetujui prediksi sistem{% endif %}
+          </p>
+        </div>
+      </div>
+
+      <div class="row g-3 align-items-center">
+        <div class="col-md-5 text-center">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:6px;">
+            Prediksi Sistem (Reuse otomatis)
+          </div>
+          <span class="bc bc-{{ kategori_sistem|lower }}"
+                style="font-size:14px;padding:6px 18px;">{{ kategori_sistem }}</span>
+        </div>
+        {% if direvisi %}
+        <div class="col-md-2 text-center">
+          <i class="bi bi-arrow-right" style="font-size:22px;color:var(--amber);"></i>
+        </div>
+        {% else %}
+        <div class="col-md-2 text-center">
+          <i class="bi bi-check2-all" style="font-size:22px;color:var(--green);"></i>
+        </div>
+        {% endif %}
+        <div class="col-md-5 text-center">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:6px;">
+            Keputusan Pakar (Final)
+          </div>
+          <span class="bc bc-{{ kategori_final|lower }}"
+                style="font-size:18px;padding:8px 22px;font-weight:700;">
+            {{ kategori_final }}
+          </span>
+        </div>
+      </div>
+
+      {% if saved.catatan_pakar %}
+      <div style="margin-top:14px;background:var(--bg-card2);border-radius:8px;
+                  padding:12px 14px;border-left:3px solid rgba(167,139,250,0.5);">
+        <div style="font-size:10.5px;color:var(--accent);font-weight:600;margin-bottom:5px;">
+          <i class="bi bi-chat-quote me-1"></i>Catatan Pakar:
+        </div>
+        <div style="font-size:12.5px;color:var(--dim);font-style:italic;">
+          "{{ saved.catatan_pakar }}"
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Ringkasan Kasus Baru -->
+    <div class="ecard mb-4">
+      <div class="ecard-header">
+        <div class="ecard-icon" style="background:rgba(56,189,248,0.12);">📋</div>
+        <div>
+          <p class="ecard-title">Ringkasan Kasus Baru</p>
+          <p class="ecard-sub">Data yang akan disimpan ke basis kasus</p>
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;">
+        <span style="font-size:11px;color:var(--muted);">Input Asli:</span>
+        {% for k, v in saved.form_data.items() %}
+        <span style="background:var(--bg-card2);border:1px solid var(--border);
+                     border-radius:5px;padding:2px 7px;font-size:11px;
+                     font-family:'JetBrains Mono',monospace;color:var(--dim);">
+          {{ k }}={{ v }}
+        </span>
+        {% endfor %}
+      </div>
+      <div class="tscroll">
+        <table class="etable">
+          <thead>
+            <tr>
+              {% for col in feature_cols %}<th>{{ col }}</th>{% endfor %}
+              <th>label_sentimen</th>
+              <th>cluster</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              {% for col in feature_cols %}
+              <td class="mono" style="font-size:10.5px;">{{ saved.normalized_dict[col] }}</td>
+              {% endfor %}
+              <td><span class="bc bc-{{ kategori_final|lower }}">{{ kategori_final }}</span></td>
+              <td class="mono" style="color:var(--accent2);">{{ saved.cluster }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel Konfirmasi RETAIN -->
+  <div class="col-lg-5">
+    <div class="ecard" style="border-color:rgba(52,211,153,0.3);
+                              box-shadow:0 0 24px rgba(52,211,153,0.06);">
+      <div class="ecard-header">
+        <div class="ecard-icon"
+             style="background:rgba(52,211,153,0.12);color:var(--green);">💾</div>
+        <div>
+          <p class="ecard-title" style="color:var(--green);">RETAIN</p>
+          <p class="ecard-sub">Simpan kasus ke basis kasus CSV</p>
+        </div>
+      </div>
+
+      <div style="font-size:12.5px;color:var(--dim);margin-bottom:16px;">
+        Kasus baru ini akan ditambahkan ke
+        <strong style="color:var(--text);">dataset/student_dataset.csv</strong>
+        dengan kategori yang telah divalidasi pakar
+        <span class="bc bc-{{ kategori_final|lower }} ms-1">{{ kategori_final }}</span>.
+      </div>
+
+      <!-- Checklist -->
+      {% for item in [
+        ('✓ Retrieve', 'Kasus cluster ' ~ saved.cluster ~ ' — ' ~ saved.cbr.retrieve.total_retrieved ~ ' kasus', 'var(--accent2)'),
+        ('✓ Reuse',    'Similarity tertinggi: ' ~ saved.cbr.revise.similarity_score, 'var(--accent)'),
+        ('✓ Revise',   ('Direvisi pakar' if direvisi else 'Disetujui pakar') ~ ': ' ~ kategori_final, 'var(--amber)'),
+      ] %}
+      <div style="display:flex;align-items:flex-start;gap:10px;
+                  padding:9px 0;border-bottom:1px solid var(--border);">
+        <span class="mono" style="font-size:11px;color:{{ item[2] }};
+              font-weight:700;white-space:nowrap;">{{ item[0] }}</span>
+        <span style="font-size:11.5px;color:var(--muted);">{{ item[1] }}</span>
+      </div>
+      {% endfor %}
+
+      <div style="margin-top:20px;display:flex;flex-direction:column;gap:10px;">
+        <form action="{{ url_for('expert_cbr') }}" method="POST">
+          <input type="hidden" name="action" value="retain"/>
+          <button type="submit" class="ebtn-primary w-100"
+                  style="background:linear-gradient(135deg,#059669,#34d399);
+                         font-size:14px;padding:12px;">
+            <i class="bi bi-floppy-fill me-1"></i>Simpan ke Basis Kasus
+          </button>
+        </form>
+        <form action="{{ url_for('expert_cbr') }}" method="POST">
+          <input type="hidden" name="action" value="batal"/>
+          <button type="submit" class="ebtn-sm w-100" style="padding:10px;">
+            <i class="bi bi-x-circle me-1"></i>Batal, Jangan Simpan
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{# ════════════════════════════════════════════════════════════════
+   STAGE DONE
+════════════════════════════════════════════════════════════════ #}
+{% elif stage == 'done' %}
+
+<div class="ecard done-card">
+  <span class="done-icon">🎉</span>
+  <h4 style="font-size:20px;font-weight:700;color:var(--text);margin-bottom:8px;">
+    Proses CBR Selesai!
+  </h4>
+  <p style="font-size:13px;color:var(--muted);margin-bottom:24px;">
+    Kasus baru telah berhasil divalidasi dan disimpan ke basis kasus.
+  </p>
+  <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+    <a href="{{ url_for('expert_cbr', stage='input') }}"
+       class="ebtn-primary" style="text-decoration:none;padding:10px 24px;">
+      <i class="bi bi-plus-circle me-1"></i>Proses Kasus Baru
+    </a>
+    <a href="{{ url_for('expert_riwayat') }}"
+       style="display:inline-flex;align-items:center;gap:6px;padding:10px 20px;
+              background:transparent;border:1px solid var(--border);
+              border-radius:8px;color:var(--dim);text-decoration:none;font-size:13px;">
+      <i class="bi bi-clock-history"></i>Lihat Riwayat
+    </a>
+    <a href="{{ url_for('expert_dashboard') }}"
+       style="display:inline-flex;align-items:center;gap:6px;padding:10px 20px;
+              background:transparent;border:1px solid var(--border);
+              border-radius:8px;color:var(--dim);text-decoration:none;font-size:13px;">
+      <i class="bi bi-speedometer2"></i>Dashboard
+    </a>
+  </div>
+</div>
+
+{% else %}
+<!-- Fallback: jika stage tidak dikenal atau session expired -->
+<div class="ecard" style="text-align:center;padding:40px;">
+  <div style="font-size:40px;opacity:0.2;margin-bottom:12px;">⚠️</div>
+  <div style="font-size:14px;color:var(--muted);margin-bottom:16px;">
+    Sesi berakhir atau halaman tidak valid.
+  </div>
+  <a href="{{ url_for('expert_cbr', stage='input') }}" class="ebtn-primary"
+     style="text-decoration:none;">Mulai Dari Awal</a>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const sistemKat = "{{ saved.cbr.revise.kategori if saved and saved.cbr else '' }}";
+
+  function selectKat(kat, color) {
+    // Reset semua
+    ['normal','waspada','bahaya'].forEach(c => {
+      const el = document.getElementById('opt-' + c);
+      if (el) {
+        el.className = 'kat-option';
+        document.getElementById('check-' + c).style.display = 'none';
+        document.getElementById('radio-' + c).checked = false;
+      }
+    });
+    // Set yang dipilih
+    const opt = document.getElementById('opt-' + color);
+    if (opt) {
+      opt.classList.add('selected-' + color);
+      document.getElementById('check-' + color).style.display = 'block';
+      document.getElementById('radio-' + color).checked = true;
+    }
+    // Indikator perubahan
+    const ind = document.getElementById('changeIndicator');
+    if (ind) {
+      if (sistemKat && kat !== sistemKat) {
+        document.getElementById('newKatLabel').textContent = kat;
+        ind.style.display = 'block';
+      } else {
+        ind.style.display = 'none';
+      }
+    }
+  }
+
+  // Inisialisasi state aktif saat halaman load
+  document.addEventListener('DOMContentLoaded', () => {
+    const checked = document.querySelector('input[name="kategori_final"]:checked');
+    if (checked) {
+      const kat = checked.value;
+      selectKat(kat, kat.toLowerCase());
+    }
+  });
+</script>
+{% endblock %}
