@@ -104,30 +104,6 @@
                  class="form-control-custom w-100"/>
         </div>
 
-        <hr style="border-color:var(--border);"/>
-
-        <!-- Dalc / Walc untuk labeling -->
-        <div style="background:var(--bg-card2); border-radius:8px; padding:12px; margin-bottom:12px;">
-          <div style="font-size:11px; color:var(--accent-amber); margin-bottom:8px; font-weight:600;">
-            ⚗️ Label Score (untuk referensi)
-          </div>
-          <div class="row g-2">
-            <div class="col-6">
-              <label class="form-label-custom">Dalc (1–5)</label>
-              <input type="number" name="dalc" min="1" max="5" step="1"
-                     value="{{ form_data.get('dalc', 1) }}"
-                     class="form-control-custom w-100"/>
-              <small style="font-size:10px; color:var(--text-muted);">Alkohol hari kerja</small>
-            </div>
-            <div class="col-6">
-              <label class="form-label-custom">Walc (1–5)</label>
-              <input type="number" name="walc" min="1" max="5" step="1"
-                     value="{{ form_data.get('walc', 1) }}"
-                     class="form-control-custom w-100"/>
-              <small style="font-size:10px; color:var(--text-muted);">Alkohol akhir pekan</small>
-            </div>
-          </div>
-        </div>
 
         <button type="submit" class="btn-primary-custom w-100">
           <i class="bi bi-search me-1"></i>Proses CBR
@@ -153,7 +129,7 @@
       <div class="card-header-custom">
         <div class="card-header-icon" style="background:#a78bfa22;">🔄</div>
         <div>
-          <p class="card-header-title">Tahap 1 — Encoding &amp; Normalisasi</p>
+          <p class="card-header-title">Tahap Encoding &amp; Normalisasi</p>
           <p class="card-header-sub">Transformasi input kasus baru</p>
         </div>
       </div>
@@ -182,42 +158,12 @@
       </div>
     </div>
 
-    <!-- Label dari Dalc/Walc -->
-    <div class="card-custom mb-4">
-      <div class="card-header-custom">
-        <div class="card-header-icon" style="background:#fbbf2422;">🏷️</div>
-        <div>
-          <p class="card-header-title">Tahap 2 — Scoring &amp; Labeling</p>
-          <p class="card-header-sub">score = 0.6×Dalc + 0.4×Walc</p>
-        </div>
-      </div>
-      <div class="row g-3 align-items-center">
-        <div class="col-md-5">
-          <div style="background:var(--bg-card2); border-radius:8px; padding:14px;">
-            <div class="mono" style="font-size:13px; color:var(--text-dim);">
-              score = 0.6 × {{ result.dalc }} + 0.4 × {{ result.walc }}<br/>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= <span style="color:var(--accent-amber); font-weight:700;">{{ result.score_dalc }}</span>
-            </div>
-            <div style="margin-top:10px; font-size:11px; color:var(--text-muted);">
-              Interval: Normal ≤ {{ result.threshold1 }} | Waspada ≤ {{ result.threshold2 }} | Bahaya &gt; {{ result.threshold2 }}
-            </div>
-          </div>
-        </div>
-        <div class="col-md-7 text-center">
-          <div style="font-size:12px; color:var(--text-muted); margin-bottom:6px;">Label dari Dalc/Walc:</div>
-          <span class="badge-cat badge-{{ result.kategori_input|lower }}" style="font-size:16px; padding:8px 20px;">
-            {{ result.kategori_input }}
-          </span>
-        </div>
-      </div>
-    </div>
-
     <!-- CBR Pipeline -->
     <div class="card-custom mb-4">
       <div class="card-header-custom">
         <div class="card-header-icon" style="background:#38bdf822;">🔁</div>
         <div>
-          <p class="card-header-title">Tahap 3 — Proses CBR</p>
+          <p class="card-header-title">Tahap Proses CBR</p>
           <p class="card-header-sub">Retrieve → Reuse → Revise → Retain</p>
         </div>
       </div>
@@ -241,8 +187,6 @@
           <div style="font-size:10px; font-weight:700; color:{{ color }}; letter-spacing:0.08em;">{{ step }}</div>
           <div style="font-size:10px; color:var(--text-muted); margin-top:3px;">{{ desc }}</div>
           {% if not loop.last %}
-          <div style="position:absolute; top:18px; right:0; left:50%; height:2px;
-                      background:{{ color }}44; z-index:0;"></div>
           {% endif %}
         </div>
         {% endfor %}
@@ -351,14 +295,14 @@
             <i class="bi bi-trophy-fill me-1" style="color:var(--accent-amber);"></i>
             Hasil Akhir Prediksi CBR
           </div>
-          <div style="font-size:13px; color:var(--text-dim); margin-bottom:6px;">
+          <div style="font-size:13px; color:var(--text-dim); margin-bottom:16px;">
             Kasus paling mirip (Rank 1) berasal dari kategori:
           </div>
           <span class="badge-cat badge-{{ result.cbr.revise.kategori|lower }}"
                 style="font-size:20px; padding:10px 24px;">
             {{ result.cbr.revise.kategori }}
           </span>
-          <div style="margin-top:10px; font-size:12px; color:var(--text-muted);">
+          <div style="margin-top:16px; font-size:12px; color:var(--text-muted);">
             Cosine Similarity: <span class="mono" style="color:var(--accent-green);">
               {{ result.cbr.revise.similarity_score }}
             </span>
@@ -380,13 +324,13 @@
       <div class="card-header-custom">
         <div class="card-header-icon" style="background:#fbbf2422;">💾</div>
         <div>
-          <p class="card-header-title">RETAIN — Simpan Kasus</p>
+          <p class="card-header-title">RETAIN (Simpan Kasus)</p>
           <p class="card-header-sub">Tambahkan kasus baru ke basis kasus CSV</p>
         </div>
       </div>
       <p style="font-size:12px; color:var(--text-muted); margin-bottom:14px;">
         Kasus baru akan disimpan dengan kategori prediksi CBR
-        (<span class="badge-cat badge-{{ result.cbr.revise.kategori|lower }}">{{ result.cbr.revise.kategori }}</span>)
+        <span class="badge-cat badge-{{ result.cbr.revise.kategori|lower }}">{{ result.cbr.revise.kategori }}</span>
         ke dalam file dataset.
       </p>
       <form action="{{ url_for('cbr') }}" method="POST">

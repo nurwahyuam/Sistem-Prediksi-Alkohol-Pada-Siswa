@@ -259,6 +259,14 @@
         "documentation": {}
     },
     {
+        "label": "ceil",
+        "importPath": "math",
+        "description": "math",
+        "isExtraImport": true,
+        "detail": "math",
+        "documentation": {}
+    },
+    {
         "label": "Flask",
         "importPath": "flask",
         "description": "flask",
@@ -448,6 +456,15 @@
         "description": "utils.expert",
         "isExtraImport": true,
         "detail": "utils.expert",
+        "documentation": {}
+    },
+    {
+        "label": "multiprocessing",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "multiprocessing",
+        "description": "multiprocessing",
+        "detail": "multiprocessing",
         "documentation": {}
     },
     {
@@ -1013,6 +1030,15 @@
         "description": "app",
         "peekOfCode": "_state = {\n    'df': None,\n    'df_cluster': None,\n    'scaler': None,\n    'kmeans': None,\n    'sse_list': [],\n    'optimal_k': 3,\n    'elbow_img': None,\n    'cluster_img': None,\n    'norm_info': {},",
         "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "os.environ[\"LOKY_MAX_CPU_COUNT\"]",
+        "kind": 5,
+        "importPath": "run",
+        "description": "run",
+        "peekOfCode": "os.environ[\"LOKY_MAX_CPU_COUNT\"] = str(multiprocessing.cpu_count())\nfrom app import app, initialize_system\nif __name__ == '__main__':\n    print(\"=\" * 55)\n    print(\"  CBR KMeans — Student Alcohol Risk Classification\")\n    print(\"=\" * 55)\n    print(\"  Inisialisasi sistem...\")\n    initialize_system()\n    print(\"  ✓ Dataset loaded\")\n    print(\"  ✓ Model trained\")",
+        "detail": "run",
         "documentation": {}
     }
 ]

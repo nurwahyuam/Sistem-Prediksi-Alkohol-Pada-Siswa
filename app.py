@@ -9,6 +9,7 @@ import json
 import numpy as np
 import pandas as pd
 from functools import wraps
+from math import ceil
 from flask import (Flask, render_template, request, jsonify,
                    redirect, url_for, session, flash)
 
@@ -499,11 +500,37 @@ def expert_basis_kasus():
             msg_type = 'success' if ok else 'danger'
             _reload_df()
 
-    df      = _state['df_cluster']
-    records = df.round(4).to_dict(orient='records')
+    df = _state['df_cluster'].copy()
+
+    # Data terbaru di atas
+    df = df.iloc[::-1].reset_index(drop=True)
+
+    # Pagination
+    PER_PAGE = 10
+    page = request.args.get('page', 1, type=int)
+
+    total = len(df)
+    total_pages = ceil(total / PER_PAGE)
+
+    start = (page - 1) * PER_PAGE
+    end = start + PER_PAGE
+
+    records = (
+        df.iloc[start:end]
+        .round(4)
+        .to_dict(orient='records')
+    )
+
     return render_template('expert/basis_kasus.html',
-                           records=records, columns=list(df.columns),
-                           total=len(df), msg=msg, msg_type=msg_type)
+        records=records,
+        columns=list(df.columns),
+        total=total,
+        page=page,
+        total_pages=total_pages,
+        per_page=PER_PAGE,
+        msg=msg,
+        msg_type=msg_type
+    )
 
 
 @app.route('/pakar/riwayat')
