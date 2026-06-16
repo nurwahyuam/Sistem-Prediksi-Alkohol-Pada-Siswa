@@ -5,7 +5,8 @@
 
 /* ===== BODY & GLOBAL ===== */
 body {
-    background-color: #f5f7fa;
+    /* background-color: #f5f7fa; */
+    background-color: #eef2f7;
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     font-size: 0.9rem;
 }
@@ -183,5 +184,10 @@ footer {
     .table th,
     .table td {
         font-size: 0.72rem;
+        padding: 0.5rem;
+    }
+
+    footer {
+        padding: 0.5rem;
     }
 }

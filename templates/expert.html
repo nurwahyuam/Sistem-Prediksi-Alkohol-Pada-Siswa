@@ -85,7 +85,7 @@
 
             <!-- Kasus Referensi -->
             {% if reuse_result.kasus_referensi %}
-            <div class="card shadow-sm border-0">
+            <div class="card shadow-sm border-0 mb-3">
                 <div class="card-header bg-light fw-bold small">
                     <i class="bi bi-file-earmark-check me-1 text-success"></i>
                     Kasus Referensi (Best Match)
@@ -97,19 +97,19 @@
                     <table class="table table-sm table-borderless mb-0 mt-2">
                         <tr>
                             <td class="text-muted">sex</td>
-                            <td>{{ reuse_result.kasus_referensi.sex }}</td>
+                            <td>: {{ reuse_result.kasus_referensi.sex }}</td>
                             <td class="text-muted">address</td>
-                            <td>{{ reuse_result.kasus_referensi.address }}</td>
+                            <td>: {{ reuse_result.kasus_referensi.address }}</td>
                         </tr>
                         <tr>
                             <td class="text-muted">studytime</td>
-                            <td>{{ "%.4f"|format(reuse_result.kasus_referensi.studytime) }}</td>
+                            <td>: {{ "%.4f"|format(reuse_result.kasus_referensi.studytime) }}</td>
                             <td class="text-muted">goout</td>
-                            <td>{{ "%.4f"|format(reuse_result.kasus_referensi.goout) }}</td>
+                            <td>: {{ "%.4f"|format(reuse_result.kasus_referensi.goout) }}</td>
                         </tr>
                         <tr>
                             <td class="text-muted">Label</td>
-                            <td colspan="3">
+                            <td colspan="3">: 
                                 {% if reuse_result.kasus_referensi.label == 'Normal' %}
                                     <span class="badge bg-success">Normal</span>
                                 {% elif reuse_result.kasus_referensi.label == 'Waspada' %}
