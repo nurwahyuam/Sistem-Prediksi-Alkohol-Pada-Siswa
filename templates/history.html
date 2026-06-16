@@ -1,13 +1,16 @@
-{% extends "base.html" %}
-{% block title %}Riwayat{% endblock %}
-
-{% block content %}
-<div class="container-fluid">
-
+{% extends "base.html" %} {% block title %}Riwayat{% endblock %} {% block
+content %}
+<!-- <div class="container-fluid"> -->
+<div class="container">
     <div class="row mb-3">
         <div class="col-12">
-            <h4 class="fw-bold"><i class="bi bi-clock-history me-2 text-primary"></i>Riwayat Retrieve &amp; Revisi</h4>
-            <p class="text-muted mb-0">Log seluruh proses retrieve dan keputusan pakar.</p>
+            <h4 class="fw-bold">
+                <i class="bi bi-clock-history me-2 text-primary"></i>Riwayat
+                Retrieve &amp; Revisi
+            </h4>
+            <p class="text-muted mb-0">
+                Log seluruh proses retrieve dan keputusan pakar.
+            </p>
         </div>
     </div>
 
@@ -18,12 +21,16 @@
                 <div class="card-header bg-light fw-bold">
                     <i class="bi bi-search me-2 text-primary"></i>
                     Riwayat Retrieve (retrieve_history.xlsx)
-                    <span class="badge bg-primary ms-2">{{ history_list|length }}</span>
+                    <span class="badge bg-primary ms-2"
+                        >{{ history_list|length }}</span
+                    >
                 </div>
                 <div class="card-body p-0">
                     {% if history_list %}
                     <div class="table-responsive">
-                        <table class="table table-sm table-hover table-striped mb-0">
+                        <table
+                            class="table table-sm table-hover table-striped mb-0"
+                        >
                             <thead class="table-primary">
                                 <tr>
                                     <th>History ID</th>
@@ -40,54 +47,92 @@
                             <tbody>
                                 {% for h in history_list %}
                                 <tr>
-                                    <td><span class="badge bg-secondary small">{{ h.history_id }}</span></td>
-                                    <td><span class="badge bg-primary small">{{ h.case_id }}</span></td>
-                                    <td><span class="badge bg-light text-dark border small">{{ h.top1_case_id }}</span></td>
                                     <td>
-                                        <strong>{{ "%.4f"|format(h.top1_similarity|float) }}</strong>
+                                        <span class="badge bg-secondary small"
+                                            >{{ h.history_id }}</span
+                                        >
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-primary small"
+                                            >{{ h.case_id }}</span
+                                        >
+                                    </td>
+                                    <td>
+                                        <span
+                                            class="badge bg-light text-dark border small"
+                                            >{{ h.top1_case_id }}</span
+                                        >
+                                    </td>
+                                    <td>
+                                        <strong
+                                            >{{
+                                            "%.4f"|format(h.top1_similarity|float)
+                                            }}</strong
+                                        >
                                     </td>
                                     <td>{{ h.cluster_id }}</td>
                                     <td>
                                         {% if h.system_label == 'Normal' %}
-                                            <span class="badge bg-success">Normal</span>
+                                        <span class="badge bg-success"
+                                            >Normal</span
+                                        >
                                         {% elif h.system_label == 'Waspada' %}
-                                            <span class="badge bg-warning text-dark">Waspada</span>
+                                        <span class="badge bg-warning text-dark"
+                                            >Waspada</span
+                                        >
                                         {% else %}
-                                            <span class="badge bg-danger">Bahaya</span>
+                                        <span class="badge bg-danger"
+                                            >Bahaya</span
+                                        >
                                         {% endif %}
                                     </td>
                                     <td>
                                         {% if h.final_label == 'Normal' %}
-                                            <span class="badge bg-success">Normal</span>
+                                        <span class="badge bg-success"
+                                            >Normal</span
+                                        >
                                         {% elif h.final_label == 'Waspada' %}
-                                            <span class="badge bg-warning text-dark">Waspada</span>
+                                        <span class="badge bg-warning text-dark"
+                                            >Waspada</span
+                                        >
                                         {% else %}
-                                            <span class="badge bg-danger">Bahaya</span>
-                                        {% endif %}
-                                        {% if h.system_label != h.final_label %}
-                                            <i class="bi bi-arrow-right text-muted mx-1"></i>
-                                            <span class="badge bg-warning text-dark small">Direvisi</span>
+                                        <span class="badge bg-danger"
+                                            >Bahaya</span
+                                        >
+                                        {% endif %} {% if h.system_label !=
+                                        h.final_label %}
+                                        <i
+                                            class="bi bi-arrow-right text-muted mx-1"
+                                        ></i>
+                                        <span
+                                            class="badge bg-warning text-dark small"
+                                            >Direvisi</span
+                                        >
                                         {% endif %}
                                     </td>
                                     <td>
-                                        <span class="badge small
-                                            {% if h.status == 'VALIDATED' %}bg-success
-                                            {% elif h.status == 'EXPERT_REVISED' %}bg-info text-dark
-                                            {% else %}bg-secondary{% endif %}">
+                                        <span
+                                            class="badge small {% if h.status == 'VALIDATED' %}bg-success {% elif h.status == 'EXPERT_REVISED' %}bg-info text-dark {% else %}bg-secondary{% endif %}"
+                                        >
                                             {{ h.status }}
                                         </span>
                                     </td>
-                                    <td class="text-muted small" style="white-space:nowrap;">{{ h.created_at }}</td>
+                                    <td
+                                        class="text-muted small"
+                                        style="white-space: nowrap"
+                                    >
+                                        {{ h.created_at }}
+                                    </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
                     </div>
                     {% else %}
-                        <div class="text-center text-muted py-4">
-                            <i class="bi bi-inbox fs-3 d-block mb-2"></i>
-                            Belum ada riwayat retrieve.
-                        </div>
+                    <div class="text-center text-muted py-4">
+                        <i class="bi bi-inbox fs-3 d-block mb-2"></i>
+                        Belum ada riwayat retrieve.
+                    </div>
                     {% endif %}
                 </div>
             </div>
@@ -101,12 +146,16 @@
                 <div class="card-header bg-light fw-bold">
                     <i class="bi bi-pencil-square me-2 text-success"></i>
                     Log Revisi Pakar (revision_log.xlsx)
-                    <span class="badge bg-success ms-2">{{ revisi_list|length }}</span>
+                    <span class="badge bg-success ms-2"
+                        >{{ revisi_list|length }}</span
+                    >
                 </div>
                 <div class="card-body p-0">
                     {% if revisi_list %}
                     <div class="table-responsive">
-                        <table class="table table-sm table-hover table-striped mb-0">
+                        <table
+                            class="table table-sm table-hover table-striped mb-0"
+                        >
                             <thead class="table-success">
                                 <tr>
                                     <th>Revision ID</th>
@@ -120,50 +169,81 @@
                             <tbody>
                                 {% for r in revisi_list %}
                                 <tr>
-                                    <td><span class="badge bg-secondary small">{{ r.revision_id }}</span></td>
-                                    <td><span class="badge bg-primary small">{{ r.case_id }}</span></td>
+                                    <td>
+                                        <span class="badge bg-secondary small"
+                                            >{{ r.revision_id }}</span
+                                        >
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-primary small"
+                                            >{{ r.case_id }}</span
+                                        >
+                                    </td>
                                     <td>
                                         {% if r.system_label == 'Normal' %}
-                                            <span class="badge bg-success">Normal</span>
+                                        <span class="badge bg-success"
+                                            >Normal</span
+                                        >
                                         {% elif r.system_label == 'Waspada' %}
-                                            <span class="badge bg-warning text-dark">Waspada</span>
+                                        <span class="badge bg-warning text-dark"
+                                            >Waspada</span
+                                        >
                                         {% else %}
-                                            <span class="badge bg-danger">Bahaya</span>
+                                        <span class="badge bg-danger"
+                                            >Bahaya</span
+                                        >
                                         {% endif %}
                                     </td>
                                     <td>
                                         {% if r.expert_label == 'Normal' %}
-                                            <span class="badge bg-success">Normal</span>
+                                        <span class="badge bg-success"
+                                            >Normal</span
+                                        >
                                         {% elif r.expert_label == 'Waspada' %}
-                                            <span class="badge bg-warning text-dark">Waspada</span>
+                                        <span class="badge bg-warning text-dark"
+                                            >Waspada</span
+                                        >
                                         {% else %}
-                                            <span class="badge bg-danger">Bahaya</span>
-                                        {% endif %}
-                                        {% if r.system_label != r.expert_label %}
-                                            <i class="bi bi-pencil-fill text-warning ms-1 small"></i>
+                                        <span class="badge bg-danger"
+                                            >Bahaya</span
+                                        >
+                                        {% endif %} {% if r.system_label !=
+                                        r.expert_label %}
+                                        <i
+                                            class="bi bi-pencil-fill text-warning ms-1 small"
+                                        ></i>
                                         {% else %}
-                                            <i class="bi bi-check-circle-fill text-success ms-1 small"></i>
+                                        <i
+                                            class="bi bi-check-circle-fill text-success ms-1 small"
+                                        ></i>
                                         {% endif %}
                                     </td>
-                                    <td class="small text-muted" style="max-width:200px;">
+                                    <td
+                                        class="small text-muted"
+                                        style="max-width: 200px"
+                                    >
                                         {{ r.note if r.note != '-' else '—' }}
                                     </td>
-                                    <td class="text-muted small" style="white-space:nowrap;">{{ r.created_at }}</td>
+                                    <td
+                                        class="text-muted small"
+                                        style="white-space: nowrap"
+                                    >
+                                        {{ r.created_at }}
+                                    </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
                     </div>
                     {% else %}
-                        <div class="text-center text-muted py-4">
-                            <i class="bi bi-inbox fs-3 d-block mb-2"></i>
-                            Belum ada log revisi pakar.
-                        </div>
+                    <div class="text-center text-muted py-4">
+                        <i class="bi bi-inbox fs-3 d-block mb-2"></i>
+                        Belum ada log revisi pakar.
+                    </div>
                     {% endif %}
                 </div>
             </div>
         </div>
     </div>
-
 </div>
 {% endblock %}

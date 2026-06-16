@@ -1,106 +1,141 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}CBR Alcohol{% endblock %} | Sistem Prediksi Konsumsi Alkohol Siswa</title>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>
+            {% block title %}CBR Alcohol{% endblock %} | Sistem Prediksi
+            Konsumsi Alkohol Siswa
+        </title>
 
-    <!-- Bootstrap 5 CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
+        <!-- Bootstrap 5 CDN -->
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+        />
+        <!-- Bootstrap Icons -->
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+            rel="stylesheet"
+        />
+        <!-- Custom CSS -->
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='style.css') }}"
+        />
+    </head>
+    <!-- <body> -->
+    <body class="d-flex flex-column min-vh-100">
+        <!-- ===== NAVBAR ===== -->
+        <nav
+            class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm sticky-top"
+        >
+            <!-- <div class="container-fluid"> -->
+            <div class="container">
+                <a class="navbar-brand fw-bold" href="{{ url_for('index') }}">
+                    <i class="bi bi-activity me-2"></i>CBR Alcohol
+                </a>
+                <button
+                    class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarMain"
+                >
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-<!-- ===== NAVBAR ===== -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
-    <div class="container-fluid">
-        <a class="navbar-brand fw-bold" href="{{ url_for('index') }}">
-            <i class="bi bi-activity me-2"></i>CBR Alcohol
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+                <div class="collapse navbar-collapse" id="navbarMain">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a
+                                class="nav-link {% if request.endpoint == 'index' %}active{% endif %}"
+                                href="{{ url_for('index') }}"
+                            >
+                                <i class="bi bi-speedometer2 me-1"></i>Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a
+                                class="nav-link {% if request.endpoint == 'preprocessing' %}active{% endif %}"
+                                href="{{ url_for('preprocessing') }}"
+                            >
+                                <i class="bi bi-cpu me-1"></i>Preprocessing
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a
+                                class="nav-link {% if request.endpoint == 'clustering' %}active{% endif %}"
+                                href="{{ url_for('clustering') }}"
+                            >
+                                <i class="bi bi-diagram-3 me-1"></i>Clustering
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a
+                                class="nav-link {% if request.endpoint == 'predict' %}active{% endif %}"
+                                href="{{ url_for('predict') }}"
+                            >
+                                <i class="bi bi-search me-1"></i>Prediksi Baru
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a
+                                class="nav-link {% if request.endpoint == 'casebase' %}active{% endif %}"
+                                href="{{ url_for('casebase') }}"
+                            >
+                                <i class="bi bi-database me-1"></i>Case Base
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a
+                                class="nav-link {% if request.endpoint == 'history' %}active{% endif %}"
+                                href="{{ url_for('history') }}"
+                            >
+                                <i class="bi bi-clock-history me-1"></i>Riwayat
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
 
-        <div class="collapse navbar-collapse" id="navbarMain">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link {% if request.endpoint == 'index' %}active{% endif %}"
-                       href="{{ url_for('index') }}">
-                        <i class="bi bi-speedometer2 me-1"></i>Dashboard
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {% if request.endpoint == 'preprocessing' %}active{% endif %}"
-                       href="{{ url_for('preprocessing') }}">
-                        <i class="bi bi-cpu me-1"></i>Preprocessing
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {% if request.endpoint == 'clustering' %}active{% endif %}"
-                       href="{{ url_for('clustering') }}">
-                        <i class="bi bi-diagram-3 me-1"></i>Clustering
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {% if request.endpoint == 'predict' %}active{% endif %}"
-                       href="{{ url_for('predict') }}">
-                        <i class="bi bi-search me-1"></i>Prediksi Baru
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {% if request.endpoint == 'casebase' %}active{% endif %}"
-                       href="{{ url_for('casebase') }}">
-                        <i class="bi bi-database me-1"></i>Case Base
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {% if request.endpoint == 'history' %}active{% endif %}"
-                       href="{{ url_for('history') }}">
-                        <i class="bi bi-clock-history me-1"></i>Riwayat
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
-
-<!-- ===== MAIN CONTENT ===== -->
-<main class="container-fluid py-4">
-
-    <!-- Flash Messages -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
+        <!-- ===== MAIN CONTENT ===== -->
+        <!-- <main class="container-fluid py-4"> -->
+        <main class="container-fluid py-4 flex-grow-1">
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %} {%
+            if messages %}
             <div class="container mb-3">
                 {% for category, message in messages %}
-                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
+                <div
+                    class="alert alert-{{ category }} alert-dismissible fade show"
+                    role="alert"
+                >
+                    {{ message }}
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                    ></button>
+                </div>
                 {% endfor %}
             </div>
-        {% endif %}
-    {% endwith %}
+            {% endif %} {% endwith %} {% block content %}{% endblock %}
+        </main>
 
-    {% block content %}{% endblock %}
-</main>
+        <!-- ===== FOOTER ===== -->
+        <footer class="bg-dark text-light text-center py-3 mt-5">
+            <small>
+                CBR Alcohol &copy; 2024 &mdash; Sistem Prediksi Tingkat Konsumsi
+                Alkohol Siswa | K-Means Clustering + Cosine Similarity + CBR
+            </small>
+        </footer>
 
-<!-- ===== FOOTER ===== -->
-<footer class="bg-dark text-light text-center py-3 mt-5">
-    <small>
-        CBR Alcohol &copy; 2024 &mdash;
-        Sistem Prediksi Tingkat Konsumsi Alkohol Siswa
-        | K-Means Clustering + Cosine Similarity + CBR
-    </small>
-</footer>
+        <!-- Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Chart.js untuk grafik elbow -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Chart.js untuk grafik elbow -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-
-{% block scripts %}{% endblock %}
-</body>
+        {% block scripts %}{% endblock %}
+    </body>
 </html>
