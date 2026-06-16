@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% block title %}Prediksi Kasus Baru{% endblock %}
+
+{% block content %}
+<div class="container">
+
+    <div class="row mb-3">
+        <div class="col-12">
+            <h4 class="fw-bold"><i class="bi bi-search me-2 text-primary"></i>Input Kasus Baru</h4>
+            <p class="text-muted">Masukkan data siswa untuk memprediksi tingkat konsumsi alkohol.</p>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow border-0">
+                <div class="card-header bg-primary text-white fw-bold">
+                    <i class="bi bi-person-fill me-2"></i>Data Siswa
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('predict_post') }}">
+
+                        <!-- Baris 1: Kategorikal -->
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Jenis Kelamin (sex)</label>
+                                <select name="sex" class="form-select" required>
+                                    <option value="F">F - Perempuan</option>
+                                    <option value="M">M - Laki-laki</option>
+                                </select>
+                                <div class="form-text">F=0, M=1</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Alamat (address)</label>
+                                <select name="address" class="form-select" required>
+                                    <option value="U">U - Perkotaan</option>
+                                    <option value="R">R - Pedesaan</option>
+                                </select>
+                                <div class="form-text">R=0, U=1</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Status Orang Tua (Pstatus)</label>
+                                <select name="pstatus" class="form-select" required>
+                                    <option value="T">T - Tinggal Bersama</option>
+                                    <option value="A">A - Terpisah</option>
+                                </select>
+                                <div class="form-text">A=0, T=1</div>
+                            </div>
+                        </div>
+
+                        <!-- Baris 2: Numerik 1 -->
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Waktu Belajar (studytime)</label>
+                                <input type="number" name="studytime" class="form-control"
+                                       min="1" max="4" value="2" required>
+                                <div class="form-text">Skala 1-4 (1=rendah, 4=tinggi)</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Kegagalan (failures)</label>
+                                <input type="number" name="failures" class="form-control"
+                                       min="0" max="3" value="0" required>
+                                <div class="form-text">0-3 (jumlah kegagalan kelas)</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Pacaran (romantic)</label>
+                                <select name="romantic" class="form-select" required>
+                                    <option value="no">No - Tidak</option>
+                                    <option value="yes">Yes - Ya</option>
+                                </select>
+                                <div class="form-text">No=0, Yes=1</div>
+                            </div>
+                        </div>
+
+                        <!-- Baris 3: Numerik 2 -->
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">Hub. Keluarga (famrel)</label>
+                                <input type="number" name="famrel" class="form-control"
+                                       min="1" max="5" value="3" required>
+                                <div class="form-text">Skala 1-5 (1=buruk, 5=sangat baik)</div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">Waktu Luang (freetime)</label>
+                                <input type="number" name="freetime" class="form-control"
+                                       min="1" max="5" value="3" required>
+                                <div class="form-text">Skala 1-5</div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">Keluar Bersama (goout)</label>
+                                <input type="number" name="goout" class="form-control"
+                                       min="1" max="5" value="3" required>
+                                <div class="form-text">Skala 1-5</div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">Ketidakhadiran (absences)</label>
+                                <input type="number" name="absences" class="form-control"
+                                       min="0" max="75" value="0" required>
+                                <div class="form-text">0-75 hari</div>
+                            </div>
+                        </div>
+
+                        <!-- Info CBR -->
+                        <div class="alert alert-info small">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Data akan dipreprocessing (encoding + normalisasi), lalu diprediksi clusternya,
+                            kemudian dicari kasus paling mirip menggunakan <strong>Cosine Similarity</strong>.
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-search me-2"></i>Retrieve &amp; Prediksi
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contoh Data (dari PPT) -->
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-light fw-bold small">
+                    <i class="bi bi-lightbulb me-1 text-warning"></i>
+                    Contoh kasus dari PPT: sex=F, address=R, Pstatus=T, studytime=2,
+                    failures=0, romantic=yes, famrel=4, freetime=3, goout=5, absences=0
+                    → Prediksi: <span class="text-success fw-bold">Normal</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

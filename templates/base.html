@@ -1,383 +1,106 @@
 <!DOCTYPE html>
-<html lang="id" data-bs-theme="dark">
+<html lang="id">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>{% block title %}CBR KMeans System{% endblock %}</title>
-  <!-- Bootstrap 5.3 -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <!-- Bootstrap Icons -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet"/>
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
-  <style>
-    :root {
-      --bg-base:      #080d1a;
-      --bg-card:      #0f1629;
-      --bg-card2:     #141e35;
-      --border:       #1e3254;
-      --border-glow:  #2563eb44;
-      --accent-blue:  #38bdf8;
-      --accent-violet:#a78bfa;
-      --accent-green: #34d399;
-      --accent-amber: #fbbf24;
-      --accent-red:   #f87171;
-      --text-primary: #e2e8f0;
-      --text-muted:   #64748b;
-      --text-dim:     #94a3b8;
-      --gradient-1:   linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 100%);
-      --gradient-2:   linear-gradient(135deg, #10b981 0%, #0ea5e9 100%);
-      --gradient-3:   linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CBR Alcohol{% endblock %} | Sistem Prediksi Konsumsi Alkohol Siswa</title>
 
-    * { box-sizing: border-box; }
-
-    body {
-      background: var(--bg-base);
-      color: var(--text-primary);
-      font-family: 'Space Grotesk', sans-serif;
-      min-height: 100vh;
-    }
-
-    /* ── Sidebar ── */
-    .sidebar {
-      width: 260px;
-      min-height: 100vh;
-      background: var(--bg-card);
-      border-right: 1px solid var(--border);
-      position: fixed;
-      top: 0; left: 0;
-      display: flex;
-      flex-direction: column;
-      z-index: 100;
-    }
-
-    .sidebar-brand {
-      padding: 24px 20px 20px;
-      border-bottom: 1px solid var(--border);
-    }
-    .sidebar-brand .brand-icon {
-      width: 40px; height: 40px;
-      background: var(--gradient-1);
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px; margin-bottom: 10px;
-    }
-    .sidebar-brand h5 {
-      font-size: 14px; font-weight: 700;
-      color: var(--text-primary); margin: 0;
-      letter-spacing: 0.03em;
-    }
-    .sidebar-brand small {
-      font-size: 11px; color: var(--text-muted);
-      font-family: 'JetBrains Mono', monospace;
-    }
-
-    .sidebar-nav { padding: 12px 0; flex: 1; }
-
-    .nav-section-label {
-      font-size: 10px; font-weight: 600;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      padding: 14px 20px 6px;
-    }
-
-    .sidebar-link {
-      display: flex; align-items: center; gap: 12px;
-      padding: 10px 20px;
-      color: var(--text-dim);
-      text-decoration: none;
-      font-size: 13.5px; font-weight: 500;
-      border-left: 3px solid transparent;
-      transition: all 0.18s ease;
-      position: relative;
-    }
-    .sidebar-link:hover {
-      color: var(--text-primary);
-      background: rgba(56, 189, 248, 0.06);
-    }
-    .sidebar-link.active {
-      color: var(--accent-blue);
-      border-left-color: var(--accent-blue);
-      background: rgba(56, 189, 248, 0.08);
-    }
-    .sidebar-link .link-icon {
-      font-size: 16px; width: 20px; text-align: center;
-    }
-    .sidebar-link .badge-count {
-      margin-left: auto;
-      font-size: 10px; padding: 2px 7px;
-      border-radius: 20px;
-      background: rgba(56, 189, 248, 0.15);
-      color: var(--accent-blue);
-      font-family: 'JetBrains Mono', monospace;
-    }
-
-    .sidebar-footer {
-      padding: 16px 20px;
-      border-top: 1px solid var(--border);
-      font-size: 11px; color: var(--text-muted);
-    }
-
-    /* ── Main content ── */
-    .main-content {
-      margin-left: 260px;
-      padding: 28px 32px;
-      min-height: 100vh;
-    }
-
-    /* ── Cards ── */
-    .card-custom {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 22px 24px;
-      transition: border-color 0.2s;
-    }
-    .card-custom:hover { border-color: var(--border-glow); }
-
-    .card-header-custom {
-      display: flex; align-items: center; gap: 10px;
-      margin-bottom: 18px;
-      padding-bottom: 14px;
-      border-bottom: 1px solid var(--border);
-    }
-    .card-header-icon {
-      width: 34px; height: 34px;
-      border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 15px;
-    }
-    .card-header-title {
-      font-size: 14px; font-weight: 600;
-      color: var(--text-primary); margin: 0;
-    }
-    .card-header-sub {
-      font-size: 11px; color: var(--text-muted);
-      margin: 0;
-    }
-
-    /* ── Tables ── */
-    .table-custom { width: 100%; border-collapse: collapse; }
-    .table-custom th {
-      font-size: 11px; font-weight: 600;
-      color: var(--text-muted);
-      text-transform: uppercase; letter-spacing: 0.08em;
-      padding: 8px 12px;
-      border-bottom: 1px solid var(--border);
-      background: var(--bg-card2);
-    }
-    .table-custom td {
-      font-size: 12.5px; color: var(--text-dim);
-      padding: 9px 12px;
-      border-bottom: 1px solid #0d1a2e;
-      font-family: 'JetBrains Mono', monospace;
-    }
-    .table-custom tr:hover td { background: rgba(255,255,255,0.02); }
-
-    /* ── Badges ── */
-    .badge-normal  { background: rgba(52,211,153,0.15); color: #34d399; border: 1px solid rgba(52,211,153,0.3); }
-    .badge-waspada { background: rgba(251,191,36,0.15); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
-    .badge-bahaya  { background: rgba(248,113,113,0.15); color: #f87171; border: 1px solid rgba(248,113,113,0.3); }
-    .badge-cat {
-      font-size: 11px; padding: 3px 10px;
-      border-radius: 20px; font-weight: 600;
-      font-family: 'Space Grotesk', sans-serif;
-    }
-
-    /* ── Stat cards ── */
-    .stat-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 18px 20px;
-    }
-    .stat-value {
-      font-size: 28px; font-weight: 700;
-      color: var(--text-primary);
-      font-family: 'JetBrains Mono', monospace;
-    }
-    .stat-label { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
-
-    /* ── Progress / Similarity bar ── */
-    .sim-bar-track {
-      height: 6px; border-radius: 3px;
-      background: var(--border);
-      overflow: hidden;
-    }
-    .sim-bar-fill {
-      height: 100%; border-radius: 3px;
-      background: var(--gradient-1);
-      transition: width 0.6s ease;
-    }
-
-    /* ── Form ── */
-    .form-control-custom {
-      background: var(--bg-card2);
-      border: 1px solid var(--border);
-      color: var(--text-primary);
-      border-radius: 8px;
-      padding: 9px 14px;
-      font-size: 13px;
-      transition: border-color 0.15s;
-    }
-    .form-control-custom:focus {
-      outline: none;
-      border-color: var(--accent-blue);
-      background: var(--bg-card2);
-      color: var(--text-primary);
-      box-shadow: 0 0 0 3px rgba(56,189,248,0.12);
-    }
-    .form-label-custom {
-      font-size: 12px; font-weight: 500;
-      color: var(--text-dim);
-      margin-bottom: 5px;
-      display: block;
-    }
-
-    /* ── Buttons ── */
-    .btn-primary-custom {
-      background: var(--gradient-1);
-      border: none; color: #fff;
-      font-weight: 600; font-size: 13px;
-      padding: 10px 22px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: opacity 0.15s, transform 0.1s;
-    }
-    .btn-primary-custom:hover { opacity: 0.88; transform: translateY(-1px); }
-    .btn-secondary-custom {
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--text-dim); font-size: 13px;
-      padding: 10px 22px; border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .btn-secondary-custom:hover {
-      border-color: var(--accent-blue);
-      color: var(--accent-blue);
-    }
-
-    /* ── Alert ── */
-    .alert-warning-custom {
-      background: rgba(251,191,36,0.08);
-      border: 1px solid rgba(251,191,36,0.3);
-      border-radius: 10px; padding: 14px 16px;
-      color: #fbbf24; font-size: 13px;
-    }
-    .alert-success-custom {
-      background: rgba(52,211,153,0.08);
-      border: 1px solid rgba(52,211,153,0.3);
-      border-radius: 10px; padding: 14px 16px;
-      color: #34d399; font-size: 13px;
-    }
-    .alert-danger-custom {
-      background: rgba(248,113,113,0.08);
-      border: 1px solid rgba(248,113,113,0.3);
-      border-radius: 10px; padding: 14px 16px;
-      color: #f87171; font-size: 13px;
-    }
-
-    /* ── Page header ── */
-    .page-header {
-      margin-bottom: 24px;
-    }
-    .page-header h2 {
-      font-size: 22px; font-weight: 700;
-      color: var(--text-primary); margin: 0;
-    }
-    .page-header p {
-      font-size: 13px; color: var(--text-muted); margin: 4px 0 0;
-    }
-
-    /* ── Step indicator ── */
-    .step-badge {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 28px; height: 28px;
-      border-radius: 50%;
-      font-size: 12px; font-weight: 700;
-      font-family: 'JetBrains Mono', monospace;
-    }
-
-    /* ── Code / mono ── */
-    .mono { font-family: 'JetBrains Mono', monospace; }
-
-    /* ── Scrollable table wrapper ── */
-    .table-scroll { overflow-x: auto; border-radius: 10px; }
-
-    /* ── Top rank highlight ── */
-    .top-1-row td { background: rgba(56,189,248,0.05) !important; }
-
-    /* ── Cluster chip ── */
-    .cluster-chip {
-      display: inline-flex; align-items: center; gap: 5px;
-      padding: 3px 10px; border-radius: 20px;
-      font-size: 11.5px; font-weight: 600;
-      font-family: 'JetBrains Mono', monospace;
-    }
-
-    img.chart-img { width: 100%; border-radius: 10px; }
-
-    @media (max-width: 768px) {
-      .sidebar { display: none; }
-      .main-content { margin-left: 0; padding: 16px; }
-    }
-  </style>
-  {% block head %}{% endblock %}
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
-<!-- Sidebar -->
-<aside class="sidebar">
-  <div class="sidebar-brand">
-    <div class="brand-icon">🎓</div>
-    <h5>CBR KMeans System</h5>
-    <small>Student Alcohol Risk</small>
-  </div>
-  <nav class="sidebar-nav">
-    <div class="nav-section-label">Main</div>
-    <a href="{{ url_for('index') }}" class="sidebar-link {% if request.endpoint=='index' %}active{% endif %}">
-      <span class="link-icon"><i class="bi bi-house"></i></span>
-      Beranda
-    </a>
-    <a href="{{ url_for('dashboard') }}" class="sidebar-link {% if request.endpoint=='dashboard' %}active{% endif %}">
-      <span class="link-icon"><i class="bi bi-grid-3x3-gap"></i></span>
-      Dashboard
-    </a>
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="{{ url_for('index') }}">
+            <i class="bi bi-activity me-2"></i>CBR Alcohol
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-    <div class="nav-section-label">Analisis</div>
-    <a href="{{ url_for('cbr') }}" class="sidebar-link {% if request.endpoint=='cbr' %}active{% endif %}">
-      <span class="link-icon"><i class="bi bi-cpu"></i></span>
-      CBR Prediksi
-    </a>
-    <a href="{{ url_for('dataset_view') }}" class="sidebar-link {% if request.endpoint=='dataset_view' %}active{% endif %}">
-      <span class="link-icon"><i class="bi bi-table"></i></span>
-      Dataset
-    </a>
-
-    <div class="nav-section-label">Admin</div>
-    <a href="{{ url_for('expert_login') }}" class="sidebar-link">
-      <span class="link-icon"><i class="bi bi-shield-lock"></i></span>
-      Ruang Pakar
-      <span class="badge-count" style="background:rgba(167,139,250,0.15); color:#a78bfa;">Expert</span>
-    </a>
-  </nav>
-  <div class="sidebar-footer">
-    <div style="font-size:11px; color:var(--text-muted);">
-      <i class="bi bi-database me-1"></i>K-Means + Cosine CBR<br/>
-      <span class="mono" style="font-size:10px;">Flask · scikit-learn</span>
+        <div class="collapse navbar-collapse" id="navbarMain">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'index' %}active{% endif %}"
+                       href="{{ url_for('index') }}">
+                        <i class="bi bi-speedometer2 me-1"></i>Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'preprocessing' %}active{% endif %}"
+                       href="{{ url_for('preprocessing') }}">
+                        <i class="bi bi-cpu me-1"></i>Preprocessing
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'clustering' %}active{% endif %}"
+                       href="{{ url_for('clustering') }}">
+                        <i class="bi bi-diagram-3 me-1"></i>Clustering
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'predict' %}active{% endif %}"
+                       href="{{ url_for('predict') }}">
+                        <i class="bi bi-search me-1"></i>Prediksi Baru
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'casebase' %}active{% endif %}"
+                       href="{{ url_for('casebase') }}">
+                        <i class="bi bi-database me-1"></i>Case Base
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'history' %}active{% endif %}"
+                       href="{{ url_for('history') }}">
+                        <i class="bi bi-clock-history me-1"></i>Riwayat
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
-  </div>
-</aside>
+</nav>
 
-<!-- Main -->
-<main class="main-content">
-  {% block content %}{% endblock %}
+<!-- ===== MAIN CONTENT ===== -->
+<main class="container-fluid py-4">
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="container mb-3">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
 </main>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- ===== FOOTER ===== -->
+<footer class="bg-dark text-light text-center py-3 mt-5">
+    <small>
+        CBR Alcohol &copy; 2024 &mdash;
+        Sistem Prediksi Tingkat Konsumsi Alkohol Siswa
+        | K-Means Clustering + Cosine Similarity + CBR
+    </small>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Chart.js untuk grafik elbow -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
 {% block scripts %}{% endblock %}
 </body>
 </html>

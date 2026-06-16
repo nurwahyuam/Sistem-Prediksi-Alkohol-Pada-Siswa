@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+{% block title %}Preprocessing{% endblock %}
+
+{% block content %}
+<div class="container">
+
+    <div class="row mb-3">
+        <div class="col-12">
+            <h4 class="fw-bold"><i class="bi bi-cpu me-2 text-primary"></i>Preprocessing Dataset</h4>
+            <p class="text-muted">Encoding, Normalisasi Min-Max, dan Pelabelan Sentimen dataset student-mat.csv</p>
+        </div>
+    </div>
+
+    <!-- Penjelasan Preprocessing -->
+    <div class="row mb-4">
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-header bg-primary text-white fw-bold">
+                    <i class="bi bi-1-circle me-2"></i>Encoding Kategorikal
+                </div>
+                <div class="card-body small">
+                    <table class="table table-sm">
+                        <tr><th>Kolom</th><th>Nilai</th><th>Kode</th></tr>
+                        <tr><td rowspan="2">sex</td><td>F</td><td>0</td></tr>
+                        <tr><td>M</td><td>1</td></tr>
+                        <tr><td rowspan="2">address</td><td>R</td><td>0</td></tr>
+                        <tr><td>U</td><td>1</td></tr>
+                        <tr><td rowspan="2">Pstatus</td><td>A</td><td>0</td></tr>
+                        <tr><td>T</td><td>1</td></tr>
+                        <tr><td rowspan="2">romantic</td><td>no</td><td>0</td></tr>
+                        <tr><td>yes</td><td>1</td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-header bg-info text-white fw-bold">
+                    <i class="bi bi-2-circle me-2"></i>Normalisasi Min-Max
+                </div>
+                <div class="card-body small">
+                    <p class="text-muted">Rumus: x' = (x - min) / (max - min)</p>
+                    <table class="table table-sm">
+                        <tr><th>Kolom</th><th>Min</th><th>Max</th></tr>
+                        <tr><td>studytime</td><td>1</td><td>4</td></tr>
+                        <tr><td>failures</td><td>0</td><td>3</td></tr>
+                        <tr><td>famrel</td><td>1</td><td>5</td></tr>
+                        <tr><td>freetime</td><td>1</td><td>5</td></tr>
+                        <tr><td>goout</td><td>1</td><td>5</td></tr>
+                        <tr><td>absences</td><td>0</td><td>75</td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-header bg-success text-white fw-bold">
+                    <i class="bi bi-3-circle me-2"></i>Pelabelan Sentimen
+                </div>
+                <div class="card-body small">
+                    <p class="text-muted">
+                        <strong>alcohol_score</strong> = 0.6 × Dalc + 0.4 × Walc
+                    </p>
+                    <p class="text-muted">Equal Interval: I = (5-1)/3 = 1.33</p>
+                    <table class="table table-sm">
+                        <tr>
+                            <td><span class="badge bg-success">Normal</span></td>
+                            <td>1.00 – 2.33</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge bg-warning text-dark">Waspada</span></td>
+                            <td>2.34 – 3.67</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge bg-danger">Bahaya</span></td>
+                            <td>3.68 – 5.00</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tombol Jalankan Preprocessing -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('preprocessing_run') }}"
+                          onsubmit="return confirm('Jalankan preprocessing? Data case_base.xlsx akan dibuat ulang.')">
+                        <div class="d-flex align-items-center gap-3">
+                            {% if sudah_diproses %}
+                                <span class="badge bg-success fs-6 p-2">
+                                    <i class="bi bi-check-circle me-1"></i>Preprocessing Selesai
+                                </span>
+                                <button type="submit" class="btn btn-warning">
+                                    <i class="bi bi-arrow-clockwise me-1"></i>Jalankan Ulang
+                                </button>
+                            {% else %}
+                                <span class="badge bg-secondary fs-6 p-2">
+                                    <i class="bi bi-clock me-1"></i>Belum Dijalankan
+                                </span>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-play-fill me-1"></i>Jalankan Preprocessing
+                                </button>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Preview Data -->
+    {% if df_preview %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-light fw-bold">
+                    <i class="bi bi-table me-2 text-primary"></i>Preview dataset_preprocessed.xlsx (10 data pertama)
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover table-striped mb-0">
+                            <thead class="table-primary">
+                                <tr>
+                                    <th>sex</th>
+                                    <th>address</th>
+                                    <th>pstatus</th>
+                                    <th>studytime</th>
+                                    <th>failures</th>
+                                    <th>romantic</th>
+                                    <th>famrel</th>
+                                    <th>freetime</th>
+                                    <th>goout</th>
+                                    <th>absences</th>
+                                    <th>alc_score</th>
+                                    <th>label</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in df_preview %}
+                                <tr>
+                                    <td>{{ row.sex }}</td>
+                                    <td>{{ row.address }}</td>
+                                    <td>{{ row.pstatus }}</td>
+                                    <td>{{ "%.2f"|format(row.studytime) }}</td>
+                                    <td>{{ "%.2f"|format(row.failures) }}</td>
+                                    <td>{{ row.romantic }}</td>
+                                    <td>{{ "%.2f"|format(row.famrel) }}</td>
+                                    <td>{{ "%.2f"|format(row.freetime) }}</td>
+                                    <td>{{ "%.2f"|format(row.goout) }}</td>
+                                    <td>{{ "%.4f"|format(row.absences) }}</td>
+                                    <td>{{ "%.2f"|format(row.alcohol_score) }}</td>
+                                    <td>
+                                        {% if row.label == 'Normal' %}
+                                            <span class="badge bg-success">Normal</span>
+                                        {% elif row.label == 'Waspada' %}
+                                            <span class="badge bg-warning text-dark">Waspada</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Bahaya</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

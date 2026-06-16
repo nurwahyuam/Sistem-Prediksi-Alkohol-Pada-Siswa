@@ -1,109 +1,213 @@
 {% extends "base.html" %}
-{% block title %}Beranda — CBR KMeans{% endblock %}
+{% block title %}Dashboard{% endblock %}
+
 {% block content %}
+<div class="container">
 
-<div class="page-header">
-  <h2>Sistem CBR Klasifikasi Risiko Alkohol Siswa</h2>
-  <p>Case Based Reasoning dengan K-Means Clustering dan Cosine Similarity</p>
-</div>
-
-<!-- Hero -->
-<div class="card-custom mb-4" style="background: linear-gradient(135deg, #0f1e3d 0%, #0f1629 100%); border-color:#1e3a5f;">
-  <div class="row align-items-center">
-    <div class="col-md-8">
-      <h4 style="font-size:18px; font-weight:700; color:var(--text-primary);">
-        🧠 Case Based Reasoning (CBR)
-      </h4>
-      <p style="font-size:13px; color:var(--text-dim); margin-bottom:16px;">
-        Sistem ini mengklasifikasikan risiko konsumsi alkohol siswa menggunakan pendekatan
-        <strong style="color:var(--accent-blue);">K-Means Clustering</strong> untuk retrieve kasus serupa,
-        lalu menghitung <strong style="color:var(--accent-violet);">Cosine Similarity</strong>
-        untuk menemukan kasus paling mirip dari basis kasus.
-      </p>
-      <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <form action="{{ url_for('train') }}" method="POST">
-          <input type="hidden" name="k" value="{{ optimal_k }}">
-          <button type="submit" class="btn-primary-custom">
-            <i class="bi bi-play-fill me-1"></i>Inisialisasi &amp; Train Model
-          </button>
-        </form>
-        {% if trained %}
-        <a href="{{ url_for('cbr') }}" class="btn-secondary-custom" style="display:inline-flex; align-items:center; text-decoration:none;">
-          <i class="bi bi-cpu me-1"></i>Mulai Prediksi CBR
-        </a>
-        {% endif %}
-      </div>
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-primary text-white shadow">
+                <div class="card-body py-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h2 class="fw-bold mb-1">
+                                <i class="bi bi-activity me-2"></i>
+                                Sistem Prediksi Tingkat Konsumsi Alkohol Siswa
+                            </h2>
+                            <p class="mb-0 opacity-75">
+                                Menggunakan Metode K-Means Clustering, Cosine Similarity &amp; Case Based Reasoning (CBR)
+                            </p>
+                        </div>
+                        <div class="col-md-4 text-end d-none d-md-block">
+                            <i class="bi bi-graph-up-arrow" style="font-size: 5rem; opacity: 0.3;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="col-md-4 text-end" style="font-size:72px; opacity:0.15;">🎓</div>
-  </div>
-</div>
 
-<!-- Alur CBR -->
-<div class="row g-3 mb-4">
-  {% set steps = [
-    ('1', 'bi-upload', '#38bdf8', 'Load Dataset', 'Baca CSV student_dataset.csv dengan 10 atribut fitur siswa.'),
-    ('2', 'bi-code-square', '#a78bfa', 'Encoding', 'Konversi Sex, Address, Pstatus, Romantic ke nilai 0/1.'),
-    ('3', 'bi-sliders', '#34d399', 'Normalisasi', 'Min-Max normalization pada fitur numerik.'),
-    ('4', 'bi-tags', '#fbbf24', 'Labeling', 'Hitung score = 0.6×Dalc + 0.4×Walc, klasifikasikan.'),
-    ('5', 'bi-diagram-3', '#f87171', 'K-Means', 'Elbow Method K=1..10, tentukan K optimal, train cluster.'),
-    ('6', 'bi-cpu', '#38bdf8', 'CBR', 'Retrieve → Reuse → Revise → Retain.'),
-  ] %}
-  {% for num, icon, color, title, desc in steps %}
-  <div class="col-md-4 col-sm-6">
-    <div class="card-custom h-100">
-      <div style="display:flex; align-items:flex-start; gap:12px;">
-        <div class="step-badge" style="background:{{ color }}22; color:{{ color }}; flex-shrink:0;">{{ num }}</div>
-        <div>
-          <div style="font-size:13px; font-weight:600; color:var(--text-primary); margin-bottom:4px;">
-            <i class="bi {{ icon }} me-1" style="color:{{ color }};"></i>{{ title }}
-          </div>
-          <div style="font-size:12px; color:var(--text-muted);">{{ desc }}</div>
+    <!-- Status Pipeline CBR -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h5 class="fw-bold text-muted mb-3"><i class="bi bi-list-check me-2"></i>Status Pipeline CBR</h5>
         </div>
-      </div>
-    </div>
-  </div>
-  {% endfor %}
-</div>
 
-<!-- Rumus -->
-<div class="row g-3">
-  <div class="col-md-6">
-    <div class="card-custom">
-      <div class="card-header-custom">
-        <div class="card-header-icon" style="background:#38bdf822;">📐</div>
-        <div>
-          <p class="card-header-title">Rumus Cosine Similarity</p>
-          <p class="card-header-sub">Digunakan pada tahap Reuse</p>
+        <!-- Step 1: Preprocessing -->
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 shadow-sm border-0
+                {% if stats.preprocessing_selesai %}border-start border-success border-4{% else %}border-start border-secondary border-4{% endif %}">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="card-title fw-bold mb-0">
+                            <i class="bi bi-1-circle-fill me-2 text-primary"></i>Preprocessing
+                        </h6>
+                        {% if stats.preprocessing_selesai %}
+                            <span class="badge bg-success"><i class="bi bi-check-lg"></i> Selesai</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Belum</span>
+                        {% endif %}
+                    </div>
+                    <p class="card-text text-muted small">
+                        Encoding, normalisasi Min-Max, labeling alcohol_score.
+                    </p>
+                    <a href="{{ url_for('preprocessing') }}" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-arrow-right me-1"></i>Buka
+                    </a>
+                </div>
+            </div>
         </div>
-      </div>
-      <div style="background:var(--bg-card2); border-radius:8px; padding:14px; text-align:center;">
-        <div class="mono" style="font-size:16px; color:var(--accent-blue); letter-spacing:0.02em;">
-          similarity = (A · B) / (‖A‖ × ‖B‖)
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="card-custom">
-      <div class="card-header-custom">
-        <div class="card-header-icon" style="background:#fbbf2422;">🏷️</div>
-        <div>
-          <p class="card-header-title">Rumus Label Kategori</p>
-          <p class="card-header-sub">Equal Interval dari score</p>
-        </div>
-      </div>
-      <div style="background:var(--bg-card2); border-radius:8px; padding:14px;">
-        <div class="mono" style="font-size:14px; color:var(--accent-amber); text-align:center; margin-bottom:10px;">
-          score = 0.6 × Dalc + 0.4 × Walc
-        </div>
-        <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
-          <span class="badge-cat badge-normal">Normal ≤ 2.33</span>
-          <span class="badge-cat badge-waspada">Waspada ≤ 3.67</span>
-          <span class="badge-cat badge-bahaya">Bahaya > 3.67</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
+        <!-- Step 2: Clustering -->
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 shadow-sm border-0
+                {% if stats.training_selesai %}border-start border-success border-4{% else %}border-start border-secondary border-4{% endif %}">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="card-title fw-bold mb-0">
+                            <i class="bi bi-2-circle-fill me-2 text-primary"></i>Training K-Means
+                        </h6>
+                        {% if stats.training_selesai %}
+                            <span class="badge bg-success"><i class="bi bi-check-lg"></i> Selesai</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Belum</span>
+                        {% endif %}
+                    </div>
+                    <p class="card-text text-muted small">
+                        Elbow Method (K=2-10), training KMeans, simpan model.
+                    </p>
+                    <a href="{{ url_for('clustering') }}" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-arrow-right me-1"></i>Buka
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Prediksi -->
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 shadow-sm border-0 border-start border-info border-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="card-title fw-bold mb-0">
+                            <i class="bi bi-3-circle-fill me-2 text-primary"></i>Prediksi CBR
+                        </h6>
+                        {% if stats.training_selesai %}
+                            <span class="badge bg-info text-dark">Siap</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Tunggu Training</span>
+                        {% endif %}
+                    </div>
+                    <p class="card-text text-muted small">
+                        Retrieve, Reuse, Revise, Retain kasus baru.
+                    </p>
+                    <a href="{{ url_for('predict') }}" class="btn btn-sm btn-outline-info">
+                        <i class="bi bi-arrow-right me-1"></i>Buka
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistik Case Base -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h5 class="fw-bold text-muted mb-3"><i class="bi bi-bar-chart me-2"></i>Statistik Case Base</h5>
+        </div>
+
+        <div class="col-6 col-md-3 mb-3">
+            <div class="card text-center shadow-sm border-0 bg-light">
+                <div class="card-body">
+                    <div class="display-5 fw-bold text-primary">{{ stats.total_case_base }}</div>
+                    <div class="text-muted small">Total Kasus</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3 mb-3">
+            <div class="card text-center shadow-sm border-0 bg-success bg-opacity-10">
+                <div class="card-body">
+                    <div class="display-5 fw-bold text-success">{{ stats.total_normal }}</div>
+                    <div class="text-muted small">Normal</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3 mb-3">
+            <div class="card text-center shadow-sm border-0 bg-warning bg-opacity-10">
+                <div class="card-body">
+                    <div class="display-5 fw-bold text-warning">{{ stats.total_waspada }}</div>
+                    <div class="text-muted small">Waspada</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3 mb-3">
+            <div class="card text-center shadow-sm border-0 bg-danger bg-opacity-10">
+                <div class="card-body">
+                    <div class="display-5 fw-bold text-danger">{{ stats.total_bahaya }}</div>
+                    <div class="text-muted small">Bahaya</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info CBR -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-light fw-bold">
+                    <i class="bi bi-info-circle me-2 text-primary"></i>Tentang Sistem CBR
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="fw-bold text-primary">Alur Sistem</h6>
+                            <ol class="list-group list-group-numbered list-group-flush small">
+                                <li class="list-group-item border-0 px-0">Dataset CSV → Preprocessing</li>
+                                <li class="list-group-item border-0 px-0">Training K-Means + Elbow Method</li>
+                                <li class="list-group-item border-0 px-0">Input Kasus Baru</li>
+                                <li class="list-group-item border-0 px-0">Retrieve: Cosine Similarity Top-5</li>
+                                <li class="list-group-item border-0 px-0">Reuse: Prediksi dari kasus terbaik</li>
+                                <li class="list-group-item border-0 px-0">Revise: Pakar validasi</li>
+                                <li class="list-group-item border-0 px-0">Retain: Simpan ke knowledge base</li>
+                            </ol>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="fw-bold text-primary">Kategori Label</h6>
+                            <table class="table table-sm table-bordered">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Label</th>
+                                        <th>Alcohol Score</th>
+                                        <th>Keterangan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="badge bg-success">Normal</span></td>
+                                        <td>1.00 – 2.33</td>
+                                        <td>Konsumsi rendah</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge bg-warning text-dark">Waspada</span></td>
+                                        <td>2.34 – 3.67</td>
+                                        <td>Perlu perhatian</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge bg-danger">Bahaya</span></td>
+                                        <td>3.68 – 5.00</td>
+                                        <td>Konsumsi tinggi</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="text-muted small mt-2">
+                                <i class="bi bi-calculator me-1"></i>
+                                Alcohol Score = 0.6 × Dalc + 0.4 × Walc
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
 {% endblock %}

@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+{% block title %}Case Base{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+    <div class="row mb-3">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <div>
+                <h4 class="fw-bold"><i class="bi bi-database me-2 text-primary"></i>Case Base</h4>
+                <p class="text-muted mb-0">Seluruh kasus yang tersimpan dalam knowledge base CBR.</p>
+            </div>
+            <a href="{{ url_for('predict') }}" class="btn btn-primary btn-sm">
+                <i class="bi bi-plus-circle me-1"></i>Tambah Kasus Baru
+            </a>
+        </div>
+    </div>
+
+    <!-- Statistik -->
+    {% if stats %}
+    <div class="row mb-4">
+        <div class="col-6 col-md-2 mb-2">
+            <div class="card text-center border-0 shadow-sm bg-light">
+                <div class="card-body py-2">
+                    <div class="fs-4 fw-bold text-primary">{{ stats.total }}</div>
+                    <div class="small text-muted">Total</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-2 mb-2">
+            <div class="card text-center border-0 shadow-sm">
+                <div class="card-body py-2">
+                    <div class="fs-4 fw-bold text-secondary">{{ stats.training }}</div>
+                    <div class="small text-muted">TRAINING</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-2 mb-2">
+            <div class="card text-center border-0 shadow-sm">
+                <div class="card-body py-2">
+                    <div class="fs-4 fw-bold text-success">{{ stats.validated }}</div>
+                    <div class="small text-muted">VALIDATED</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-2 mb-2">
+            <div class="card text-center border-0 shadow-sm">
+                <div class="card-body py-2">
+                    <div class="fs-4 fw-bold text-info">{{ stats.expert_revised }}</div>
+                    <div class="small text-muted">EXPERT_REVISED</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-2 mb-2">
+            <div class="card text-center border-0 shadow-sm bg-success bg-opacity-10">
+                <div class="card-body py-2">
+                    <div class="fs-4 fw-bold text-success">{{ stats.normal }}</div>
+                    <div class="small text-muted">Normal</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-2 mb-2">
+            <div class="card text-center border-0 shadow-sm bg-warning bg-opacity-10">
+                <div class="card-body py-2">
+                    <div class="fs-4 fw-bold text-warning">{{ stats.waspada }}</div>
+                    <div class="small text-muted">Waspada</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Filter Bar -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body py-2">
+                    <div class="d-flex gap-2 flex-wrap align-items-center">
+                        <span class="text-muted small fw-bold">Filter:</span>
+                        <button class="btn btn-sm btn-outline-secondary filter-btn active" data-filter="all">Semua</button>
+                        <button class="btn btn-sm btn-outline-success filter-btn" data-filter="Normal">Normal</button>
+                        <button class="btn btn-sm btn-outline-warning filter-btn" data-filter="Waspada">Waspada</button>
+                        <button class="btn btn-sm btn-outline-danger filter-btn" data-filter="Bahaya">Bahaya</button>
+                        <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="TRAINING">TRAINING</button>
+                        <button class="btn btn-sm btn-outline-primary filter-btn" data-filter="VALIDATED">VALIDATED</button>
+                        <button class="btn btn-sm btn-outline-info filter-btn" data-filter="EXPERT_REVISED">EXPERT_REVISED</button>
+                        <div class="ms-auto">
+                            <input type="text" id="searchBox" class="form-control form-control-sm"
+                                   placeholder="Cari case_id..." style="width: 150px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabel Case Base -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover table-striped mb-0" id="caseTable">
+                            <thead class="table-primary">
+                                <tr>
+                                    <th>Case ID</th>
+                                    <th>Cluster</th>
+                                    <th>sex</th>
+                                    <th>addr</th>
+                                    <th>pst</th>
+                                    <th>study</th>
+                                    <th>fail</th>
+                                    <th>rom</th>
+                                    <th>famrel</th>
+                                    <th>free</th>
+                                    <th>goout</th>
+                                    <th>abs</th>
+                                    <th>alc_score</th>
+                                    <th>Label</th>
+                                    <th>Status</th>
+                                    <th>Dibuat</th>
+                                </tr>
+                            </thead>
+                            <tbody id="caseTableBody">
+                                {% if cases %}
+                                    {% for case in cases %}
+                                    <tr class="case-row"
+                                        data-label="{{ case.label }}"
+                                        data-status="{{ case.status }}"
+                                        data-caseid="{{ case.case_id }}">
+                                        <td>
+                                            <span class="badge bg-secondary small">{{ case.case_id }}</span>
+                                        </td>
+                                        <td class="text-center">{{ case.cluster_id if case.cluster_id != -1 else '—' }}</td>
+                                        <td class="text-center">{{ case.sex }}</td>
+                                        <td class="text-center">{{ case.address }}</td>
+                                        <td class="text-center">{{ case.pstatus }}</td>
+                                        <td>{{ "%.2f"|format(case.studytime|float) }}</td>
+                                        <td>{{ "%.2f"|format(case.failures|float) }}</td>
+                                        <td class="text-center">{{ case.romantic }}</td>
+                                        <td>{{ "%.2f"|format(case.famrel|float) }}</td>
+                                        <td>{{ "%.2f"|format(case.freetime|float) }}</td>
+                                        <td>{{ "%.2f"|format(case.goout|float) }}</td>
+                                        <td>{{ "%.4f"|format(case.absences|float) }}</td>
+                                        <td>
+                                            <strong>{{ "%.2f"|format(case.alcohol_score|float) }}</strong>
+                                        </td>
+                                        <td>
+                                            {% if case.label == 'Normal' %}
+                                                <span class="badge bg-success">Normal</span>
+                                            {% elif case.label == 'Waspada' %}
+                                                <span class="badge bg-warning text-dark">Waspada</span>
+                                            {% else %}
+                                                <span class="badge bg-danger">Bahaya</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <span class="badge small
+                                                {% if case.status == 'TRAINING' %}bg-secondary
+                                                {% elif case.status == 'VALIDATED' %}bg-success
+                                                {% else %}bg-info text-dark{% endif %}">
+                                                {{ case.status }}
+                                            </span>
+                                        </td>
+                                        <td class="text-muted small" style="white-space: nowrap;">
+                                            {{ case.created_at }}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="16" class="text-center text-muted py-4">
+                                            <i class="bi bi-inbox fs-3 d-block mb-2"></i>
+                                            Belum ada data. Jalankan preprocessing terlebih dahulu.
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Filter tabel berdasarkan label/status
+document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', function () {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+
+        const filter = this.dataset.filter;
+        document.querySelectorAll('.case-row').forEach(row => {
+            if (filter === 'all') {
+                row.style.display = '';
+            } else {
+                const label  = row.dataset.label;
+                const status = row.dataset.status;
+                row.style.display = (label === filter || status === filter) ? '' : 'none';
+            }
+        });
+    });
+});
+
+// Pencarian berdasarkan case_id
+document.getElementById('searchBox').addEventListener('input', function () {
+    const q = this.value.toLowerCase();
+    document.querySelectorAll('.case-row').forEach(row => {
+        row.style.display = row.dataset.caseid.toLowerCase().includes(q) ? '' : 'none';
+    });
+});
+</script>
+{% endblock %}

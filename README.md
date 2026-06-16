@@ -52,12 +52,12 @@ pip install -r requirements.txt
 
 ### 2. Jalankan Aplikasi
 ```bash
-python run.py
+py app.py
 ```
 
 ### 3. Buka Browser
 ```
-http://127.0.0.1:5000
+http://localhost:5000
 ```
 
 ---

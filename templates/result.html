@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+{% block title %}Hasil Prediksi{% endblock %}
+
+{% block content %}
+<div class="container">
+
+    <div class="row mb-3">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <div>
+                <h4 class="fw-bold"><i class="bi bi-clipboard-data me-2 text-primary"></i>Hasil Retrieve &amp; Reuse</h4>
+                <p class="text-muted mb-0">Kasus dianalisis pada: {{ timestamp }}</p>
+            </div>
+            <a href="{{ url_for('predict') }}" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-arrow-left me-1"></i>Input Baru
+            </a>
+        </div>
+    </div>
+
+    <!-- Input Kasus Baru -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-light fw-bold">
+                    <i class="bi bi-person me-2 text-primary"></i>Data Input (Raw)
+                </div>
+                <div class="card-body small">
+                    <div class="row">
+                        <div class="col-6">
+                            <table class="table table-sm mb-0">
+                                <tr><td class="text-muted">sex</td><td><strong>{{ input_raw.sex }}</strong></td></tr>
+                                <tr><td class="text-muted">address</td><td><strong>{{ input_raw.address }}</strong></td></tr>
+                                <tr><td class="text-muted">pstatus</td><td><strong>{{ input_raw.pstatus }}</strong></td></tr>
+                                <tr><td class="text-muted">studytime</td><td><strong>{{ input_raw.studytime }}</strong></td></tr>
+                                <tr><td class="text-muted">failures</td><td><strong>{{ input_raw.failures }}</strong></td></tr>
+                            </table>
+                        </div>
+                        <div class="col-6">
+                            <table class="table table-sm mb-0">
+                                <tr><td class="text-muted">romantic</td><td><strong>{{ input_raw.romantic }}</strong></td></tr>
+                                <tr><td class="text-muted">famrel</td><td><strong>{{ input_raw.famrel }}</strong></td></tr>
+                                <tr><td class="text-muted">freetime</td><td><strong>{{ input_raw.freetime }}</strong></td></tr>
+                                <tr><td class="text-muted">goout</td><td><strong>{{ input_raw.goout }}</strong></td></tr>
+                                <tr><td class="text-muted">absences</td><td><strong>{{ input_raw.absences }}</strong></td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-light fw-bold">
+                    <i class="bi bi-calculator me-2 text-info"></i>Fitur Ternormalisasi
+                </div>
+                <div class="card-body small">
+                    <div class="row">
+                        <div class="col-6">
+                            <table class="table table-sm mb-0">
+                                <tr><td class="text-muted">sex</td><td><strong>{{ fitur_normalized.sex }}</strong></td></tr>
+                                <tr><td class="text-muted">address</td><td><strong>{{ fitur_normalized.address }}</strong></td></tr>
+                                <tr><td class="text-muted">pstatus</td><td><strong>{{ fitur_normalized.pstatus }}</strong></td></tr>
+                                <tr><td class="text-muted">studytime</td><td><strong>{{ "%.4f"|format(fitur_normalized.studytime) }}</strong></td></tr>
+                                <tr><td class="text-muted">failures</td><td><strong>{{ "%.4f"|format(fitur_normalized.failures) }}</strong></td></tr>
+                            </table>
+                        </div>
+                        <div class="col-6">
+                            <table class="table table-sm mb-0">
+                                <tr><td class="text-muted">romantic</td><td><strong>{{ fitur_normalized.romantic }}</strong></td></tr>
+                                <tr><td class="text-muted">famrel</td><td><strong>{{ "%.4f"|format(fitur_normalized.famrel) }}</strong></td></tr>
+                                <tr><td class="text-muted">freetime</td><td><strong>{{ "%.4f"|format(fitur_normalized.freetime) }}</strong></td></tr>
+                                <tr><td class="text-muted">goout</td><td><strong>{{ "%.4f"|format(fitur_normalized.goout) }}</strong></td></tr>
+                                <tr><td class="text-muted">absences</td><td><strong>{{ "%.4f"|format(fitur_normalized.absences) }}</strong></td></tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="mt-2 pt-2 border-top">
+                        <span class="text-muted">Cluster Diprediksi:</span>
+                        <span class="badge bg-secondary ms-1">Cluster {{ cluster_id }}</span>
+                        <span class="text-muted ms-2">| Total dalam cluster: {{ retrieve_result.total_dalam_cluster }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hasil REUSE (Prediksi Sistem) -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow border-0 border-start border-5
+                border-{{ reuse_result.badge_color }}">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <h5 class="fw-bold text-muted mb-1">
+                                <i class="bi bi-robot me-2"></i>Prediksi Sistem (REUSE)
+                            </h5>
+                            <div class="display-5 fw-bold
+                                {% if reuse_result.prediksi_label == 'Normal' %}text-success
+                                {% elif reuse_result.prediksi_label == 'Waspada' %}text-warning
+                                {% else %}text-danger{% endif %}">
+                                {{ reuse_result.prediksi_label }}
+                            </div>
+                            <div class="mt-2">
+                                <span class="badge bg-{{ reuse_result.badge_color }} me-2">
+                                    {{ reuse_result.prediksi_label }}
+                                </span>
+                                <span class="text-muted small">
+                                    Similarity: <strong>{{ reuse_result.similarity_pct }}</strong>
+                                    | Kepercayaan: <strong>{{ reuse_result.tingkat_kepercayaan }}</strong>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="alert alert-light border mb-0 small">
+                                <i class="bi bi-info-circle me-1 text-primary"></i>
+                                {{ reuse_result.penjelasan }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top 5 Kasus Retrieve -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-light fw-bold">
+                    <i class="bi bi-list-ol me-2 text-primary"></i>
+                    Top 5 Kasus Paling Mirip (RETRIEVE — Cosine Similarity)
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>#</th>
+                                <th>Case ID</th>
+                                <th>Cluster</th>
+                                <th>Similarity</th>
+                                <th>Label</th>
+                                <th>Status</th>
+                                <th>Fitur (Normalized)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for case in reuse_result.top_cases %}
+                            <tr class="{% if loop.first %}table-warning{% endif %}">
+                                <td class="fw-bold">{{ loop.index }}</td>
+                                <td>
+                                    <span class="badge bg-secondary">{{ case.case_id }}</span>
+                                    {% if loop.first %}
+                                        <span class="badge bg-warning text-dark ms-1">Best Match</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ case.cluster_id }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="progress flex-grow-1" style="height:8px; min-width:60px;">
+                                            <div class="progress-bar
+                                                {% if case.similarity >= 0.7 %}bg-success
+                                                {% elif case.similarity >= 0.5 %}bg-warning
+                                                {% else %}bg-danger{% endif %}"
+                                                style="width: {{ (case.similarity * 100)|int }}%">
+                                            </div>
+                                        </div>
+                                        <span class="fw-bold small">{{ "%.4f"|format(case.similarity) }}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    {% if case.label == 'Normal' %}
+                                        <span class="badge bg-success">Normal</span>
+                                    {% elif case.label == 'Waspada' %}
+                                        <span class="badge bg-warning text-dark">Waspada</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Bahaya</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge
+                                        {% if case.status == 'TRAINING' %}bg-secondary
+                                        {% elif case.status == 'VALIDATED' %}bg-success
+                                        {% else %}bg-info{% endif %} small">
+                                        {{ case.status }}
+                                    </span>
+                                </td>
+                                <td class="small text-muted">
+                                    sex={{ case.sex }}, addr={{ case.address }},
+                                    pst={{ case.pstatus }}, st={{ "%.2f"|format(case.studytime) }},
+                                    go={{ "%.2f"|format(case.goout) }}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tombol ke Ruang Pakar -->
+    <div class="row">
+        <div class="col-12 text-center">
+            <a href="{{ url_for('expert', session_id=session_id) }}" class="btn btn-primary btn-lg me-2">
+                <i class="bi bi-person-check me-2"></i>Lanjut ke Ruang Pakar (Revise)
+            </a>
+            <a href="{{ url_for('predict') }}" class="btn btn-outline-secondary btn-lg">
+                <i class="bi bi-arrow-left me-2"></i>Input Kasus Baru
+            </a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

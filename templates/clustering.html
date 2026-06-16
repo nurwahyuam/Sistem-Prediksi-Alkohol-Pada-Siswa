@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+{% block title %}Clustering K-Means{% endblock %}
+
+{% block content %}
+<div class="container">
+
+    <div class="row mb-3">
+        <div class="col-12">
+            <h4 class="fw-bold"><i class="bi bi-diagram-3 me-2 text-primary"></i>Training K-Means Clustering</h4>
+            <p class="text-muted">Cari K optimal dengan Elbow Method (K=1 sampai 10), lalu latih model KMeans.</p>
+        </div>
+    </div>
+
+    <!-- Penjelasan -->
+    <div class="row mb-4">
+        <div class="col-md-6 mb-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-header bg-primary text-white fw-bold">
+                    <i class="bi bi-info-circle me-2"></i>Elbow Method
+                </div>
+                <div class="card-body small text-muted">
+                    <p>Elbow Method mencari titik "siku" pada grafik SSE vs K.</p>
+                    <p><strong>SSE (Sum of Squared Errors):</strong><br>
+                    Jumlah kuadrat jarak setiap data ke centroid clusternya.</p>
+                    <p>K optimal = nilai K di mana penurunan SSE paling besar terjadi.</p>
+                    <p class="mb-0"><strong>Rumus SSE:</strong><br>
+                    SSE = Σ Σ ||xᵢ - cⱼ||²</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-header bg-info text-white fw-bold">
+                    <i class="bi bi-gear me-2"></i>Proses Clustering
+                </div>
+                <div class="card-body small text-muted">
+                    <ol>
+                        <li>Tentukan jumlah cluster K</li>
+                        <li>Tentukan centroid awal (random)</li>
+                        <li>Hitung Euclidean Distance tiap data ke centroid</li>
+                        <li>Kelompokkan ke cluster jarak terdekat</li>
+                        <li>Update centroid = rata-rata anggota cluster</li>
+                        <li>Ulangi sampai centroid tidak berubah</li>
+                    </ol>
+                    <p class="mb-0"><strong>Fitur:</strong> sex, address, pstatus, studytime, failures, romantic, famrel, freetime, goout, absences</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tombol Training -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('clustering_run') }}"
+                          onsubmit="return confirm('Jalankan training K-Means? Model lama akan diganti.')">
+                        <div class="d-flex align-items-center gap-3">
+                            {% if training_selesai %}
+                                <span class="badge bg-success fs-6 p-2">
+                                    <i class="bi bi-check-circle me-1"></i>Training Selesai
+                                </span>
+                                <button type="submit" class="btn btn-warning">
+                                    <i class="bi bi-arrow-clockwise me-1"></i>Latih Ulang
+                                </button>
+                            {% else %}
+                                <span class="badge bg-secondary fs-6 p-2">
+                                    <i class="bi bi-clock me-1"></i>Belum Dilatih
+                                </span>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-play-fill me-1"></i>Jalankan Training
+                                </button>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grafik Elbow -->
+    {% if elbow_data %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-light fw-bold">
+                    <i class="bi bi-graph-down me-2 text-danger"></i>
+                    Grafik Elbow Method — K Optimal = <strong class="text-danger">{{ elbow_data.k_optimal }}</strong>
+                </div>
+                <div class="card-body">
+                    <canvas id="elbowChart" height="100"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Info Cluster -->
+    {% if cluster_info %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-light fw-bold">
+                    <i class="bi bi-pie-chart me-2 text-primary"></i>Distribusi Cluster
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-striped table-hover mb-0">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>Cluster ID</th>
+                                <th>Jumlah Data</th>
+                                <th>Waktu Training</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for info in cluster_info %}
+                            <tr>
+                                <td><span class="badge bg-secondary fs-6">Cluster {{ info.cluster_id }}</span></td>
+                                <td>{{ info.total_data }} kasus</td>
+                                <td class="text-muted small">{{ info.trained_at }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% if elbow_data %}
+<script>
+const kValues  = {{ elbow_data.k_values | tojson }};
+const sseValues = {{ elbow_data.sse_values | tojson }};
+const kOptimal = {{ elbow_data.k_optimal }};
+
+// Warnai titik: merah untuk K optimal
+const pointColors = kValues.map(k => k === kOptimal ? '#dc3545' : '#0d6efd');
+const pointRadii  = kValues.map(k => k === kOptimal ? 10 : 5);
+
+const ctx = document.getElementById('elbowChart').getContext('2d');
+new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: kValues.map(k => 'K=' + k),
+        datasets: [{
+            label: 'SSE (Within-Cluster Sum of Squares)',
+            data: sseValues,
+            borderColor: '#0d6efd',
+            backgroundColor: 'rgba(13, 110, 253, 0.1)',
+            borderWidth: 2,
+            tension: 0.3,
+            fill: true,
+            pointBackgroundColor: pointColors,
+            pointRadius: pointRadii,
+            pointBorderColor: pointColors,
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { position: 'top' },
+            tooltip: {
+                callbacks: {
+                    afterLabel: function(ctx) {
+                        if (kValues[ctx.dataIndex] === kOptimal) {
+                            return '← K Optimal (Elbow Point)';
+                        }
+                        return '';
+                    }
+                }
+            }
+        },
+        scales: {
+            x: {
+                title: { display: true, text: 'Jumlah Cluster (K)' }
+            },
+            y: {
+                title: { display: true, text: 'SSE (Inertia)' },
+                beginAtZero: false
+            }
+        }
+    }
+});
+</script>
+{% endif %}
+{% endblock %}

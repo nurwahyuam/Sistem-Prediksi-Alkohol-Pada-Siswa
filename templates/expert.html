@@ -1,0 +1,266 @@
+{% extends "base.html" %}
+{% block title %}Ruang Pakar{% endblock %}
+
+{% block content %}
+<div class="container">
+
+    <div class="row mb-3">
+        <div class="col-12">
+            <h4 class="fw-bold"><i class="bi bi-person-check me-2 text-success"></i>Ruang Pakar — Revise &amp; Retain</h4>
+            <p class="text-muted mb-0">
+                Pakar dapat memvalidasi atau merevisi prediksi sistem, lalu menyimpan kasus ke knowledge base.
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <!-- Kolom Kiri: Info Prediksi -->
+        <div class="col-md-5">
+
+            <!-- Prediksi Sistem -->
+            <div class="card shadow-sm border-0 mb-3">
+                <div class="card-header bg-primary text-white fw-bold">
+                    <i class="bi bi-robot me-2"></i>Prediksi Sistem
+                </div>
+                <div class="card-body text-center py-4">
+                    <div class="display-5 fw-bold
+                        {% if reuse_result.prediksi_label == 'Normal' %}text-success
+                        {% elif reuse_result.prediksi_label == 'Waspada' %}text-warning
+                        {% else %}text-danger{% endif %}">
+                        {{ reuse_result.prediksi_label }}
+                    </div>
+                    <div class="mt-2 text-muted small">
+                        Similarity Tertinggi: <strong>{{ reuse_result.similarity_pct }}</strong><br>
+                        Referensi: <strong>{{ reuse_result.kasus_referensi.case_id }}</strong><br>
+                        Tingkat Kepercayaan: <strong>{{ reuse_result.tingkat_kepercayaan }}</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Input Kasus -->
+            <div class="card shadow-sm border-0 mb-3">
+                <div class="card-header bg-light fw-bold small">
+                    <i class="bi bi-person me-1 text-primary"></i>Data Kasus Baru
+                </div>
+                <div class="card-body p-2">
+                    <table class="table table-sm table-borderless mb-0 small">
+                        <tr>
+                            <td class="text-muted">Jenis Kelamin</td>
+                            <td>: <strong>{{ input_raw.sex }}</strong></td>
+                            <td class="text-muted">Alamat</td>
+                            <td>: <strong>{{ input_raw.address }}</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Pstatus</td>
+                            <td>: <strong>{{ input_raw.pstatus }}</strong></td>
+                            <td class="text-muted">Pacaran</td>
+                            <td>: <strong>{{ input_raw.romantic }}</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Studytime</td>
+                            <td>: <strong>{{ input_raw.studytime }}</strong></td>
+                            <td class="text-muted">Failures</td>
+                            <td>: <strong>{{ input_raw.failures }}</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Famrel</td>
+                            <td>: <strong>{{ input_raw.famrel }}</strong></td>
+                            <td class="text-muted">Freetime</td>
+                            <td>: <strong>{{ input_raw.freetime }}</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Goout</td>
+                            <td>: <strong>{{ input_raw.goout }}</strong></td>
+                            <td class="text-muted">Absences</td>
+                            <td>: <strong>{{ input_raw.absences }}</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Cluster</td>
+                            <td colspan="3">: <span class="badge bg-secondary">Cluster {{ cluster_id }}</span></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Kasus Referensi -->
+            {% if reuse_result.kasus_referensi %}
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-light fw-bold small">
+                    <i class="bi bi-file-earmark-check me-1 text-success"></i>
+                    Kasus Referensi (Best Match)
+                </div>
+                <div class="card-body p-2 small">
+                    <span class="badge bg-secondary me-1">{{ reuse_result.kasus_referensi.case_id }}</span>
+                    <span class="text-muted">Similarity: </span>
+                    <strong>{{ reuse_result.similarity_pct }}</strong>
+                    <table class="table table-sm table-borderless mb-0 mt-2">
+                        <tr>
+                            <td class="text-muted">sex</td>
+                            <td>{{ reuse_result.kasus_referensi.sex }}</td>
+                            <td class="text-muted">address</td>
+                            <td>{{ reuse_result.kasus_referensi.address }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">studytime</td>
+                            <td>{{ "%.4f"|format(reuse_result.kasus_referensi.studytime) }}</td>
+                            <td class="text-muted">goout</td>
+                            <td>{{ "%.4f"|format(reuse_result.kasus_referensi.goout) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Label</td>
+                            <td colspan="3">
+                                {% if reuse_result.kasus_referensi.label == 'Normal' %}
+                                    <span class="badge bg-success">Normal</span>
+                                {% elif reuse_result.kasus_referensi.label == 'Waspada' %}
+                                    <span class="badge bg-warning text-dark">Waspada</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Bahaya</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+
+        <!-- Kolom Kanan: Form Revisi Pakar -->
+        <div class="col-md-7">
+            <div class="card shadow border-0">
+                <div class="card-header bg-success text-white fw-bold">
+                    <i class="bi bi-pencil-square me-2"></i>Keputusan Pakar
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('expert_save') }}"
+                          onsubmit="return confirm('Simpan keputusan pakar dan tambahkan kasus ke knowledge base?')">
+                        <input type="hidden" name="session_id" value="{{ session_id }}">
+
+                        <!-- Label Pilihan Pakar -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold fs-5">
+                                <i class="bi bi-tag me-1 text-success"></i>Label Final
+                            </label>
+                            <p class="text-muted small">
+                                Prediksi sistem: 
+                                <strong class="
+                                    {% if reuse_result.prediksi_label == 'Normal' %}text-success
+                                    {% elif reuse_result.prediksi_label == 'Waspada' %}text-warning
+                                    {% else %}text-danger{% endif %}">
+                                    {{ reuse_result.prediksi_label }}
+                                </strong>
+                                — Setujui atau ubah label di bawah:
+                            </p>
+
+                            <div class="row g-2">
+                                {% for label in label_options %}
+                                <div class="col-4">
+                                    <input type="radio" class="btn-check" name="expert_label"
+                                           id="label_{{ label }}" value="{{ label }}"
+                                           {% if label == reuse_result.prediksi_label %}checked{% endif %}
+                                           required>
+                                    <label class="btn w-100
+                                        {% if label == 'Normal' %}btn-outline-success
+                                        {% elif label == 'Waspada' %}btn-outline-warning
+                                        {% else %}btn-outline-danger{% endif %}"
+                                        for="label_{{ label }}">
+                                        {% if label == 'Normal' %}
+                                            <i class="bi bi-check-circle me-1"></i>
+                                        {% elif label == 'Waspada' %}
+                                            <i class="bi bi-exclamation-triangle me-1"></i>
+                                        {% else %}
+                                            <i class="bi bi-x-octagon me-1"></i>
+                                        {% endif %}
+                                        {{ label }}
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Catatan Pakar -->
+                        <div class="mb-4">
+                            <label for="note" class="form-label fw-bold">
+                                <i class="bi bi-journal-text me-1 text-primary"></i>Catatan Pakar (Opsional)
+                            </label>
+                            <textarea name="note" id="note" class="form-control" rows="4"
+                                      placeholder="Tulis alasan revisi atau catatan tambahan..."></textarea>
+                        </div>
+
+                        <!-- Info Retain -->
+                        <div class="alert alert-info small">
+                            <i class="bi bi-info-circle me-1"></i>
+                            <strong>Setelah disimpan:</strong>
+                            <ul class="mb-0 mt-1">
+                                <li>Kasus baru akan ditambahkan ke <strong>case_base.xlsx</strong></li>
+                                <li>Jika label diubah → status: <span class="badge bg-warning text-dark">EXPERT_REVISED</span></li>
+                                <li>Jika label sama → status: <span class="badge bg-success">VALIDATED</span></li>
+                                <li>Knowledge base akan bertambah satu kasus</li>
+                            </ul>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="bi bi-save me-2"></i>Simpan &amp; Retain ke Knowledge Base
+                            </button>
+                            <a href="{{ url_for('result', session_id=session_id) }}"
+                               class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-1"></i>Kembali ke Hasil
+                            </a>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top 5 Similarity (referensi pakar) -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-light fw-bold small">
+                    <i class="bi bi-list-ol me-1 text-primary"></i>Top 5 Kasus Serupa (Referensi Pakar)
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-sm table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Case ID</th>
+                                <th>Similarity</th>
+                                <th>Label</th>
+                                <th>alc_score</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for case in reuse_result.top_cases %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td><span class="badge bg-secondary small">{{ case.case_id }}</span></td>
+                                <td>
+                                    <span class="fw-bold">{{ "%.4f"|format(case.similarity) }}</span>
+                                    <small class="text-muted">({{ case.similarity_pct }})</small>
+                                </td>
+                                <td>
+                                    {% if case.label == 'Normal' %}
+                                        <span class="badge bg-success">Normal</span>
+                                    {% elif case.label == 'Waspada' %}
+                                        <span class="badge bg-warning text-dark">Waspada</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Bahaya</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ "%.2f"|format(case.alcohol_score) }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
