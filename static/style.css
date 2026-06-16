@@ -6,7 +6,7 @@
 /* ===== BODY & GLOBAL ===== */
 body {
     background-color: #f5f7fa;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     font-size: 0.9rem;
 }
 
@@ -34,6 +34,7 @@ body {
 .card-header {
     border-radius: 10px 10px 0 0 !important;
     font-size: 0.875rem;
+    padding: 0.85rem 1rem;
 }
 
 /* ===== TABLES ===== */
@@ -41,11 +42,14 @@ body {
     font-size: 0.78rem;
     font-weight: 600;
     white-space: nowrap;
+    padding: 0.85rem 1rem;
+    vertical-align: middle;
 }
 
 .table td {
     font-size: 0.8rem;
     vertical-align: middle;
+    padding: 0.75rem 1rem;
 }
 
 /* ===== BADGES ===== */
@@ -81,7 +85,8 @@ body {
     margin-bottom: 0.3rem;
 }
 
-.form-control, .form-select {
+.form-control,
+.form-select {
     border-radius: 6px;
     font-size: 0.85rem;
 }
@@ -175,7 +180,8 @@ footer {
         padding: 1rem 0.75rem;
     }
 
-    .table th, .table td {
+    .table th,
+    .table td {
         font-size: 0.72rem;
     }
 }
