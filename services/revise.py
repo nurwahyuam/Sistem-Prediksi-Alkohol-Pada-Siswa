@@ -22,15 +22,16 @@ REVISION_LOG_XLSX = os.path.join(DATASET_DIR, 'revision_log.xlsx')
 LABEL_OPTIONS = ['Normal', 'Waspada', 'Bahaya']
 
 
-def simpan_revisi(case_id, system_label, expert_label, note):
+def simpan_revisi(case_id, system_label, final_label, note, expert_name='pakar'):
     """
     Simpan hasil revisi pakar ke revision_log.xlsx.
     
     Parameters:
         case_id: ID kasus yang direvisi
         system_label: label dari prediksi sistem
-        expert_label: label yang dipilih pakar
+        final_label: label final hasil keputusan pakar
         note: catatan dari pakar
+        expert_name: nama pakar yang melakukan revisi
     
     Returns:
         dict berisi revision_id dan status
@@ -43,7 +44,7 @@ def simpan_revisi(case_id, system_label, expert_label, note):
     else:
         df_log = pd.DataFrame(columns=[
             'revision_id', 'case_id', 'system_label',
-            'expert_label', 'note', 'created_at'
+            'final_label', 'note', 'expert_name', 'created_at'
         ])
         n = 1
 
@@ -54,8 +55,9 @@ def simpan_revisi(case_id, system_label, expert_label, note):
         'revision_id': revision_id,
         'case_id': case_id,
         'system_label': system_label,
-        'expert_label': expert_label,
+        'final_label': final_label,
         'note': note if note else '-',
+        'expert_name': expert_name,
         'created_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     }
 
@@ -64,8 +66,8 @@ def simpan_revisi(case_id, system_label, expert_label, note):
 
     return {
         'revision_id': revision_id,
-        'label_berubah': system_label != expert_label,
-        'status_kasus': 'EXPERT_REVISED' if system_label != expert_label else 'VALIDATED'
+        'label_berubah': system_label != final_label,
+        'status_kasus': 'EXPERT_REVISED' if system_label != final_label else 'VALIDATED'
     }
 
 

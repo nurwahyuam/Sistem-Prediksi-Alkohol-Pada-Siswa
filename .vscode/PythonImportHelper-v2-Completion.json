@@ -1,29 +1,11 @@
 [
     {
-        "label": "pandas",
+        "label": "json",
         "kind": 6,
         "isExtraImport": true,
-        "importPath": "pandas",
-        "description": "pandas",
-        "detail": "pandas",
-        "documentation": {}
-    },
-    {
-        "label": "numpy",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "numpy",
-        "description": "numpy",
-        "detail": "numpy",
-        "documentation": {}
-    },
-    {
-        "label": "pickle",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "pickle",
-        "description": "pickle",
-        "detail": "pickle",
+        "importPath": "json",
+        "description": "json",
+        "detail": "json",
         "documentation": {}
     },
     {
@@ -36,68 +18,51 @@
         "documentation": {}
     },
     {
-        "label": "json",
-        "kind": 6,
+        "label": "wraps",
+        "importPath": "functools",
+        "description": "functools",
         "isExtraImport": true,
-        "importPath": "json",
-        "description": "json",
-        "detail": "json",
+        "detail": "functools",
         "documentation": {}
     },
     {
-        "label": "datetime",
-        "importPath": "datetime",
-        "description": "datetime",
+        "label": "session",
+        "importPath": "flask",
+        "description": "flask",
         "isExtraImport": true,
-        "detail": "datetime",
+        "detail": "flask",
         "documentation": {}
     },
     {
-        "label": "datetime",
-        "importPath": "datetime",
-        "description": "datetime",
+        "label": "redirect",
+        "importPath": "flask",
+        "description": "flask",
         "isExtraImport": true,
-        "detail": "datetime",
+        "detail": "flask",
         "documentation": {}
     },
     {
-        "label": "datetime",
-        "importPath": "datetime",
-        "description": "datetime",
+        "label": "url_for",
+        "importPath": "flask",
+        "description": "flask",
         "isExtraImport": true,
-        "detail": "datetime",
+        "detail": "flask",
         "documentation": {}
     },
     {
-        "label": "datetime",
-        "importPath": "datetime",
-        "description": "datetime",
+        "label": "flash",
+        "importPath": "flask",
+        "description": "flask",
         "isExtraImport": true,
-        "detail": "datetime",
+        "detail": "flask",
         "documentation": {}
     },
     {
-        "label": "datetime",
-        "importPath": "datetime",
-        "description": "datetime",
+        "label": "request",
+        "importPath": "flask",
+        "description": "flask",
         "isExtraImport": true,
-        "detail": "datetime",
-        "documentation": {}
-    },
-    {
-        "label": "KMeans",
-        "importPath": "sklearn.cluster",
-        "description": "sklearn.cluster",
-        "isExtraImport": true,
-        "detail": "sklearn.cluster",
-        "documentation": {}
-    },
-    {
-        "label": "cosine_similarity",
-        "importPath": "sklearn.metrics.pairwise",
-        "description": "sklearn.metrics.pairwise",
-        "isExtraImport": true,
-        "detail": "sklearn.metrics.pairwise",
+        "detail": "flask",
         "documentation": {}
     },
     {
@@ -154,6 +119,145 @@
         "description": "flask",
         "isExtraImport": true,
         "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "pandas",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "pandas",
+        "description": "pandas",
+        "detail": "pandas",
+        "documentation": {}
+    },
+    {
+        "label": "numpy",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "numpy",
+        "description": "numpy",
+        "detail": "numpy",
+        "documentation": {}
+    },
+    {
+        "label": "pickle",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "pickle",
+        "description": "pickle",
+        "detail": "pickle",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "KMeans",
+        "importPath": "sklearn.cluster",
+        "description": "sklearn.cluster",
+        "isExtraImport": true,
+        "detail": "sklearn.cluster",
+        "documentation": {}
+    },
+    {
+        "label": "train_test_split",
+        "importPath": "sklearn.model_selection",
+        "description": "sklearn.model_selection",
+        "isExtraImport": true,
+        "detail": "sklearn.model_selection",
+        "documentation": {}
+    },
+    {
+        "label": "cosine_similarity",
+        "importPath": "sklearn.metrics.pairwise",
+        "description": "sklearn.metrics.pairwise",
+        "isExtraImport": true,
+        "detail": "sklearn.metrics.pairwise",
+        "documentation": {}
+    },
+    {
+        "label": "cosine_similarity",
+        "importPath": "sklearn.metrics.pairwise",
+        "description": "sklearn.metrics.pairwise",
+        "isExtraImport": true,
+        "detail": "sklearn.metrics.pairwise",
+        "documentation": {}
+    },
+    {
+        "label": "accuracy_score",
+        "importPath": "sklearn.metrics",
+        "description": "sklearn.metrics",
+        "isExtraImport": true,
+        "detail": "sklearn.metrics",
+        "documentation": {}
+    },
+    {
+        "label": "precision_score",
+        "importPath": "sklearn.metrics",
+        "description": "sklearn.metrics",
+        "isExtraImport": true,
+        "detail": "sklearn.metrics",
+        "documentation": {}
+    },
+    {
+        "label": "recall_score",
+        "importPath": "sklearn.metrics",
+        "description": "sklearn.metrics",
+        "isExtraImport": true,
+        "detail": "sklearn.metrics",
+        "documentation": {}
+    },
+    {
+        "label": "f1_score",
+        "importPath": "sklearn.metrics",
+        "description": "sklearn.metrics",
+        "isExtraImport": true,
+        "detail": "sklearn.metrics",
+        "documentation": {}
+    },
+    {
+        "label": "confusion_matrix",
+        "importPath": "sklearn.metrics",
+        "description": "sklearn.metrics",
+        "isExtraImport": true,
+        "detail": "sklearn.metrics",
         "documentation": {}
     },
     {
@@ -283,6 +387,92 @@
         "description": "services.retain",
         "isExtraImport": true,
         "detail": "services.retain",
+        "documentation": {}
+    },
+    {
+        "label": "run_evaluation",
+        "importPath": "services.evaluation",
+        "description": "services.evaluation",
+        "isExtraImport": true,
+        "detail": "services.evaluation",
+        "documentation": {}
+    },
+    {
+        "label": "verify_login",
+        "importPath": "services.auth",
+        "description": "services.auth",
+        "isExtraImport": true,
+        "detail": "services.auth",
+        "documentation": {}
+    },
+    {
+        "label": "login_required",
+        "importPath": "services.auth",
+        "description": "services.auth",
+        "isExtraImport": true,
+        "detail": "services.auth",
+        "documentation": {}
+    },
+    {
+        "label": "is_logged_in",
+        "importPath": "services.auth",
+        "description": "services.auth",
+        "isExtraImport": true,
+        "detail": "services.auth",
+        "documentation": {}
+    },
+    {
+        "label": "load_expert_config",
+        "kind": 2,
+        "importPath": "services.auth",
+        "description": "services.auth",
+        "peekOfCode": "def load_expert_config():\n    \"\"\"Load kredensial pakar dari config/expert.json.\"\"\"\n    with open(EXPERT_CONFIG_PATH, 'r') as f:\n        return json.load(f)\ndef verify_login(username, password):\n    \"\"\"\n    Cek username & password terhadap config/expert.json.\n    Returns:\n        nama pakar (str) jika valid, None jika tidak valid.\n    \"\"\"",
+        "detail": "services.auth",
+        "documentation": {}
+    },
+    {
+        "label": "verify_login",
+        "kind": 2,
+        "importPath": "services.auth",
+        "description": "services.auth",
+        "peekOfCode": "def verify_login(username, password):\n    \"\"\"\n    Cek username & password terhadap config/expert.json.\n    Returns:\n        nama pakar (str) jika valid, None jika tidak valid.\n    \"\"\"\n    config = load_expert_config()\n    if username == config.get('username') and password == config.get('password'):\n        return config.get('name', config.get('username'))\n    return None",
+        "detail": "services.auth",
+        "documentation": {}
+    },
+    {
+        "label": "is_logged_in",
+        "kind": 2,
+        "importPath": "services.auth",
+        "description": "services.auth",
+        "peekOfCode": "def is_logged_in():\n    \"\"\"Cek apakah sesi pakar sedang aktif.\"\"\"\n    return session.get('role') == 'pakar'\ndef login_required(view_func):\n    \"\"\"Decorator: wajib login sebagai Pakar untuk mengakses route.\"\"\"\n    @wraps(view_func)\n    def wrapped(*args, **kwargs):\n        if not is_logged_in():\n            flash('Silakan login sebagai Pakar untuk mengakses halaman ini.', 'warning')\n            return redirect(url_for('login', next=request.path))",
+        "detail": "services.auth",
+        "documentation": {}
+    },
+    {
+        "label": "login_required",
+        "kind": 2,
+        "importPath": "services.auth",
+        "description": "services.auth",
+        "peekOfCode": "def login_required(view_func):\n    \"\"\"Decorator: wajib login sebagai Pakar untuk mengakses route.\"\"\"\n    @wraps(view_func)\n    def wrapped(*args, **kwargs):\n        if not is_logged_in():\n            flash('Silakan login sebagai Pakar untuk mengakses halaman ini.', 'warning')\n            return redirect(url_for('login', next=request.path))\n        return view_func(*args, **kwargs)\n    return wrapped",
+        "detail": "services.auth",
+        "documentation": {}
+    },
+    {
+        "label": "BASE_DIR",
+        "kind": 5,
+        "importPath": "services.auth",
+        "description": "services.auth",
+        "peekOfCode": "BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))\nEXPERT_CONFIG_PATH = os.path.join(BASE_DIR, 'config', 'expert.json')\ndef load_expert_config():\n    \"\"\"Load kredensial pakar dari config/expert.json.\"\"\"\n    with open(EXPERT_CONFIG_PATH, 'r') as f:\n        return json.load(f)\ndef verify_login(username, password):\n    \"\"\"\n    Cek username & password terhadap config/expert.json.\n    Returns:",
+        "detail": "services.auth",
+        "documentation": {}
+    },
+    {
+        "label": "EXPERT_CONFIG_PATH",
+        "kind": 5,
+        "importPath": "services.auth",
+        "description": "services.auth",
+        "peekOfCode": "EXPERT_CONFIG_PATH = os.path.join(BASE_DIR, 'config', 'expert.json')\ndef load_expert_config():\n    \"\"\"Load kredensial pakar dari config/expert.json.\"\"\"\n    with open(EXPERT_CONFIG_PATH, 'r') as f:\n        return json.load(f)\ndef verify_login(username, password):\n    \"\"\"\n    Cek username & password terhadap config/expert.json.\n    Returns:\n        nama pakar (str) jika valid, None jika tidak valid.",
+        "detail": "services.auth",
         "documentation": {}
     },
     {
@@ -445,6 +635,60 @@
         "description": "services.clustering",
         "peekOfCode": "FEATURE_COLS = ['sex', 'address', 'pstatus', 'studytime', 'failures',\n                'romantic', 'famrel', 'freetime', 'goout', 'absences']\ndef hitung_elbow(df_features, k_min=1, k_max=10):\n    \"\"\"\n    Hitung SSE untuk setiap nilai K dari k_min sampai k_max.\n    Parameters:\n        df_features: DataFrame berisi fitur yang sudah dinormalisasi\n        k_min: nilai K minimum\n        k_max: nilai K maksimum\n    Returns:",
         "detail": "services.clustering",
+        "documentation": {}
+    },
+    {
+        "label": "run_evaluation",
+        "kind": 2,
+        "importPath": "services.evaluation",
+        "description": "services.evaluation",
+        "peekOfCode": "def run_evaluation(test_size=0.2, random_state=42):\n    \"\"\"\n    Jalankan evaluasi sistem dengan split 80:20.\n    Returns:\n        dict berisi total data, metrik evaluasi, dan confusion matrix.\n    \"\"\"\n    if not os.path.exists(CASE_BASE_XLSX):\n        raise ValueError('Case base belum tersedia.')\n    df = pd.read_excel(CASE_BASE_XLSX)\n    if len(df) < 10:",
+        "detail": "services.evaluation",
+        "documentation": {}
+    },
+    {
+        "label": "BASE_DIR",
+        "kind": 5,
+        "importPath": "services.evaluation",
+        "description": "services.evaluation",
+        "peekOfCode": "BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))\nDATASET_DIR = os.path.join(BASE_DIR, 'datasets')\nCASE_BASE_XLSX = os.path.join(DATASET_DIR, 'case_base.xlsx')\nFEATURE_COLS = ['sex', 'address', 'pstatus', 'studytime', 'failures',\n                'romantic', 'famrel', 'freetime', 'goout', 'absences']\nLABEL_ORDER = ['Normal', 'Waspada', 'Bahaya']\ndef _prediksi_reuse(fitur_vektor, cluster_id, df_train):\n    \"\"\"\n    Replikasi logika Reuse: ambil label dari kasus training dengan\n    cosine similarity TERTINGGI (tanpa voting / KNN).",
+        "detail": "services.evaluation",
+        "documentation": {}
+    },
+    {
+        "label": "DATASET_DIR",
+        "kind": 5,
+        "importPath": "services.evaluation",
+        "description": "services.evaluation",
+        "peekOfCode": "DATASET_DIR = os.path.join(BASE_DIR, 'datasets')\nCASE_BASE_XLSX = os.path.join(DATASET_DIR, 'case_base.xlsx')\nFEATURE_COLS = ['sex', 'address', 'pstatus', 'studytime', 'failures',\n                'romantic', 'famrel', 'freetime', 'goout', 'absences']\nLABEL_ORDER = ['Normal', 'Waspada', 'Bahaya']\ndef _prediksi_reuse(fitur_vektor, cluster_id, df_train):\n    \"\"\"\n    Replikasi logika Reuse: ambil label dari kasus training dengan\n    cosine similarity TERTINGGI (tanpa voting / KNN).\n    \"\"\"",
+        "detail": "services.evaluation",
+        "documentation": {}
+    },
+    {
+        "label": "CASE_BASE_XLSX",
+        "kind": 5,
+        "importPath": "services.evaluation",
+        "description": "services.evaluation",
+        "peekOfCode": "CASE_BASE_XLSX = os.path.join(DATASET_DIR, 'case_base.xlsx')\nFEATURE_COLS = ['sex', 'address', 'pstatus', 'studytime', 'failures',\n                'romantic', 'famrel', 'freetime', 'goout', 'absences']\nLABEL_ORDER = ['Normal', 'Waspada', 'Bahaya']\ndef _prediksi_reuse(fitur_vektor, cluster_id, df_train):\n    \"\"\"\n    Replikasi logika Reuse: ambil label dari kasus training dengan\n    cosine similarity TERTINGGI (tanpa voting / KNN).\n    \"\"\"\n    df_cluster = df_train[df_train['cluster_id'] == cluster_id]",
+        "detail": "services.evaluation",
+        "documentation": {}
+    },
+    {
+        "label": "FEATURE_COLS",
+        "kind": 5,
+        "importPath": "services.evaluation",
+        "description": "services.evaluation",
+        "peekOfCode": "FEATURE_COLS = ['sex', 'address', 'pstatus', 'studytime', 'failures',\n                'romantic', 'famrel', 'freetime', 'goout', 'absences']\nLABEL_ORDER = ['Normal', 'Waspada', 'Bahaya']\ndef _prediksi_reuse(fitur_vektor, cluster_id, df_train):\n    \"\"\"\n    Replikasi logika Reuse: ambil label dari kasus training dengan\n    cosine similarity TERTINGGI (tanpa voting / KNN).\n    \"\"\"\n    df_cluster = df_train[df_train['cluster_id'] == cluster_id]\n    if len(df_cluster) == 0:",
+        "detail": "services.evaluation",
+        "documentation": {}
+    },
+    {
+        "label": "LABEL_ORDER",
+        "kind": 5,
+        "importPath": "services.evaluation",
+        "description": "services.evaluation",
+        "peekOfCode": "LABEL_ORDER = ['Normal', 'Waspada', 'Bahaya']\ndef _prediksi_reuse(fitur_vektor, cluster_id, df_train):\n    \"\"\"\n    Replikasi logika Reuse: ambil label dari kasus training dengan\n    cosine similarity TERTINGGI (tanpa voting / KNN).\n    \"\"\"\n    df_cluster = df_train[df_train['cluster_id'] == cluster_id]\n    if len(df_cluster) == 0:\n        df_cluster = df_train\n    matriks = df_cluster[FEATURE_COLS].values.astype(float)",
+        "detail": "services.evaluation",
         "documentation": {}
     },
     {
@@ -758,7 +1002,7 @@
         "kind": 2,
         "importPath": "services.revise",
         "description": "services.revise",
-        "peekOfCode": "def simpan_revisi(case_id, system_label, expert_label, note):\n    \"\"\"\n    Simpan hasil revisi pakar ke revision_log.xlsx.\n    Parameters:\n        case_id: ID kasus yang direvisi\n        system_label: label dari prediksi sistem\n        expert_label: label yang dipilih pakar\n        note: catatan dari pakar\n    Returns:\n        dict berisi revision_id dan status",
+        "peekOfCode": "def simpan_revisi(case_id, system_label, final_label, note, expert_name='pakar'):\n    \"\"\"\n    Simpan hasil revisi pakar ke revision_log.xlsx.\n    Parameters:\n        case_id: ID kasus yang direvisi\n        system_label: label dari prediksi sistem\n        final_label: label final hasil keputusan pakar\n        note: catatan dari pakar\n        expert_name: nama pakar yang melakukan revisi\n    Returns:",
         "detail": "services.revise",
         "documentation": {}
     },
@@ -785,7 +1029,7 @@
         "kind": 5,
         "importPath": "services.revise",
         "description": "services.revise",
-        "peekOfCode": "BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))\nDATASET_DIR = os.path.join(BASE_DIR, 'datasets')\nREVISION_LOG_XLSX = os.path.join(DATASET_DIR, 'revision_log.xlsx')\nLABEL_OPTIONS = ['Normal', 'Waspada', 'Bahaya']\ndef simpan_revisi(case_id, system_label, expert_label, note):\n    \"\"\"\n    Simpan hasil revisi pakar ke revision_log.xlsx.\n    Parameters:\n        case_id: ID kasus yang direvisi\n        system_label: label dari prediksi sistem",
+        "peekOfCode": "BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))\nDATASET_DIR = os.path.join(BASE_DIR, 'datasets')\nREVISION_LOG_XLSX = os.path.join(DATASET_DIR, 'revision_log.xlsx')\nLABEL_OPTIONS = ['Normal', 'Waspada', 'Bahaya']\ndef simpan_revisi(case_id, system_label, final_label, note, expert_name='pakar'):\n    \"\"\"\n    Simpan hasil revisi pakar ke revision_log.xlsx.\n    Parameters:\n        case_id: ID kasus yang direvisi\n        system_label: label dari prediksi sistem",
         "detail": "services.revise",
         "documentation": {}
     },
@@ -794,7 +1038,7 @@
         "kind": 5,
         "importPath": "services.revise",
         "description": "services.revise",
-        "peekOfCode": "DATASET_DIR = os.path.join(BASE_DIR, 'datasets')\nREVISION_LOG_XLSX = os.path.join(DATASET_DIR, 'revision_log.xlsx')\nLABEL_OPTIONS = ['Normal', 'Waspada', 'Bahaya']\ndef simpan_revisi(case_id, system_label, expert_label, note):\n    \"\"\"\n    Simpan hasil revisi pakar ke revision_log.xlsx.\n    Parameters:\n        case_id: ID kasus yang direvisi\n        system_label: label dari prediksi sistem\n        expert_label: label yang dipilih pakar",
+        "peekOfCode": "DATASET_DIR = os.path.join(BASE_DIR, 'datasets')\nREVISION_LOG_XLSX = os.path.join(DATASET_DIR, 'revision_log.xlsx')\nLABEL_OPTIONS = ['Normal', 'Waspada', 'Bahaya']\ndef simpan_revisi(case_id, system_label, final_label, note, expert_name='pakar'):\n    \"\"\"\n    Simpan hasil revisi pakar ke revision_log.xlsx.\n    Parameters:\n        case_id: ID kasus yang direvisi\n        system_label: label dari prediksi sistem\n        final_label: label final hasil keputusan pakar",
         "detail": "services.revise",
         "documentation": {}
     },
@@ -803,7 +1047,7 @@
         "kind": 5,
         "importPath": "services.revise",
         "description": "services.revise",
-        "peekOfCode": "REVISION_LOG_XLSX = os.path.join(DATASET_DIR, 'revision_log.xlsx')\nLABEL_OPTIONS = ['Normal', 'Waspada', 'Bahaya']\ndef simpan_revisi(case_id, system_label, expert_label, note):\n    \"\"\"\n    Simpan hasil revisi pakar ke revision_log.xlsx.\n    Parameters:\n        case_id: ID kasus yang direvisi\n        system_label: label dari prediksi sistem\n        expert_label: label yang dipilih pakar\n        note: catatan dari pakar",
+        "peekOfCode": "REVISION_LOG_XLSX = os.path.join(DATASET_DIR, 'revision_log.xlsx')\nLABEL_OPTIONS = ['Normal', 'Waspada', 'Bahaya']\ndef simpan_revisi(case_id, system_label, final_label, note, expert_name='pakar'):\n    \"\"\"\n    Simpan hasil revisi pakar ke revision_log.xlsx.\n    Parameters:\n        case_id: ID kasus yang direvisi\n        system_label: label dari prediksi sistem\n        final_label: label final hasil keputusan pakar\n        note: catatan dari pakar",
         "detail": "services.revise",
         "documentation": {}
     },
@@ -812,8 +1056,17 @@
         "kind": 5,
         "importPath": "services.revise",
         "description": "services.revise",
-        "peekOfCode": "LABEL_OPTIONS = ['Normal', 'Waspada', 'Bahaya']\ndef simpan_revisi(case_id, system_label, expert_label, note):\n    \"\"\"\n    Simpan hasil revisi pakar ke revision_log.xlsx.\n    Parameters:\n        case_id: ID kasus yang direvisi\n        system_label: label dari prediksi sistem\n        expert_label: label yang dipilih pakar\n        note: catatan dari pakar\n    Returns:",
+        "peekOfCode": "LABEL_OPTIONS = ['Normal', 'Waspada', 'Bahaya']\ndef simpan_revisi(case_id, system_label, final_label, note, expert_name='pakar'):\n    \"\"\"\n    Simpan hasil revisi pakar ke revision_log.xlsx.\n    Parameters:\n        case_id: ID kasus yang direvisi\n        system_label: label dari prediksi sistem\n        final_label: label final hasil keputusan pakar\n        note: catatan dari pakar\n        expert_name: nama pakar yang melakukan revisi",
         "detail": "services.revise",
+        "documentation": {}
+    },
+    {
+        "label": "inject_auth_context",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def inject_auth_context():\n    \"\"\"Sediakan status login pakar (is_expert, expert_name) ke semua template.\"\"\"\n    return dict(is_expert=is_logged_in(), expert_name=session.get('expert_name'))\n# ===================================================================\n# HELPER FUNCTIONS\n# ===================================================================\ndef get_stats_dashboard():\n    \"\"\"Ambil statistik untuk dashboard.\"\"\"\n    stats = {\n        'preprocessing_selesai': cek_preprocessing_selesai(),",
+        "detail": "app",
         "documentation": {}
     },
     {
@@ -830,7 +1083,25 @@
         "kind": 2,
         "importPath": "app",
         "description": "app",
-        "peekOfCode": "def index():\n    \"\"\"Dashboard utama.\"\"\"\n    stats = get_stats_dashboard()\n    return render_template('index.html', stats=stats)\n# ===================================================================\n# ROUTES - PREPROCESSING\n# ===================================================================\n@app.route('/preprocessing')\ndef preprocessing():\n    \"\"\"Halaman preprocessing dataset.\"\"\"",
+        "peekOfCode": "def index():\n    \"\"\"Dashboard utama.\"\"\"\n    stats = get_stats_dashboard()\n    return render_template('index.html', stats=stats)\n# ===================================================================\n# ROUTES - AUTENTIKASI PAKAR\n# ===================================================================\n@app.route('/login', methods=['GET', 'POST'])\ndef login():\n    \"\"\"Login Pakar menggunakan Flask Session.\"\"\"",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "login",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def login():\n    \"\"\"Login Pakar menggunakan Flask Session.\"\"\"\n    if is_logged_in():\n        return redirect(url_for('index'))\n    if request.method == 'POST':\n        username = request.form.get('username', '')\n        password = request.form.get('password', '')\n        expert_name = verify_login(username, password)\n        if expert_name:\n            session['role'] = 'pakar'",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "logout",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def logout():\n    \"\"\"Logout Pakar, hapus session.\"\"\"\n    session.pop('role', None)\n    session.pop('expert_name', None)\n    flash('Anda telah logout dari mode Pakar.', 'info')\n    return redirect(url_for('index'))\n# ===================================================================\n# ROUTES - PREPROCESSING\n# ===================================================================\n@app.route('/preprocessing')",
         "detail": "app",
         "documentation": {}
     },
@@ -934,11 +1205,20 @@
         "documentation": {}
     },
     {
+        "label": "evaluation",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def evaluation():\n    \"\"\"Halaman evaluasi sistem CBR (split 80:20) — khusus Pakar.\"\"\"\n    hasil = None\n    try:\n        hasil = run_evaluation()\n    except Exception as e:\n        flash(f\"Error saat evaluasi: {str(e)}\", 'danger')\n    return render_template('evaluation.html', hasil=hasil)\n# ===================================================================\n# MAIN",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
         "label": "app",
         "kind": 5,
         "importPath": "app",
         "description": "app",
-        "peekOfCode": "app = Flask(__name__)\napp.secret_key = 'cbr_alcohol_secret_key_2024'\n# Penyimpanan sementara sesi prediksi (in-memory, bukan DB)\n# Key: session_id, Value: dict data prediksi\nPREDICT_SESSIONS = {}\n# ===================================================================\n# HELPER FUNCTIONS\n# ===================================================================\ndef get_stats_dashboard():\n    \"\"\"Ambil statistik untuk dashboard.\"\"\"",
+        "peekOfCode": "app = Flask(__name__)\napp.secret_key = 'cbr_alcohol_secret_key_2024'\n# Penyimpanan sementara sesi prediksi (in-memory, bukan DB)\n# Key: session_id, Value: dict data prediksi\nPREDICT_SESSIONS = {}\n@app.context_processor\ndef inject_auth_context():\n    \"\"\"Sediakan status login pakar (is_expert, expert_name) ke semua template.\"\"\"\n    return dict(is_expert=is_logged_in(), expert_name=session.get('expert_name'))\n# ===================================================================",
         "detail": "app",
         "documentation": {}
     },
@@ -947,7 +1227,7 @@
         "kind": 5,
         "importPath": "app",
         "description": "app",
-        "peekOfCode": "app.secret_key = 'cbr_alcohol_secret_key_2024'\n# Penyimpanan sementara sesi prediksi (in-memory, bukan DB)\n# Key: session_id, Value: dict data prediksi\nPREDICT_SESSIONS = {}\n# ===================================================================\n# HELPER FUNCTIONS\n# ===================================================================\ndef get_stats_dashboard():\n    \"\"\"Ambil statistik untuk dashboard.\"\"\"\n    stats = {",
+        "peekOfCode": "app.secret_key = 'cbr_alcohol_secret_key_2024'\n# Penyimpanan sementara sesi prediksi (in-memory, bukan DB)\n# Key: session_id, Value: dict data prediksi\nPREDICT_SESSIONS = {}\n@app.context_processor\ndef inject_auth_context():\n    \"\"\"Sediakan status login pakar (is_expert, expert_name) ke semua template.\"\"\"\n    return dict(is_expert=is_logged_in(), expert_name=session.get('expert_name'))\n# ===================================================================\n# HELPER FUNCTIONS",
         "detail": "app",
         "documentation": {}
     },
@@ -956,7 +1236,7 @@
         "kind": 5,
         "importPath": "app",
         "description": "app",
-        "peekOfCode": "PREDICT_SESSIONS = {}\n# ===================================================================\n# HELPER FUNCTIONS\n# ===================================================================\ndef get_stats_dashboard():\n    \"\"\"Ambil statistik untuk dashboard.\"\"\"\n    stats = {\n        'preprocessing_selesai': cek_preprocessing_selesai(),\n        'training_selesai': cek_training_selesai(),\n        'total_case_base': 0,",
+        "peekOfCode": "PREDICT_SESSIONS = {}\n@app.context_processor\ndef inject_auth_context():\n    \"\"\"Sediakan status login pakar (is_expert, expert_name) ke semua template.\"\"\"\n    return dict(is_expert=is_logged_in(), expert_name=session.get('expert_name'))\n# ===================================================================\n# HELPER FUNCTIONS\n# ===================================================================\ndef get_stats_dashboard():\n    \"\"\"Ambil statistik untuk dashboard.\"\"\"",
         "detail": "app",
         "documentation": {}
     }

@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+{% block title %}Evaluasi Sistem{% endblock %}
+
+{% block content %}
+<div class="container">
+
+    <div class="row mb-3">
+        <div class="col-12">
+            <h4 class="fw-bold"><i class="bi bi-graph-up me-2 text-primary"></i>Evaluasi Sistem CBR</h4>
+            <p class="text-muted mb-0">
+                Split data 80:20 — Training (Case Base) vs Testing (Evaluasi).
+                Prediksi tiap data testing menggunakan Reuse (similarity tertinggi, tanpa voting/KNN).
+            </p>
+        </div>
+    </div>
+
+    {% if hasil %}
+
+    <!-- Info Split -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 text-center">
+                <div class="card-body">
+                    <div class="text-muted small">Total Case Base</div>
+                    <div class="fs-3 fw-bold">{{ hasil.total_data }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 text-center">
+                <div class="card-body">
+                    <div class="text-muted small">Data Training (80%)</div>
+                    <div class="fs-3 fw-bold text-primary">{{ hasil.total_train }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 text-center">
+                <div class="card-body">
+                    <div class="text-muted small">Data Testing (20%)</div>
+                    <div class="fs-3 fw-bold text-info">{{ hasil.total_test }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Metrik -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 text-center border-start border-5 border-success">
+                <div class="card-body">
+                    <div class="text-muted small">Accuracy</div>
+                    <div class="fs-3 fw-bold text-success">{{ hasil.accuracy }}%</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 text-center border-start border-5 border-primary">
+                <div class="card-body">
+                    <div class="text-muted small">Precision</div>
+                    <div class="fs-3 fw-bold text-primary">{{ hasil.precision }}%</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 text-center border-start border-5 border-warning">
+                <div class="card-body">
+                    <div class="text-muted small">Recall</div>
+                    <div class="fs-3 fw-bold text-warning">{{ hasil.recall }}%</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 text-center border-start border-5 border-info">
+                <div class="card-body">
+                    <div class="text-muted small">F1 Score</div>
+                    <div class="fs-3 fw-bold text-info">{{ hasil.f1_score }}%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confusion Matrix -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-light fw-bold">
+                    <i class="bi bi-grid-3x3 me-2 text-primary"></i>Confusion Matrix
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered text-center mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Aktual \ Prediksi</th>
+                                {% for lbl in hasil.labels %}
+                                <th>{{ lbl }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in hasil.confusion_matrix %}
+                            <tr>
+                                <th class="table-light">{{ hasil.labels[loop.index0] }}</th>
+                                {% for val in row %}
+                                <td>{{ val }}</td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-light fw-bold">
+                    <i class="bi bi-list-check me-2 text-primary"></i>Detail Prediksi vs Aktual
+                </div>
+                <div class="card-body p-0" style="max-height: 320px; overflow-y: auto;">
+                    <table class="table table-sm table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Aktual</th>
+                                <th>Prediksi</th>
+                                <th>Hasil</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for d in hasil.detail %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>{{ d.actual }}</td>
+                                <td>{{ d.predicted }}</td>
+                                <td>
+                                    {% if d.benar %}
+                                        <span class="badge bg-success">Benar</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Salah</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <div class="alert alert-warning">
+        <i class="bi bi-exclamation-triangle me-1"></i>
+        Evaluasi belum dapat dijalankan. Pastikan preprocessing, training, dan case base sudah tersedia
+        dengan jumlah data yang cukup.
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

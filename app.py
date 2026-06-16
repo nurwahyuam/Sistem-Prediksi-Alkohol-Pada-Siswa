@@ -40,6 +40,8 @@ from services.retrieve import run_retrieve
 from services.reuse import run_reuse
 from services.revise import simpan_revisi, load_revision_log
 from services.retain import run_retain, load_retrieve_history
+from services.evaluation import run_evaluation
+from services.auth import verify_login, login_required, is_logged_in
 
 # ===== INISIALISASI FLASK =====
 app = Flask(__name__)
@@ -48,6 +50,12 @@ app.secret_key = 'cbr_alcohol_secret_key_2024'
 # Penyimpanan sementara sesi prediksi (in-memory, bukan DB)
 # Key: session_id, Value: dict data prediksi
 PREDICT_SESSIONS = {}
+
+
+@app.context_processor
+def inject_auth_context():
+    """Sediakan status login pakar (is_expert, expert_name) ke semua template."""
+    return dict(is_expert=is_logged_in(), expert_name=session.get('expert_name'))
 
 
 # ===================================================================
@@ -95,6 +103,42 @@ def index():
     """Dashboard utama."""
     stats = get_stats_dashboard()
     return render_template('index.html', stats=stats)
+
+
+# ===================================================================
+# ROUTES - AUTENTIKASI PAKAR
+# ===================================================================
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    """Login Pakar menggunakan Flask Session."""
+    if is_logged_in():
+        return redirect(url_for('index'))
+
+    if request.method == 'POST':
+        username = request.form.get('username', '')
+        password = request.form.get('password', '')
+        expert_name = verify_login(username, password)
+
+        if expert_name:
+            session['role'] = 'pakar'
+            session['expert_name'] = expert_name
+            flash(f"Selamat datang, {expert_name}!", 'success')
+            next_url = request.args.get('next') or url_for('index')
+            return redirect(next_url)
+
+        flash('Username atau password salah.', 'danger')
+
+    return render_template('login.html')
+
+
+@app.route('/logout')
+def logout():
+    """Logout Pakar, hapus session."""
+    session.pop('role', None)
+    session.pop('expert_name', None)
+    flash('Anda telah logout dari mode Pakar.', 'info')
+    return redirect(url_for('index'))
 
 
 # ===================================================================
@@ -288,6 +332,7 @@ def result(session_id):
 # ===================================================================
 
 @app.route('/expert/<session_id>')
+@login_required
 def expert(session_id):
     """Ruang pakar untuk revisi prediksi."""
     if session_id not in PREDICT_SESSIONS:
@@ -309,6 +354,7 @@ def expert(session_id):
 
 
 @app.route('/expert/save', methods=['POST'])
+@login_required
 def expert_save():
     """Simpan keputusan pakar dan jalankan Retain."""
     session_id = request.form.get('session_id')
@@ -331,8 +377,9 @@ def expert_save():
         revise_result = simpan_revisi(
             case_id=temp_case_id,
             system_label=system_label,
-            expert_label=expert_label,
-            note=note
+            final_label=expert_label,
+            note=note,
+            expert_name=session.get('expert_name', 'pakar')
         )
 
         # RETAIN - Simpan kasus ke case base
@@ -421,10 +468,27 @@ def history():
 
 
 # ===================================================================
+# ROUTES - EVALUASI SISTEM (KHUSUS PAKAR)
+# ===================================================================
+
+@app.route('/evaluation')
+@login_required
+def evaluation():
+    """Halaman evaluasi sistem CBR (split 80:20) — khusus Pakar."""
+    hasil = None
+    try:
+        hasil = run_evaluation()
+    except Exception as e:
+        flash(f"Error saat evaluasi: {str(e)}", 'danger')
+
+    return render_template('evaluation.html', hasil=hasil)
+
+
+# ===================================================================
 # MAIN
 # ===================================================================
 
 if __name__ == '__main__':
     # Pastikan folder models ada
     os.makedirs(os.path.join(os.path.dirname(__file__), 'models'), exist_ok=True)
-    app.run(debug=True, host='localhost', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5000)
