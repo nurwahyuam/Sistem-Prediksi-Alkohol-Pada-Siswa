@@ -476,12 +476,16 @@ def history():
 def evaluation():
     """Halaman evaluasi sistem CBR (split 80:20) — khusus Pakar."""
     hasil = None
+    cases = []
     try:
         hasil = run_evaluation()
+        df_case = load_case_base()
+        if df_case is not None:
+            cases = df_case.to_dict('records')
     except Exception as e:
         flash(f"Error saat evaluasi: {str(e)}", 'danger')
 
-    return render_template('evaluation.html', hasil=hasil)
+    return render_template('evaluation.html', hasil=hasil, cases=cases)
 
 
 # ===================================================================
@@ -491,4 +495,4 @@ def evaluation():
 if __name__ == '__main__':
     # Pastikan folder models ada
     os.makedirs(os.path.join(os.path.dirname(__file__), 'models'), exist_ok=True)
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='localhost', port=5000)
