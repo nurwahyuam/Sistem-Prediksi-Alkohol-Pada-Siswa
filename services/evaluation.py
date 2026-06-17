@@ -48,6 +48,16 @@ def _prediksi_reuse(fitur_vektor, cluster_id, df_train):
     idx_terbaik = int(np.argmax(sims))
     return df_cluster.iloc[idx_terbaik]['label']
 
+def _simpan_eval_split(df_full, train_index, test_index):
+    """
+    Tandai hasil split evaluasi terakhir ke kolom 'eval_split' pada
+    case_base.xlsx (TRAINING / TESTING), supaya terlihat di halaman
+    Case Base kasus mana saja yang dipakai sebagai data testing.
+    """
+    df_full = df_full.copy()
+    df_full['eval_split'] = 'TRAINING'
+    df_full.loc[test_index, 'eval_split'] = 'TESTING'
+    df_full.to_excel(CASE_BASE_XLSX, index=False)
 
 def run_evaluation(test_size=0.2, random_state=42):
     """
@@ -83,6 +93,9 @@ def run_evaluation(test_size=0.2, random_state=42):
         label_prediksi = _prediksi_reuse(fitur_vektor, row['cluster_id'], df_train)
         y_true.append(row['label'])
         y_pred.append(label_prediksi)
+
+    # Tandai status TRAINING/TESTING hasil split ini ke case_base.xlsx
+    _simpan_eval_split(df, df_train.index, df_test.index)
 
     labels_ada = [l for l in LABEL_ORDER if l in set(y_true) | set(y_pred)]
 
